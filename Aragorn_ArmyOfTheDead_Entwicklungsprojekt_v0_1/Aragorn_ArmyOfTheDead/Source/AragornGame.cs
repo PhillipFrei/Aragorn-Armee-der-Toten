@@ -47,7 +47,7 @@ namespace AragornArmy
 
         private static int Ticks => Find.TickManager.TicksGame;
         private bool AnySummoned => ghosts.Any(p => p != null && p.Spawned && !p.Dead && !p.Downed);
-        public bool IsSummonedKing(Pawn pawn) => pawn != null && pawn.kindDef.defName == "AR_GhostKing" && ghosts.Contains(pawn) && pawn.Spawned && !pawn.Dead && !pawn.Downed;
+        public bool IsSummonedKing(Pawn pawn) => pawn != null && (pawn.kindDef.defName == "AR_GhostSpiritKing" || pawn.kindDef.defName == "AR_GhostKing") && ghosts.Contains(pawn) && pawn.Spawned && !pawn.Dead && !pawn.Downed;
         public bool IsSummoned(Pawn pawn) => pawn != null && ghosts.Contains(pawn);
         public int SummonCooldownRemaining => Math.Max(0, lastSummonTick + 32500 - Ticks);
         public int LightningCooldownRemaining => Math.Max(0, lastKingLightning + 7500 - Ticks);
@@ -168,6 +168,7 @@ namespace AragornArmy
             if (i < 0 || i >= GhostDefinitions.PawnKinds.Length) return null;
             PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail(GhostDefinitions.PawnKinds[i]);
             if (kind == null) { Log.Error("[Aragorn] Missing PawnKind for index " + i); return null; }
+            GhostDefinitions.ConfigureNaturalAttacks(i);
             // Generate a combat-only pawn without random backgrounds, apparel,
             // equipment, relationships, ideology, addictions or age traits.
             var request = new PawnGenerationRequest(kind, faction,
@@ -202,7 +203,10 @@ namespace AragornArmy
                 pawn.Drawer.renderer.SetAllGraphicsDirty();
             }
             if (pawn.needs != null) pawn.needs.AddOrRemoveNeedsAsAppropriate();
-            GhostDefinitions.SetFixedWeapon(pawn, GhostDefinitions.Weapons[i]);
+            // New wraith-like races use intrinsic weapon attacks, never inventory gear.
+            // Legacy human ghosts from old saved games may still use equipment.
+            if (pawn.RaceProps.Humanlike)
+                GhostDefinitions.SetFixedWeapon(pawn, GhostDefinitions.Weapons[i]);
             return pawn;
         }
 
@@ -213,7 +217,7 @@ namespace AragornArmy
             Pawn king = ghosts.FirstOrDefault(IsSummonedKing);
             foreach (Pawn g in ghosts)
             {
-                if (g == null || g.health == null || g.kindDef.defName == "AR_GhostKing") continue;
+                if (g == null || g.health == null || (g.kindDef.defName == "AR_GhostSpiritKing" || g.kindDef.defName == "AR_GhostKing")) continue;
                 bool shouldHave = king != null && g.Spawned && g.Map == king.Map && !g.Dead && !g.Downed;
                 bool has = g.health.hediffSet.HasHediff(status);
                 if (shouldHave && !has) g.health.AddHediff(status);
