@@ -23,6 +23,7 @@ namespace AragornArmy
         private bool encounterCreated;
         private bool completed;
         private int nextRetryTick;
+        private bool rescueOfferLetterSent;
 
         public AragornRescueGame(Game game) { }
 
@@ -36,8 +37,33 @@ namespace AragornArmy
             Scribe_Values.Look(ref encounterCreated, "arRescueEncounterCreated");
             Scribe_Values.Look(ref completed, "arRescueCompleted");
             Scribe_Values.Look(ref nextRetryTick, "arRescueRetryTick");
+            Scribe_Values.Look(ref rescueOfferLetterSent, "arRescueOfferLetterSent", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && guards == null)
                 guards = new List<Pawn>();
+        }
+
+        // Unlike GameComponentTick, GameComponentUpdate also runs while the
+        // colony is paused. Always expose the permanent offer after load.
+        public override void GameComponentUpdate()
+        {
+            if (Current.ProgramState != ProgramState.Playing) return;
+            if (completed || Find.QuestManager == null || Find.AnyPlayerHomeMap == null) return;
+
+            if (rescueQuest == null)
+                OfferQuest();
+
+            if (rescueQuest != null && !rescueOfferLetterSent)
+            {
+                // Also notifies users upgrading from v0.6 whose offer exists
+                // but had never generated a visible letter.
+                if (rescueQuest.State == QuestState.NotYetAccepted)
+                {
+                    QuestUtility.SendLetterQuestAvailable(rescueQuest);
+                    Messages.Message("Aragorn-Rettungsquest: Unter Aufträge → Verfügbar verfügbar.",
+                        MessageTypeDefOf.PositiveEvent);
+                }
+                rescueOfferLetterSent = true;
+            }
         }
 
         public override void GameComponentTick()
@@ -57,7 +83,11 @@ namespace AragornArmy
         private void OfferQuest()
         {
             QuestScriptDef root = DefDatabase<QuestScriptDef>.GetNamedSilentFail("AR_RescueAragornQuest");
-            if (root == null) return;
+            if (root == null)
+            {
+                Log.ErrorOnce("[Aragorn] AR_RescueAragornQuest nicht geladen. Bitte Player.log prüfen (XML-Fehler).", 906173571);
+                return;
+            }
             Quest prior = Find.QuestManager.QuestsListForReading.FirstOrDefault(q => q.root == root && !q.Historical);
             if (prior != null) { rescueQuest = prior; return; }
 
@@ -73,9 +103,13 @@ namespace AragornArmy
                 + "Eine Profaned-Weltfraktion ist nicht erforderlich.";
             quest.acceptanceExpireTick = -1;
             quest.SetNotYetAccepted();
+            quest.hidden = false;
+            quest.hiddenInUI = false;
+            quest.dismissed = false;
             quest.AddPart(new QuestPart_AragornRescueTarget());
             Find.QuestManager.Add(quest);
             rescueQuest = quest;
+            rescueOfferLetterSent = false;
             Log.Message("[Aragorn] Dauerhafter Rettungsauftrag verfügbar: " + quest.name);
         }
 
