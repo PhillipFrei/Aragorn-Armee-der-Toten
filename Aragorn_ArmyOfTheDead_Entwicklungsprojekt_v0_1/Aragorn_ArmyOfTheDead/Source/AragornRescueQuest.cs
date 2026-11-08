@@ -27,6 +27,71 @@ namespace AragornArmy
 
         public AragornRescueGame(Game game) { }
 
+        public string DiagnosticStatus
+        {
+            get
+            {
+                if (Find.QuestManager == null) return "QuestManager ist nicht initialisiert.";
+                if (DefDatabase<QuestScriptDef>.GetNamedSilentFail("AR_RescueAragornQuest") == null)
+                    return "FEHLER: Questdefinition AR_RescueAragornQuest nicht geladen (Player.log prüfen).";
+                if (completed) return "Aragorn-Rettung in diesem Spielstand bereits abgeschlossen.";
+                Quest q = rescueQuest ?? Find.QuestManager.QuestsListForReading.FirstOrDefault(x =>
+                    x != null && x.root != null && x.root.defName == "AR_RescueAragornQuest" && !x.Historical);
+                if (q == null) return "Noch keine Rettungsquest erzeugt.";
+                if (!Find.QuestManager.Contains(q))
+                    return "Quest-Referenz vorhanden, aber nicht im QuestManager.";
+                return "Quest vorhanden: " + q.State + (q.dismissed ? " (ausgeblendet)" : "")
+                    + (q.hiddenInUI ? " (UI-versteckt)" : "");
+            }
+        }
+
+        // Immediate manual fallback via Mod Settings. Does not depend on game time
+        // ticking or a generated Profaned world faction.
+        public string ForceOfferQuest()
+        {
+            if (Current.ProgramState != ProgramState.Playing || Find.QuestManager == null)
+                return "Bitte zuerst einen Spielstand vollständig laden.";
+            if (completed) return "Rettung bereits abgeschlossen; kein zweiter Auftrag nötig.";
+            try
+            {
+                var root = DefDatabase<QuestScriptDef>.GetNamedSilentFail("AR_RescueAragornQuest");
+                if (root == null)
+                {
+                    Log.Error("[Aragorn] Manuelles Questangebot: QuestScriptDef AR_RescueAragornQuest fehlt.");
+                    return "Questdefinition fehlt. Bitte Player.log hochladen.";
+                }
+                if (rescueQuest == null || !Find.QuestManager.Contains(rescueQuest))
+                    rescueQuest = Find.QuestManager.QuestsListForReading.FirstOrDefault(q =>
+                        q != null && q.root == root && !q.Historical);
+
+                if (rescueQuest == null) OfferQuest();
+                if (rescueQuest == null) return "Quest konnte nicht erzeugt werden. Siehe Player.log.";
+                rescueQuest.hidden = false;
+                rescueQuest.hiddenInUI = false;
+                rescueQuest.dismissed = false;
+
+                if (rescueQuest.State == QuestState.NotYetAccepted)
+                {
+                    QuestUtility.SendLetterQuestAvailable(rescueQuest);
+                    rescueOfferLetterSent = true;
+                    return "Questangebot ist jetzt unter Aufträge → Verfügbar. Benachrichtigung erstellt.";
+                }
+                if (rescueQuest.State == QuestState.Ongoing)
+                {
+                    if (!siteCreated) TryCreateRescueSite();
+                    return "Quest bereits angenommen. " + (siteCreated ?
+                        "Rettungsort ist auf der Weltkarte." :
+                        "Rettungsort noch nicht erstellt – siehe Player.log.");
+                }
+                return "Queststatus: " + rescueQuest.State;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[Aragorn] Manuelles Questangebot fehlgeschlagen: " + ex);
+                return "Fehler beim Erstellen: " + ex.GetType().Name + ". Player.log hochladen.";
+            }
+        }
+
         public override void ExposeData()
         {
             Scribe_References.Look(ref rescueQuest, "arRescueQuest");
@@ -47,10 +112,16 @@ namespace AragornArmy
         public override void GameComponentUpdate()
         {
             if (Current.ProgramState != ProgramState.Playing) return;
-            if (completed || Find.QuestManager == null || Find.AnyPlayerHomeMap == null) return;
+            // The offer itself requires no home map; the site is placed after acceptance.
+            if (completed || Find.QuestManager == null) return;
 
             if (rescueQuest == null)
-                OfferQuest();
+            {
+                rescueQuest = Find.QuestManager.QuestsListForReading.FirstOrDefault(q =>
+                    q != null && q.root != null &&
+                    q.root.defName == "AR_RescueAragornQuest" && !q.Historical);
+                if (rescueQuest == null) OfferQuest();
+            }
 
             if (rescueQuest != null && !rescueOfferLetterSent)
             {
@@ -88,7 +159,8 @@ namespace AragornArmy
                 Log.ErrorOnce("[Aragorn] AR_RescueAragornQuest nicht geladen. Bitte Player.log prüfen (XML-Fehler).", 906173571);
                 return;
             }
-            Quest prior = Find.QuestManager.QuestsListForReading.FirstOrDefault(q => q.root == root && !q.Historical);
+            Quest prior = Find.QuestManager.QuestsListForReading.FirstOrDefault(q =>
+                q != null && q.root == root && !q.Historical);
             if (prior != null) { rescueQuest = prior; return; }
 
             Quest quest = Quest.MakeRaw();
