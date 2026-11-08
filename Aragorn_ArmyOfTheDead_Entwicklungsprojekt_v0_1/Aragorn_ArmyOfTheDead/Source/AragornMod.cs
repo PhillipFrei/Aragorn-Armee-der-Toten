@@ -21,6 +21,19 @@ namespace AragornArmy
         {
             var ls = new Listing_Standard();
             ls.Begin(rect);
+            ls.Label("Aragorn-Rettungsquest (Test)");
+            var rescue = Current.Game?.GetComponent<AragornRescueGame>();
+            ls.Label(rescue == null
+                ? "Status: Noch kein Spielstand geladen / Quest-Komponente fehlt."
+                : "Status: " + rescue.DiagnosticStatus);
+            if (ls.ButtonText("Aragorn-Rettungsquest JETZT erstellen / anzeigen"))
+            {
+                string status = rescue == null
+                    ? "Keine Quest-Komponente: Ist dieser Mod aktiv und ein Spielstand geladen?"
+                    : rescue.ForceOfferQuest();
+                Messages.Message(status, MessageTypeDefOf.NeutralEvent);
+            }
+            ls.GapLine();
             ls.Label("Beschwörungsdauer: " + Config.summonHours + " Ingame-Stunden (Cooldown: 13 h)");
             Config.summonHours = Mathf.RoundToInt(ls.Slider(Config.summonHours, 6, 13));
             ls.Label("Rüstungsstufe: " + Config.armorLevel + " / 20   (Stufe 1: 50 %, 10: 1000 %, 20: 2000 %)");
