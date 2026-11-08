@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Schwertgeist I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace01</defName>
+    <label>Schwertgeist I</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritSword01</defName>
+    <label>Schwertgeist I</label>
+    <race>AR_SpiritRace01</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Schwertgeist II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace02</defName>
+    <label>Schwertgeist II</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritSword02</defName>
+    <label>Schwertgeist II</label>
+    <race>AR_SpiritRace02</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Schwertgeist III: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace03</defName>
+    <label>Schwertgeist III</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritSword03</defName>
+    <label>Schwertgeist III</label>
+    <race>AR_SpiritRace03</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Bogenschütze I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace04</defName>
+    <label>Bogenschütze I</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritArcher01</defName>
+    <label>Bogenschütze I</label>
+    <race>AR_SpiritRace04</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Bogenschütze II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace05</defName>
+    <label>Bogenschütze II</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritArcher02</defName>
+    <label>Bogenschütze II</label>
+    <race>AR_SpiritRace05</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Bogenschütze III: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace06</defName>
+    <label>Bogenschütze III</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritArcher03</defName>
+    <label>Bogenschütze III</label>
+    <race>AR_SpiritRace06</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Granatwerfer I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace07</defName>
+    <label>Granatwerfer I</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritGrenadier01</defName>
+    <label>Granatwerfer I</label>
+    <race>AR_SpiritRace07</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Granatwerfer II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace08</defName>
+    <label>Granatwerfer II</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritGrenadier02</defName>
+    <label>Granatwerfer II</label>
+    <race>AR_SpiritRace08</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Axtgeist I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace09</defName>
+    <label>Axtgeist I</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritAxe01</defName>
+    <label>Axtgeist I</label>
+    <race>AR_SpiritRace09</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Axtgeist II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace10</defName>
+    <label>Axtgeist II</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.6</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.3</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritAxe02</defName>
+    <label>Axtgeist II</label>
+    <race>AR_SpiritRace10</race>
+    <combatPower>150</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith</texPath><drawSize>1.4</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Verfluchter Hauptmann I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace11</defName>
+    <label>Verfluchter Hauptmann I</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.0</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.7</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritCaptain01</defName>
+    <label>Verfluchter Hauptmann I</label>
+    <race>AR_SpiritRace11</race>
+    <combatPower>350</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith2</texPath><drawSize>1.6</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith2</texPath><drawSize>1.6</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- Verfluchter Hauptmann II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace12</defName>
+    <label>Verfluchter Hauptmann II</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.0</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>1.7</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritCaptain02</defName>
+    <label>Verfluchter Hauptmann II</label>
+    <race>AR_SpiritRace12</race>
+    <combatPower>350</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith2</texPath><drawSize>1.6</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith2</texPath><drawSize>1.6</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- König der Toten: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
+  <ThingDef ParentName="BotchJob_UndeadAnimalBase">
+    <defName>AR_SpiritRace13</defName>
+    <label>König der Toten</label>
+    <description>Ein beschworener, körperloser Geisterkrieger. Keine Kleidung, keine wechselbaren Waffen, keine Arbeit.</description>
+    <statBases>
+      <MoveSpeed>4.3</MoveSpeed>
+      <FilthRate>0</FilthRate>
+      <Wildness>0</Wildness>
+      <RangedWeapon_Cooldown>2.4</RangedWeapon_Cooldown>
+    </statBases>
+    <race>
+      <body>Human</body>
+      <baseHealthScale>2</baseHealthScale>
+      <baseBodySize>1</baseBodySize>
+      <needsRest>false</needsRest>
+      <hasGenders>false</hasGenders>
+      <trainability>None</trainability>
+      <wildBiomes Inherit="False"/>
+      <lifeStageAges><li><def>AnimalAdult</def><minAge>0</minAge></li></lifeStageAges>
+    </race>
+    <tools>
+      <li><label>geisterhieb</label><capacities><li>Blunt</li></capacities><power>10</power><cooldownTime>2.4</cooldownTime></li>
+    </tools>
+    <comps>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Draftable">
+        <makeNonFleeingToo>true</makeNonFleeingToo>
+      </li>
+      <li MayRequire="OskarPotocki.VanillaFactionsExpanded.Core" Class="VEF.AnimalBehaviours.CompProperties_Floating"/>
+    </comps>
+    <tradeTags Inherit="False"/>
+    <butcherProducts Inherit="False"/>
+  </ThingDef>
+  <PawnKindDef ParentName="AnimalKindBase">
+    <defName>AR_GhostSpiritKing</defName>
+    <label>König der Toten</label>
+    <race>AR_SpiritRace13</race>
+    <combatPower>500</combatPower>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>0</ecoSystemWeight>
+    <lifeStages>
+      <li>
+        <bodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith2</texPath><drawSize>1.80</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Things/Pawn/Animal/BotchJob_Wraith/BotchJob_Wraith2</texPath><drawSize>1.80</drawSize></dessicatedBodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+</Defs>
