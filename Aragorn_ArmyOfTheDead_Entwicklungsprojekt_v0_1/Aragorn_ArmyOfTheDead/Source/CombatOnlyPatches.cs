@@ -41,10 +41,21 @@ namespace AragornArmy
     {
         private static bool Prefix(Pawn_EquipmentTracker __instance, ref bool __result, ref ThingWithComps resultingEq)
         {
-            if (!GhostDefinitions.IsGhost(__instance.pawn)) return true;
-            resultingEq = null;
-            __result = false;
-            return false;
+            if (GhostDefinitions.IsGhost(__instance.pawn))
+            {
+                resultingEq = null;
+                __result = false;
+                return false;
+            }
+            // Prevent an accidental drop of Aragorn's unique Anduril on downing.
+            if (GhostDefinitions.IsAragorn(__instance.pawn) &&
+                __instance.Primary != null && __instance.Primary.def.defName == "AR_Anduril")
+            {
+                resultingEq = null;
+                __result = false;
+                return false;
+            }
+            return true;
         }
     }
 
@@ -95,7 +106,17 @@ namespace AragornArmy
             }
 
             foreach (var gizmo in vanilla) yield return gizmo;
-            if (game == null || !GhostDefinitions.HasAnduril(pawn)) yield break;
+            if (game == null || !GhostDefinitions.IsAragorn(pawn)) yield break;
+            if (!GhostDefinitions.HasAnduril(pawn))
+            {
+                // Repair tool for old v0.1 saves in which the sword was dropped.
+                yield return new Command_Action {
+                    defaultLabel = "Andúril wiederherstellen (Test)",
+                    defaultDesc = "Entwicklungswerkzeug für alte Testspielstände: Andúril anlegen, falls die Waffe verlorenging.",
+                    action = () => GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril")
+                };
+                yield break;
+            }
 
             Command_Action summon = new Command_Action {
                 defaultLabel = "Geister beschwören",
