@@ -180,8 +180,9 @@ namespace AragornArmy
             pawn.Name = new NameSingle(GhostDefinitions.Names[i]);
             if (pawn.story != null)
             {
-                pawn.story.Childhood = null;
-                pawn.story.Adulthood = null;
+                // forceNoBackstory was already supplied to PawnGenerator.
+                // Do NOT assign Childhood = null: RimWorld 1.6's Childhood setter
+                // dereferences value.spawnCategories and throws NullReferenceException.
                 pawn.story.title = null;
                 if (pawn.story.traits != null)
                     foreach (Trait trait in pawn.story.traits.allTraits.ToList())
@@ -253,11 +254,28 @@ namespace AragornArmy
                 Reject("Keine feindliche Test-Fraktion verfügbar (AncientsHostile).");
                 return;
             }
+            // Prepare the boss before saving a trial state. A generation failure
+            // must not leave an invisible or irrecoverably half-started trial.
+            Pawn boss;
+            try
+            {
+                boss = CreateGhost(Unlocked, hostile);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[Aragorn] Fehler beim Erzeugen des Prüfungsgeistes " + (Unlocked + 1) + ": " + ex);
+                Reject("Geisterprüfung konnte nicht gestartet werden. Details im Player.log unter [Aragorn].");
+                return;
+            }
+            if (boss == null)
+            {
+                Reject("Geisterprüfung konnte nicht gestartet werden: Geisterdefinition fehlt.");
+                return;
+            }
             trialIndex = Unlocked;
             trialMap = aragorn.Map;
             trialAragorn = aragorn; // Anduril was equipped when starting the fight.
-            trialBoss = CreateGhost(trialIndex, hostile);
-            if (trialBoss == null) return;
+            trialBoss = boss;
             IntVec3 location = CellFinder.RandomClosewalkCellNear(aragorn.Position, aragorn.Map, 24);
             GenSpawn.Spawn(trialBoss, location, aragorn.Map);
             List<Pawn> attackers = new List<Pawn> { trialBoss };
