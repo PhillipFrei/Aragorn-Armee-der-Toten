@@ -7,7 +7,7 @@
     <randomlySelectable>false</randomlySelectable>
     <autoAccept>false</autoAccept>
     <sendAvailableLetter>false</sendAvailableLetter>
-    <expireDaysRange>(-1, -1)</expireDaysRange>
+    <!-- No expireDaysRange: QuestScriptDef already defaults to no expiry (-1,-1). -->
     <rootSelectionWeight>0</rootSelectionWeight>
   </QuestScriptDef>
 
