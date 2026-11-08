@@ -1,0 +1,413 @@
+{
+  "format": "AragornModImplementationPlan",
+  "version": 8,
+  "characters": [
+    {
+      "id": "aragorn",
+      "name": "Aragorn",
+      "role": "Erbe Isildurs · Andúril wird separat gebaut",
+      "weapon": null,
+      "apparel": [
+        "BotchJob_CrusaderArmor",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost01",
+      "name": "Schwertgeist I",
+      "role": "Schwertgeist · 1/3",
+      "weapon": "BotchJob_ProfanedScimitar",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_RaggedLegwraps"
+      ]
+    },
+    {
+      "id": "ghost02",
+      "name": "Schwertgeist II",
+      "role": "Schwertgeist · 2/3",
+      "weapon": "BotchJob_ProfanedShotel",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_RaggedLegwraps"
+      ]
+    },
+    {
+      "id": "ghost03",
+      "name": "Schwertgeist III",
+      "role": "Schwertgeist · 3/3",
+      "weapon": "BotchJob_ScourgeknightGreatsword",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_RaggedLegwraps"
+      ]
+    },
+    {
+      "id": "ghost04",
+      "name": "Bogenschütze I",
+      "role": "Bogenschütze · 1/3",
+      "weapon": "BotchJob_SpectralGreatbow",
+      "apparel": [
+        "BotchJob_DivineOrderSkirmisherArmor",
+        "BotchJob_WeatheredChainmailCoif"
+      ]
+    },
+    {
+      "id": "ghost05",
+      "name": "Bogenschütze II",
+      "role": "Bogenschütze · 2/3",
+      "weapon": "BotchJob_SpectralGreatbow",
+      "apparel": [
+        "BotchJob_DivineOrderSkirmisherArmor",
+        "BotchJob_WeatheredChainmailCoif"
+      ]
+    },
+    {
+      "id": "ghost06",
+      "name": "Bogenschütze III",
+      "role": "Bogenschütze · 3/3",
+      "weapon": "BotchJob_SpectralGreatbow",
+      "apparel": [
+        "BotchJob_DivineOrderSkirmisherArmor",
+        "BotchJob_WeatheredChainmailCoif"
+      ]
+    },
+    {
+      "id": "ghost07",
+      "name": "Granatwerfer I",
+      "role": "Granatwerfer · 1/2",
+      "weapon": "BotchJob_DivineOrderCleansingConcoction",
+      "apparel": [
+        "BotchJob_InquisitorArmor",
+        "BotchJob_InquisitorHat",
+        "BotchJob_DivineOrderZealotRobes"
+      ]
+    },
+    {
+      "id": "ghost08",
+      "name": "Granatwerfer II",
+      "role": "Granatwerfer · 2/2",
+      "weapon": "BotchJob_DivineOrderCleansingConcoction",
+      "apparel": [
+        "BotchJob_InquisitorArmor",
+        "BotchJob_InquisitorHat",
+        "BotchJob_DivineOrderZealotRobes"
+      ]
+    },
+    {
+      "id": "ghost09",
+      "name": "Axtgeist I",
+      "role": "Axtgeist · 1/2",
+      "weapon": "BotchJob_ScourgeknightGreataxe",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost10",
+      "name": "Axtgeist II",
+      "role": "Axtgeist · 2/2",
+      "weapon": "BotchJob_ScourgeknightGreataxe",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost11",
+      "name": "Verfluchter Hauptmann I",
+      "role": "Verfluchter Hauptmann · Elite · 1/2",
+      "weapon": "BotchJob_GraspingDeadGreatsword",
+      "apparel": [
+        "BotchJob_ScourgeknightArmor",
+        "BotchJob_ScourgeknightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost12",
+      "name": "Verfluchter Hauptmann II",
+      "role": "Verfluchter Hauptmann · Elite · 2/2",
+      "weapon": "BotchJob_GraspingDeadGreatsword",
+      "apparel": [
+        "BotchJob_ScourgeknightArmor",
+        "BotchJob_ScourgeknightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost13",
+      "name": "König der Toten",
+      "role": "König der Toten · Eltex-Stab, gezielte fünffache Blitzfähigkeit, Aura-Unterstützung",
+      "weapon": "Royalty: Eltex staff (exact ThingDef name to verify against installed Royalty defs)",
+      "apparel": []
+    }
+  ],
+  "sources": [
+    "botchjob.profaned",
+    "botchjob.divineorder",
+    "Royalty DLC (Eltex staff)"
+  ],
+  "rimworldVersion": "1.6",
+  "summoning": {
+    "maxGhosts": 13,
+    "baseDurationHours": 6,
+    "maxConfiguredDurationHours": 13,
+    "cooldownHours": 13,
+    "deadGhostsReturnOnNextSummon": true,
+    "modMenuHoursMin": 6,
+    "modMenuHoursMax": 13
+  },
+  "defense": {
+    "supersededBy": "ghostImplementation.naturalArmor"
+  },
+  "questEnemies": {
+    "faction": "The Profaned",
+    "selection": "Weighted by the existing Profaned PawnGroupMaker options",
+    "countMin": 5,
+    "countMax": 50,
+    "note": "Generate a fixed count with weighted per-kind selection, rather than a raw points-budget raid."
+  },
+  "notes": [
+    "Design only: no compiled C# mod yet.",
+    "Existing equipment assignment V4 kept for all 14 characters, but ghost apparel is only a visual reference.",
+    "The original grasping dead greatsword special attack is not automatically copied to Andúril.",
+    "Spinning slash (Andúril): 60 damage, 150% armor penetration.",
+    "King lightning: 20 damage per bolt, 300% armor penetration.",
+    "Aragorn must have Andúril equipped to summon and recall ghosts.",
+    "V7: Summoned ghosts are combat-only; no needs, work, clothing, inventory or replaceable equipment; only select/draft/move/attack and Aragorn summon/recall.",
+    "V7: Need suppression and weapon locking require selective C# logic; native controllable humanlike pawns alone do not guarantee these restrictions.",
+    "V8: Royalty is now a mandatory DLC dependency because the king receives the original Eltex staff and attacks in melee with it.",
+    "V8: King weapon lock identical to other ghosts; no swapping, dropping or gear loot; full replacement on next summon.",
+    "V8: King casts exactly 5 turquoise lightning strikes via player-targeted gizmo; cast center within 15 cells; strikes inside a 6-cell radius around center; 20 damage each, 300% armor penetration, 3 in-game hour cooldown (7500 ticks).",
+    "V8: Quest boss king uses same lightning ability under AI targeting; summoned king uses manual targeting.",
+    "V8: Royal buff applied as a removable Hediff on all other summoned ghosts on same map, default x2 with x1.5/x2.5/x3 menu alternatives; removes immediately when king dies, disappears or is recalled.",
+    "V8: The king itself does not get the speed buff; aura persists independent of equipped staff if king is alive and present.",
+    "V8: Specific Royalty Eltex staff ThingDef must be checked from DLC defs before hardcoding, rather than guessing defName."
+  ],
+  "designStatus": "Planning V8; implementation not compiled or playtested",
+  "anduril": {
+    "name": "Andúril",
+    "modeledOn": "BotchJob_GraspingDeadGreatsword",
+    "mainAttackDamage": 34,
+    "mainAttackCooldownSeconds": 2.85,
+    "mainAttackArmorPenetration": 1.5,
+    "hiltAttackDamageReference": 10,
+    "hiltAttackCooldownSecondsReference": 2.0,
+    "specialRotAttackCopied": false,
+    "onlyAragornCanEquip": true,
+    "summonRequiresAndurilEquipped": true,
+    "spinAttack": {
+      "damage": 60,
+      "armorPenetration": 1.5,
+      "knockback": true,
+      "affectsEnemiesOnly": true,
+      "radiusCells": "to balance",
+      "cooldownSeconds": "to balance"
+    }
+  },
+  "kingLightning": {
+    "damagePerBolt": 20,
+    "armorPenetration": 3.0,
+    "boltsPerCast": 5,
+    "effectColor": "turquoise/cyan",
+    "castIntervalHours": 3,
+    "castIntervalTicks": 7500,
+    "targetingRadiusCells": 15,
+    "targetingRadiusStatus": "confirmed user requirement, this is CAST range from king (not AoE radius)",
+    "targetMode": "Player chooses a center within 15 cells of king; 5 turquoise strikes hit hostile units within 6-cell radius of chosen center. Repeat hits on same hostile are possible if fewer than 5 targets; no friendly targeting.",
+    "friendlyFire": false,
+    "onBossKing": true,
+    "onSummonedKing": true,
+    "weaponRequired": false,
+    "usesWeapon": false,
+    "unarmedMelee": false,
+    "autoCast": false,
+    "targetingRangeCells": 15,
+    "targetAreaRadiusCells": 6,
+    "kingAlsoHasMeleeWeapon": "Royalty Eltex staff, vanilla normal melee attacks",
+    "summonedKingCastMode": "manual targeted Ability gizmo, standard cooldown applies from cast",
+    "bossKingCastMode": "AI selects enemy target location automatically",
+    "abilityHasGizmo": true,
+    "abilityCategory": "active targeted king ability",
+    "selectionRule": "only enemy units; avoid friendly fire; prefer enemies for each bolt, may repeat targets when fewer than five exist",
+    "lineOfSightRule": "implementation detail to validate against map and ability targeting"
+  },
+  "ghostImplementation": {
+    "pawnKindDefinitions": 6,
+    "uniqueUnlockableGhosts": 13,
+    "wearsApparel": false,
+    "naturalArmor": true,
+    "genes": false,
+    "graphicSource": "custom ghost appearance, dark silhouettes with turquoise aura; apparel references only as optional visuals",
+    "weaponSource": "weapon ThingDefs from The Profaned / Divine Order; prevent dropped loot on expiration and death",
+    "armorStats": [
+      "ArmorRating_Sharp",
+      "ArmorRating_Blunt",
+      "ArmorRating_Heat"
+    ],
+    "armorMethod": "No mandatory Hediff; role-specific native armor stats computed by C# StatPart on custom player-controllable humanlike combat pawns (six classes) and shared global scaling.",
+    "classes": [
+      {
+        "role": "swordsman",
+        "count": 3,
+        "proposedRelativeArmor": 1.0
+      },
+      {
+        "role": "archer",
+        "count": 3,
+        "proposedRelativeArmor": 0.75
+      },
+      {
+        "role": "grenadier",
+        "count": 2,
+        "proposedRelativeArmor": 0.85
+      },
+      {
+        "role": "axeman",
+        "count": 2,
+        "proposedRelativeArmor": 1.1
+      },
+      {
+        "role": "captain",
+        "count": 2,
+        "proposedRelativeArmor": 1.4
+      },
+      {
+        "role": "king",
+        "count": 1,
+        "proposedRelativeArmor": 1.6
+      }
+    ],
+    "roleArmorFactorsStatus": "Suggested defaults only; individually configurable",
+    "globalArmorScale": {
+      "levelMin": 1,
+      "levelMax": 20,
+      "anchors": {
+        "1": 50,
+        "10": 1000,
+        "20": 2000
+      },
+      "units": "percentage points for reference class (swordsman)",
+      "interpolation": "linear between anchor points",
+      "note": "A 10th level 1000% is not exactly 10× the 50% on level 1."
+    },
+    "combatTweaksRequired": false,
+    "compatibilityCaveat": "Natural armor may not work as expected with Combat Tweaks Armor Deflection Rework enabled; user likely disables or replaces mod.",
+    "roleSpecificArmorMethod": "Use native ArmorRating_Sharp/Blunt/Heat stat calculation keyed to the ghost PawnKindDef via C# StatPart; no Hediff required for armor.",
+    "requiresHediffForArmor": false,
+    "humanlikeControllablePawns": true,
+    "mechanoidSystemUsed": false,
+    "pawnGraphics": "Independent original spectral soldier sprites inspired by LOTR film green/turquoise translucent ancient armored dead; ragged cloth, glowing eyes, mist and particle aura; no copied movie art.",
+    "playerControl": {
+      "draftable": true,
+      "directMoveAndAttackOrders": true,
+      "canMultiSelect": true,
+      "noNormalColonistWork": true,
+      "searchAndDestroy": "expected if drafted; verify in game",
+      "runAndGun": "expected for drafted ranged weapon pawns; test thrown Cleansing Concoction separately",
+      "notDependentOnMods": true,
+      "selectable": true,
+      "combatOrdersOnly": true,
+      "noWorkTab": true,
+      "apparelGizmosBlocked": true,
+      "inventoryGizmosBlocked": true,
+      "equipmentSwapsBlocked": true,
+      "allowedNeeds": []
+    },
+    "needs": "none: no food, rest, mood, recreation, comfort, etc.; suppress NeedDefs only for project ghost pawns",
+    "needsImplementation": "Selective C# patch on Pawn_NeedsTracker.ShouldHaveNeed for project ghost PawnKindDefs; invoke regeneration/removal of needs on spawn/load; validate other mods in game",
+    "combatOnly": true,
+    "workAllowed": false,
+    "haulingAllowed": false,
+    "rescueAndTreatmentAllowed": false,
+    "allowCarryInventory": false,
+    "allowWearApparel": false,
+    "allowPickUpOrSwapWeapons": false,
+    "playerCommands": [
+      "draft",
+      "move",
+      "attack",
+      "summon via Aragorn",
+      "recall via Aragorn"
+    ],
+    "noNormalPawnWorkOrGizmos": true,
+    "downedOrDeadGhostBehavior": "despawn; no corpse, gear, apparel or loot left behind",
+    "recreateAfterSummon": "Fresh combat pawn with fixed per-slot original weapon Def, natural role-specific armor and 100% combat condition even if previously downed or disarmed",
+    "gearHandling": "Create fixed non-lootable internal original-mod weapon for each ghost at each summon; prevent drop/swap/transfer; destroy with pawn on despawn or death.",
+    "kingEquipment": "Royalty Eltex staff as locked, fixed, non-lootable equipment; re-created at each summon",
+    "kingOnlyAttacks": "Standard melee attacks with the Royalty Eltex staff plus targeted manual 5-strike turquoise lightning ability (boss version controlled by AI)",
+    "buffEligibility": "other summoned project ghosts on same map while summoned king alive/active; Hediff applied only to those; never himself, Aragorn, colonists or Profaned enemies",
+    "armorStatImplementation": "Role-specific native ArmorRating_Sharp/Blunt/Heat calculated via small C# StatPart based on pawn identification and global setting; no armor Hediff.",
+    "kingHasWeapon": true,
+    "kingOwnsOneFixedWeapon": "Eltex staff (Royalty DLC)",
+    "kingCanAttackInMelee": true
+  },
+  "aragonDesign": {
+    "biotechGenes": [
+      "WoundHealing_Fast",
+      "Immunity_Strong",
+      "Superclotting",
+      "DarkVision",
+      "StrongStomach",
+      "RobustDigestion",
+      "MinTemp_SmallDecrease",
+      "MeleeDamage_Strong",
+      "Pain_Reduced",
+      "AptitudeTerrible_Plants",
+      "AptitudeTerrible_Construction",
+      "AptitudeTerrible_Crafting",
+      "AptitudePoor_Artistic"
+    ],
+    "traits": [
+      "Jogger",
+      "Fast Learner",
+      "Optimist",
+      "Beautiful"
+    ],
+    "majorPassions": [
+      "Melee",
+      "Shooting"
+    ],
+    "metabolismTarget": -5,
+    "introQuest": "Unique prisoner rescue guarded by The Profaned"
+  },
+  "bossVictory": {
+    "unlockWhen": "Tagged quest boss pawn downed or killed while Aragorn is physically on the same active quest map and has Anduril equipped",
+    "lastHitByAragornRequired": false,
+    "canBeDefeatedByAllies": true,
+    "aragornPresenceOnly": false,
+    "saveProgressAndPreventDuplicateUnlock": true,
+    "onFailureIfAragornAbsentOrWithoutSword": "Do not unlock; quest stays unresolved or explicitly fails; gameplay test required"
+  },
+  "kingAura": {
+    "name": "Königlicher Befehl",
+    "type": "passive removable Hediff on other summoned ghosts, sustained by presence of the summoned king",
+    "duration": "present only while king active and alive on same map; remove immediately after king death, downing, departure, recall or expiry",
+    "targets": "all other summoned Aragorn ghost pawns on same map, excluding king, Aragorn, colonists and all non-project units",
+    "buffChoices": [
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "defaultBuff": 2.0,
+    "moveSpeedFactor": "multiplied by configured buff",
+    "meleeCooldownFactor": "divided by configured buff",
+    "rangedCooldownFactor": "divided by configured buff",
+    "aimingDelayFactor": "divided by configured buff",
+    "burstShotInterval": "weapon-defined burst spacing may need separate code; not promised exact factor for burst-type weapons",
+    "implementation": "Assign/removal of named status Hediff via C# on summoned ghost pawns; a custom StatPart or similar runtime adjustment reads the active Hediff and configured multiplier to apply MoveSpeed ×B and melee/ranged cooldown/aiming delays ÷B. Remove Hediff on king death/recall/despawn or when recipients despawn; reapply on new summon.",
+    "kingBuffsItself": false,
+    "kingRequiresEquippedWeapon": false,
+    "status": "planned, not playtested",
+    "kingCarriesWeapon": "Royalty Eltex staff",
+    "effectAsHediff": true
+  }
+}

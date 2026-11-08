@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- Damage / attack period from BotchJob_GraspingDeadGreatsword, penetration customized. -->
+  <ThingDef ParentName="BaseWeapon">
+    <defName>AR_Anduril</defName>
+    <label>Andúril</label>
+    <description>Die Flamme des Westens. Aragorns einzigartige Klinge. Schaltet die Geisterprüfungen, die Beschwörung und den Rundumschlag frei.</description>
+    <graphicData>
+      <texPath>Things/Weapons/Anduril</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>1.45</drawSize>
+    </graphicData>
+    <thingCategories><li>WeaponsMelee</li></thingCategories>
+    <techLevel>Ultra</techLevel>
+    <statBases>
+      <MaxHitPoints>999999</MaxHitPoints>
+      <MarketValue>5000</MarketValue>
+      <Mass>4</Mass>
+    </statBases>
+    <weaponTags><li>AR_Anduril</li></weaponTags>
+    <tools>
+      <li>
+        <label>Knauf</label>
+        <capacities><li>Blunt</li></capacities>
+        <power>10</power>
+        <cooldownTime>2.0</cooldownTime>
+      </li>
+      <li>
+        <label>Schneide</label>
+        <capacities><li>Cut</li></capacities>
+        <power>34</power>
+        <cooldownTime>2.85</cooldownTime>
+        <armorPenetration>1.5</armorPenetration>
+      </li>
+    </tools>
+  </ThingDef>
+</Defs>

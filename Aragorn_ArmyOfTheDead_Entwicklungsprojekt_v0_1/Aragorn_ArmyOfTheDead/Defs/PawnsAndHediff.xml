@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <PawnKindDef Name="AR_GhostBase" Abstract="True">
+    <race>Human</race>
+    <label>Geisterkrieger</label>
+    <combatPower>150</combatPower>
+    <isFighter>true</isFighter>
+    <apparelMoney>0</apparelMoney>
+    <weaponMoney>0</weaponMoney>
+    <apparelTags />
+    <weaponTags />
+    <apparelRequired />
+    <itemQuality>Normal</itemQuality>
+  </PawnKindDef>
+  <PawnKindDef ParentName="AR_GhostBase"><defName>AR_GhostSword</defName><label>Schwertgeist</label></PawnKindDef>
+  <PawnKindDef ParentName="AR_GhostBase"><defName>AR_GhostArcher</defName><label>Geisterbogenschütze</label></PawnKindDef>
+  <PawnKindDef ParentName="AR_GhostBase"><defName>AR_GhostGrenadier</defName><label>Geistergranatwerfer</label></PawnKindDef>
+  <PawnKindDef ParentName="AR_GhostBase"><defName>AR_GhostAxe</defName><label>Axtgeist</label></PawnKindDef>
+  <PawnKindDef ParentName="AR_GhostBase"><defName>AR_GhostCaptain</defName><label>Verfluchter Hauptmann</label><combatPower>350</combatPower></PawnKindDef>
+  <PawnKindDef ParentName="AR_GhostBase"><defName>AR_GhostKing</defName><label>König der Toten</label><combatPower>500</combatPower></PawnKindDef>
+  <PawnKindDef>
+    <defName>AR_Aragorn</defName>
+    <label>Aragorn</label>
+    <race>Human</race>
+    <combatPower>300</combatPower>
+    <isFighter>true</isFighter>
+    <apparelMoney>0</apparelMoney>
+    <weaponMoney>0</weaponMoney>
+    <apparelTags />
+    <weaponTags />
+  </PawnKindDef>
+  <HediffDef>
+    <defName>AR_KinglyCommand</defName>
+    <label>Königlicher Befehl</label>
+    <description>Solange der König der Toten auf der Karte aktiv ist, bewegen und kämpfen die anderen Geister schneller.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <isBad>false</isBad>
+    <stages><li /></stages>
+  </HediffDef>
+</Defs>

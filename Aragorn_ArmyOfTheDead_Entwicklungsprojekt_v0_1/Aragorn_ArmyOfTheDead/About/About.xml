@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Aragorn – Armee der Toten (Entwicklungsstand)</name>
+  <author>Aragorn Mod Project</author>
+  <packageId>aragorn.armyofthedead</packageId>
+  <description>Aragorn, Andúril und 13 freischaltbare Geister. Frühversion zum Testen der Kampfmechaniken. Der vollständige Weltkarten-Queststrang und finale Geistergrafiken sind noch nicht implementiert.</description>
+  <supportedVersions><li>1.6</li></supportedVersions>
+  <modDependencies>
+    <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
+    <li><packageId>Ludeon.RimWorld.Biotech</packageId><displayName>Biotech</displayName></li>
+    <li><packageId>Ludeon.RimWorld.Royalty</packageId><displayName>Royalty</displayName></li>
+    <li><packageId>botchjob.profaned</packageId><displayName>The Profaned</displayName></li>
+    <li><packageId>botchjob.divineorder</packageId><displayName>The Divine Order</displayName></li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>Ludeon.RimWorld.Biotech</li>
+    <li>Ludeon.RimWorld.Royalty</li>
+    <li>botchjob.profaned</li>
+    <li>botchjob.divineorder</li>
+  </loadAfter>
+</ModMetaData>

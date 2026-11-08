@@ -1,0 +1,181 @@
+{
+  "format": "AragornEquipmentPlan",
+  "version": 4,
+  "characters": [
+    {
+      "id": "aragorn",
+      "name": "Aragorn",
+      "role": "Erbe Isildurs · Andúril wird separat gebaut",
+      "weapon": null,
+      "apparel": [
+        "BotchJob_CrusaderArmor",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost01",
+      "name": "Schwertgeist I",
+      "role": "Schwertgeist · 1/3",
+      "weapon": "BotchJob_ProfanedScimitar",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_RaggedLegwraps"
+      ]
+    },
+    {
+      "id": "ghost02",
+      "name": "Schwertgeist II",
+      "role": "Schwertgeist · 2/3",
+      "weapon": "BotchJob_ProfanedShotel",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_RaggedLegwraps"
+      ]
+    },
+    {
+      "id": "ghost03",
+      "name": "Schwertgeist III",
+      "role": "Schwertgeist · 3/3",
+      "weapon": "BotchJob_ScourgeknightGreatsword",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_RaggedLegwraps"
+      ]
+    },
+    {
+      "id": "ghost04",
+      "name": "Bogenschütze I",
+      "role": "Bogenschütze · 1/3",
+      "weapon": "BotchJob_SpectralGreatbow",
+      "apparel": [
+        "BotchJob_DivineOrderSkirmisherArmor",
+        "BotchJob_WeatheredChainmailCoif"
+      ]
+    },
+    {
+      "id": "ghost05",
+      "name": "Bogenschütze II",
+      "role": "Bogenschütze · 2/3",
+      "weapon": "BotchJob_SpectralGreatbow",
+      "apparel": [
+        "BotchJob_DivineOrderSkirmisherArmor",
+        "BotchJob_WeatheredChainmailCoif"
+      ]
+    },
+    {
+      "id": "ghost06",
+      "name": "Bogenschütze III",
+      "role": "Bogenschütze · 3/3",
+      "weapon": "BotchJob_SpectralGreatbow",
+      "apparel": [
+        "BotchJob_DivineOrderSkirmisherArmor",
+        "BotchJob_WeatheredChainmailCoif"
+      ]
+    },
+    {
+      "id": "ghost07",
+      "name": "Granatwerfer I",
+      "role": "Granatwerfer · 1/2",
+      "weapon": "BotchJob_DivineOrderCleansingConcoction",
+      "apparel": [
+        "BotchJob_InquisitorArmor",
+        "BotchJob_InquisitorHat",
+        "BotchJob_DivineOrderZealotRobes"
+      ]
+    },
+    {
+      "id": "ghost08",
+      "name": "Granatwerfer II",
+      "role": "Granatwerfer · 2/2",
+      "weapon": "BotchJob_DivineOrderCleansingConcoction",
+      "apparel": [
+        "BotchJob_InquisitorArmor",
+        "BotchJob_InquisitorHat",
+        "BotchJob_DivineOrderZealotRobes"
+      ]
+    },
+    {
+      "id": "ghost09",
+      "name": "Axtgeist I",
+      "role": "Axtgeist · 1/2",
+      "weapon": "BotchJob_ScourgeknightGreataxe",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost10",
+      "name": "Axtgeist II",
+      "role": "Axtgeist · 2/2",
+      "weapon": "BotchJob_ScourgeknightGreataxe",
+      "apparel": [
+        "BotchJob_DivineOrderPlateArmor",
+        "BotchJob_DivineOrderLightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost11",
+      "name": "Verfluchter Hauptmann I",
+      "role": "Verfluchter Hauptmann · Elite · 1/2",
+      "weapon": "BotchJob_GraspingDeadGreatsword",
+      "apparel": [
+        "BotchJob_ScourgeknightArmor",
+        "BotchJob_ScourgeknightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost12",
+      "name": "Verfluchter Hauptmann II",
+      "role": "Verfluchter Hauptmann · Elite · 2/2",
+      "weapon": "BotchJob_GraspingDeadGreatsword",
+      "apparel": [
+        "BotchJob_ScourgeknightArmor",
+        "BotchJob_ScourgeknightHelmet",
+        "BotchJob_DivineOrderTunic"
+      ]
+    },
+    {
+      "id": "ghost13",
+      "name": "König der Toten",
+      "role": "Abschlussboss · Türkisgrüne Blitze",
+      "weapon": "BotchJob_BloodflameStaff",
+      "apparel": [
+        "BotchJob_GravetenderRobes",
+        "BotchJob_DivineOrderTunic",
+        "BotchJob_BoneCrown"
+      ]
+    }
+  ],
+  "sources": [
+    "botchjob.profaned",
+    "botchjob.divineorder"
+  ],
+  "rimworldVersion": "1.6",
+  "summoning": {
+    "maxGhosts": 13,
+    "baseDurationHours": 6,
+    "maxConfiguredDurationHours": 13,
+    "cooldownHours": 13,
+    "deadGhostsReturnOnNextSummon": true
+  },
+  "defense": {
+    "regularArmorProtectionMultiplier": 2,
+    "regularArmorHitPointsMultiplier": 2,
+    "eliteArmorProtectionMultiplier": 3,
+    "eliteArmorHitPointsMultiplier": 3,
+    "implemented": false
+  },
+  "questEnemies": "Additional The Profaned enemies support ghosts",
+  "notes": [
+    "Andúril to be defined separately",
+    "King: lightning spells and glow",
+    "Cleansing concoction is a thrown grenade, not a machine grenade launcher"
+  ]
+}

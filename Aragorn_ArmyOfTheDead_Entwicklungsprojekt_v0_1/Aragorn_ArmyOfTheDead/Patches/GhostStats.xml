@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Patch>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/StatDef[defName="ArmorRating_Sharp"]/parts</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="ArmorRating_Sharp"]/parts</xpath>
+      <value>
+        <li Class="AragornArmy.StatPartGhostNaturalArmor"/>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="ArmorRating_Sharp"]</xpath>
+      <value>
+        <parts>
+          <li Class="AragornArmy.StatPartGhostNaturalArmor"/>
+        </parts>
+      </value>
+    </nomatch>
+  </Operation>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/StatDef[defName="ArmorRating_Blunt"]/parts</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="ArmorRating_Blunt"]/parts</xpath>
+      <value>
+        <li Class="AragornArmy.StatPartGhostNaturalArmor"/>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="ArmorRating_Blunt"]</xpath>
+      <value>
+        <parts>
+          <li Class="AragornArmy.StatPartGhostNaturalArmor"/>
+        </parts>
+      </value>
+    </nomatch>
+  </Operation>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/StatDef[defName="ArmorRating_Heat"]/parts</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="ArmorRating_Heat"]/parts</xpath>
+      <value>
+        <li Class="AragornArmy.StatPartGhostNaturalArmor"/>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="ArmorRating_Heat"]</xpath>
+      <value>
+        <parts>
+          <li Class="AragornArmy.StatPartGhostNaturalArmor"/>
+        </parts>
+      </value>
+    </nomatch>
+  </Operation>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/StatDef[defName="MoveSpeed"]/parts</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="MoveSpeed"]/parts</xpath>
+      <value>
+        <li Class="AragornArmy.StatPartKinglyCommand"/>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="MoveSpeed"]</xpath>
+      <value>
+        <parts>
+          <li Class="AragornArmy.StatPartKinglyCommand"/>
+        </parts>
+      </value>
+    </nomatch>
+  </Operation>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/StatDef[defName="MeleeCooldownFactor"]/parts</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="MeleeCooldownFactor"]/parts</xpath>
+      <value>
+        <li Class="AragornArmy.StatPartKinglyCommand"/>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="MeleeCooldownFactor"]</xpath>
+      <value>
+        <parts>
+          <li Class="AragornArmy.StatPartKinglyCommand"/>
+        </parts>
+      </value>
+    </nomatch>
+  </Operation>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/StatDef[defName="RangedCooldownFactor"]/parts</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="RangedCooldownFactor"]/parts</xpath>
+      <value>
+        <li Class="AragornArmy.StatPartKinglyCommand"/>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="RangedCooldownFactor"]</xpath>
+      <value>
+        <parts>
+          <li Class="AragornArmy.StatPartKinglyCommand"/>
+        </parts>
+      </value>
+    </nomatch>
+  </Operation>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/StatDef[defName="AimingDelayFactor"]/parts</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="AimingDelayFactor"]/parts</xpath>
+      <value>
+        <li Class="AragornArmy.StatPartKinglyCommand"/>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/StatDef[defName="AimingDelayFactor"]</xpath>
+      <value>
+        <parts>
+          <li Class="AragornArmy.StatPartKinglyCommand"/>
+        </parts>
+      </value>
+    </nomatch>
+  </Operation>
+</Patch>
