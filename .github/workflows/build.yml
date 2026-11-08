@@ -1,0 +1,28 @@
+name: Build Aragorn Army of the Dead
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/**'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Compile RimWorld 1.6 assembly
+        run: dotnet build "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/Aragorn_ArmyOfTheDead/Source/Aragorn_ArmyOfTheDead.csproj" -c Release --nologo
+      - name: Upload mod build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aragorn-ArmyOfTheDead-build
+          path: Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/Aragorn_ArmyOfTheDead/
+          if-no-files-found: error
