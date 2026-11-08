@@ -20,6 +20,7 @@ namespace AragornArmy
         private List<Pawn> ghosts = new List<Pawn>();
         private List<int> initializedAragornIds = new List<int>();
         private Pawn trialBoss;
+        private Pawn trialAragorn; // Save the original, sword-bearing quest participant.
         private Map trialMap;
         private int trialIndex = -1;
         private bool cleanUpInProgress;
@@ -35,6 +36,7 @@ namespace AragornArmy
             Scribe_Collections.Look(ref ghosts, "ghosts", LookMode.Reference);
             Scribe_Collections.Look(ref initializedAragornIds, "initializedAragornIds", LookMode.Value);
             Scribe_References.Look(ref trialBoss, "trialBoss");
+            Scribe_References.Look(ref trialAragorn, "trialAragorn");
             Scribe_References.Look(ref trialMap, "trialMap");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -60,10 +62,18 @@ namespace AragornArmy
             {
                 foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned)
                 {
-                    if (GhostDefinitions.IsAragorn(pawn) && !initializedAragornIds.Contains(pawn.thingIDNumber))
+                    if (GhostDefinitions.IsAragorn(pawn))
                     {
-                        initializedAragornIds.Add(pawn.thingIDNumber);
-                        PrepareAragorn(pawn);
+                        if (!initializedAragornIds.Contains(pawn.thingIDNumber))
+                        {
+                            initializedAragornIds.Add(pawn.thingIDNumber);
+                            PrepareAragorn(pawn);
+                        }
+                        else if (Ticks % 600 == 0)
+                        {
+                            // Repairs older saved Aragorns as well: traits were not deterministic in v0.1.
+                            EnsureAragornTraits(pawn);
+                        }
                     }
                 }
             }
@@ -158,17 +168,38 @@ namespace AragornArmy
             if (i < 0 || i >= GhostDefinitions.PawnKinds.Length) return null;
             PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail(GhostDefinitions.PawnKinds[i]);
             if (kind == null) { Log.Error("[Aragorn] Missing PawnKind for index " + i); return null; }
-            Pawn pawn = PawnGenerator.GeneratePawn(kind, faction);
+            // Generate a combat-only pawn without random backgrounds, apparel,
+            // equipment, relationships, ideology, addictions or age traits.
+            var request = new PawnGenerationRequest(kind, faction,
+                forceGenerateNewPawn: true, canGeneratePawnRelations: false,
+                allowPregnant: false, allowFood: false, allowAddictions: false,
+                forceNoIdeo: true, forceNoBackstory: true, forbidAnyTitle: true,
+                forceBaselinerChance: 1f, dontGiveWeapon: true,
+                maximumAgeTraits: 0, minimumAgeTraits: 0, forceNoGear: true);
+            Pawn pawn = PawnGenerator.GeneratePawn(request);
             pawn.Name = new NameSingle(GhostDefinitions.Names[i]);
-            if (pawn.apparel != null)
+            if (pawn.story != null)
             {
+                pawn.story.Childhood = null;
+                pawn.story.Adulthood = null;
+                pawn.story.title = null;
+                if (pawn.story.traits != null)
+                    foreach (Trait trait in pawn.story.traits.allTraits.ToList())
+                        if (trait.sourceGene == null) pawn.story.traits.RemoveTrait(trait);
+            }
+            if (pawn.apparel != null)
                 foreach (Apparel app in pawn.apparel.WornApparel.ToList())
                     app.Destroy(DestroyMode.Vanish);
-            }
-            pawn.story.skinColorOverride = new Color(.30f, .82f, .76f);
-            // These are not Biotech xenotypes. Clear any genes assigned by random human generation.
+            // No randomly generated bionic parts, wounds or implants.
+            if (pawn.health != null) pawn.health.Reset();
             if (pawn.genes != null)
                 foreach (Gene gene in pawn.genes.GenesListForReading.ToList()) pawn.genes.RemoveGene(gene);
+            if (pawn.story != null)
+            {
+                pawn.story.skinColorOverride = new Color(.25f, .85f, .77f);
+                pawn.story.HairColor = new Color(.38f, .92f, .84f);
+                pawn.Drawer.renderer.SetAllGraphicsDirty();
+            }
             if (pawn.needs != null) pawn.needs.AddOrRemoveNeedsAsAppropriate();
             GhostDefinitions.SetFixedWeapon(pawn, GhostDefinitions.Weapons[i]);
             return pawn;
@@ -208,6 +239,7 @@ namespace AragornArmy
             if (hostile == null) { Reject("Keine aktive Profaned-Fraktion gefunden."); return; }
             trialIndex = Unlocked;
             trialMap = aragorn.Map;
+            trialAragorn = aragorn; // Anduril was equipped when starting the fight.
             trialBoss = CreateGhost(trialIndex, hostile);
             if (trialBoss == null) return;
             IntVec3 location = CellFinder.RandomClosewalkCellNear(aragorn.Position, aragorn.Map, 24);
@@ -235,7 +267,9 @@ namespace AragornArmy
         {
             if (trialBoss == null || trialIndex < 0) return;
             if (!trialBoss.Dead && !trialBoss.Downed) return;
-            bool validAragorn = trialMap != null && trialMap.mapPawns.AllPawnsSpawned.Any(GhostDefinitions.HasAnduril);
+            // Knocked-down Aragorn still counts if he started armed and stays alive on the map.
+            bool validAragorn = trialMap != null && trialAragorn != null &&
+                trialAragorn.Spawned && !trialAragorn.Dead && trialAragorn.Map == trialMap;
             if (validAragorn && trialIndex == Unlocked)
             {
                 Unlocked++;
@@ -245,6 +279,7 @@ namespace AragornArmy
                 Messages.Message("Prüfung nicht bestanden: Aragorn muss mit Andúril auf der Karte sein.", MessageTypeDefOf.RejectInput);
             trialBoss = null;
             trialMap = null;
+            trialAragorn = null;
             trialIndex = -1;
         }
 
@@ -347,21 +382,7 @@ namespace AragornArmy
                     GeneDef gene = DefDatabase<GeneDef>.GetNamedSilentFail(name);
                     if (gene != null && !pawn.genes.GenesListForReading.Any(g => g.def == gene)) pawn.genes.AddGene(gene, xenogene: true);
                 }
-            if (pawn.story != null)
-                foreach (var entry in AragornTraits)
-                {
-                    TraitDef trait = DefDatabase<TraitDef>.GetNamedSilentFail(entry.defName);
-                    if (trait != null && !pawn.story.traits.HasTrait(trait)) pawn.story.traits.GainTrait(new Trait(trait, entry.degree));
-                }
-            if (pawn.skills != null)
-            {
-                var melee = pawn.skills.GetSkill(SkillDefOf.Melee);
-                var shooting = pawn.skills.GetSkill(SkillDefOf.Shooting);
-                melee.Level = Math.Max(18, melee.Level);
-                shooting.Level = Math.Max(18, shooting.Level);
-                melee.passion = Passion.Major;
-                shooting.passion = Passion.Major;
-            }
+            EnsureAragornTraits(pawn);
             if (pawn.apparel != null)
             {
                 WearAragorn(pawn, "BotchJob_CrusaderArmor");
@@ -371,6 +392,32 @@ namespace AragornArmy
             // Replace with the rescue / sword quest reward during the quest milestone.
             GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril");
             Messages.Message("Aragorn ist bereit. Andúril enthält Beschwörung und lokale Testprüfungen.", MessageTypeDefOf.PositiveEvent);
+        }
+
+        private static void EnsureAragornTraits(Pawn pawn)
+        {
+            if (pawn == null || pawn.story == null || pawn.story.traits == null) return;
+            TraitSet set = pawn.story.traits;
+            foreach (Trait existing in set.allTraits.ToList())
+            {
+                bool desired = AragornTraits.Any(t => t.defName == existing.def.defName && t.degree == existing.Degree);
+                if (!desired && existing.sourceGene == null) set.RemoveTrait(existing, unsuppressConflicts: true);
+            }
+            foreach (var entry in AragornTraits)
+            {
+                TraitDef def = DefDatabase<TraitDef>.GetNamedSilentFail(entry.defName);
+                if (def != null && !set.HasTrait(def, entry.degree))
+                    set.GainTrait(new Trait(def, entry.degree), suppressConflicts: true);
+            }
+            if (pawn.skills != null)
+            {
+                SkillRecord melee = pawn.skills.GetSkill(SkillDefOf.Melee);
+                SkillRecord shooting = pawn.skills.GetSkill(SkillDefOf.Shooting);
+                melee.Level = Math.Max(18, melee.Level);
+                shooting.Level = Math.Max(18, shooting.Level);
+                melee.passion = Passion.Major;
+                shooting.passion = Passion.Major;
+            }
         }
 
         private static void WearAragorn(Pawn pawn, string defName)
