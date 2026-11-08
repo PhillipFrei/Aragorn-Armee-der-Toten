@@ -62,7 +62,9 @@ namespace AragornArmy
             {
                 foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned)
                 {
-                    if (GhostDefinitions.IsAragorn(pawn))
+                    // Captive quest Aragorn is prepared only AFTER joining the player.
+                    // This avoids handing Anduril to the prisoner's hostile captors.
+                    if (GhostDefinitions.IsAragorn(pawn) && pawn.Faction == Faction.OfPlayer)
                     {
                         if (!initializedAragornIds.Contains(pawn.thingIDNumber))
                         {
