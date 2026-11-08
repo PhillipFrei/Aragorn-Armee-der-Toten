@@ -234,9 +234,25 @@ namespace AragornArmy
         public void StartTrial(Pawn aragorn)
         {
             if (!CanStartTrial(aragorn, out string reason)) { Reject(reason); return; }
+            // The Profaned mod supplies its faction definition and its PawnGroupMaker,
+            // but a Profaned world faction is NOT necessary. It might never have spawned
+            // or have been eliminated earlier in this save.
             var factionDef = DefDatabase<FactionDef>.GetNamedSilentFail("BotchJob_ProfanedFaction");
-            Faction hostile = factionDef == null ? null : Find.FactionManager.FirstFactionOfDef(factionDef);
-            if (hostile == null) { Reject("Keine aktive Profaned-Fraktion gefunden."); return; }
+            if (factionDef == null)
+            {
+                Reject("Profaned-Fraktionsdefinition fehlt. Ist The Profaned geladen?");
+                Log.Error("[Aragorn] Missing BotchJob_ProfanedFaction def. Trial requires the loaded mod, not its world faction.");
+                return;
+            }
+            // A guaranteed hostile, hidden vanilla faction provides ownership and AI.
+            // The combatants are still generated from the REAL Profaned PawnKindDefs and
+            // the Profaned PawnGroupMaker weights; we do not alter world factions or diplomacy.
+            Faction hostile = Faction.OfAncientsHostile;
+            if (hostile == null)
+            {
+                Reject("Keine feindliche Test-Fraktion verfügbar (AncientsHostile).");
+                return;
+            }
             trialIndex = Unlocked;
             trialMap = aragorn.Map;
             trialAragorn = aragorn; // Anduril was equipped when starting the fight.
