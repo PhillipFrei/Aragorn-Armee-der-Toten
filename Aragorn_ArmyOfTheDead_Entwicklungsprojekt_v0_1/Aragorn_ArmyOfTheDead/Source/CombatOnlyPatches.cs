@@ -141,8 +141,8 @@ namespace AragornArmy
             yield return spin;
 
             Command_Action trial = new Command_Action {
-                defaultLabel = "Nächste Geisterprüfung (Test)",
-                defaultDesc = "Test-Begegnung auf dieser Karte mit einem Geisterboss und Profaned-Wachen. Die richtige Weltkarten-Quest folgt später.",
+                defaultLabel = "Nächste Geisterkrypta entdecken",
+                defaultDesc = "Startet die nächste der 13 Weltkartenprüfungen. Reise mit Aragorn zur Krypta, besiege den Geisterboss und die Profaned-Legion, um den Geist freizuschalten.",
                 action = () => game.StartTrial(pawn)
             };
             if (!game.CanStartTrial(pawn, out string trialReason)) trial.Disable(trialReason);
