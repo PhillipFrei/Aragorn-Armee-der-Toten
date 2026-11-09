@@ -3,7 +3,7 @@
   <name>Aragorn – Armee der Toten (Entwicklungsstand)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>Version 0.12: Aragorn retten, Andúril in einer goldenen Schmiedehalle der Divine Order neu schmieden lassen und dabei mehrere Profaned-Angriffswellen abwehren. Danach sind die 13 Weltkarten-Geisterprüfungen und bewaffnete Wraith-Beschwörungen spielbar. Die goldenen Gebäude bestehen aus echten Vanilla-Materialien. Kartenbau und Schmiedeanimation sind noch Prototypen; eigene Grafiken folgen.</description>
+  <description>Version 0.13: Die goldene Divine-Order-Schmiede wird zwölf Ingame-Stunden lang gegen zwölf stündlich eintreffende, eskalierende Profaned-Legionen samt Elite-Einheiten verteidigt. Die Goldgebäude sind Eigentum der Divine Order, gewaltsame Beschädigung kostet Ruf. Aragorn erscheint bereits in der Rettungszelle als gerüsteter, langhaariger, bartloser Held mit Standardkörper; der Gefängnisraum liegt getrennt von den Gegnern. Größere mehrteilige Krypten mit Original-Profaned-Dekorationen. Spielbare Andúril-Quest und 13 Geisterprüfungen. Erste Testversion, neue Missionen noch im Spiel zu prüfen.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
