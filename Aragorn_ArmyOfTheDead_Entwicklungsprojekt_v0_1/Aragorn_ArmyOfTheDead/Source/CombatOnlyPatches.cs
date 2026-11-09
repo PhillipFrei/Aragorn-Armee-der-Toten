@@ -70,6 +70,18 @@ namespace AragornArmy
         }
     }
 
+    // VEF's animal-style draft controls do not always set Pawn.Drafted.
+    // Ensure a fixed ToolUser weapon is visible even when the spirit is idle.
+    [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.CarryWeaponOpenly))]
+    internal static class ShowBoundGhostWeapons
+    {
+        private static void Postfix(Pawn pawn, ref bool __result)
+        {
+            if (GhostDefinitions.IsGhost(pawn) && pawn.equipment?.Primary != null)
+                __result = true;
+        }
+    }
+
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
     internal static class AragornAndGhostGizmos
     {
