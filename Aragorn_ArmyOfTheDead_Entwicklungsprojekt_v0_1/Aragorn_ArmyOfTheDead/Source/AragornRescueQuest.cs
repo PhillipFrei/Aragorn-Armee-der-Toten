@@ -198,10 +198,10 @@ namespace AragornArmy
                 Log.Warning("[Aragorn] Kein freies Weltkartenfeld für Aragorns Gefängnis gefunden; versuche es später erneut.");
                 return;
             }
-            Faction hostile = Faction.OfAncientsHostile ?? Faction.OfMechanoids ?? Faction.OfInsects;
+            Faction hostile = ProfanedEncounterUtility.GetOrCreateFaction();
             if (hostile == null)
             {
-                Log.Warning("[Aragorn] Keine feindliche Vanilla-Fraktion für die Rettungsmission verfügbar.");
+                Log.Warning("[Aragorn] Originale Profaned-Fraktion nicht verfügbar.");
                 return;
             }
             try
@@ -255,38 +255,26 @@ namespace AragornArmy
                 prisoner.health.AddHediff(HediffDefOf.Anesthetic);
                 captive = prisoner;
 
-                var group = profanedDef.pawnGroupMakers == null ? null
-                    : profanedDef.pawnGroupMakers.FirstOrDefault(x => x.kindDef == PawnGroupKindDefOf.Combat);
-                var options = group == null ? new List<PawnGenOption>()
-                    : group.options.Where(x => x.kind != null && x.selectionWeight > 0).ToList();
-                if (options.Count == 0)
+                Faction guardFaction = ProfanedEncounterUtility.GetOrCreateFaction();
+                if (guardFaction == null)
                 {
-                    Log.Error("[Aragorn] Keine Profaned-Kampfgruppenoptionen gefunden; der Rettungskampf kann nicht beginnen.");
+                    Log.Error("[Aragorn] Rescue camp cannot spawn actual Profaned enemy faction.");
                     return;
                 }
-
-                Faction guardFaction = rescueSite.Faction;
+                if (rescueSite.Faction != guardFaction) rescueSite.SetFaction(guardFaction);
                 int count = Mathf.Clamp(AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount, 5, 50);
-                for (int i = 0; i < count; i++)
-                {
-                    PawnGenOption choice = options.RandomElementByWeight(x => x.selectionWeight);
-                    try
-                    {
-                        Pawn guard = PawnGenerator.GeneratePawn(choice.kind, guardFaction);
-                        IntVec3 pos = CellFinder.RandomClosewalkCellNear(prisonCell, map, 18);
-                        GenSpawn.Spawn(guard, pos, map);
-                        guards.Add(guard);
-                    }
-                    catch (Exception e) { Log.Warning("[Aragorn] Profaned-Wache konnte nicht erzeugt werden: " + e.Message); }
-                }
+                // A small slate crypt is now generated rather than only an empty map.
+                prisonCell = AragornCryptBuilder.Build(map, prisonCell);
+                guards.AddRange(ProfanedEncounterUtility.SpawnGuards(map, prisonCell, guardFaction, count));
                 if (guards.Count == 0)
                 {
                     Log.Error("[Aragorn] Rettungslager hat keine Wachen erhalten.");
                     return;
                 }
+                // RimWorld's LordToil_DefendPoint breaks for wanderRadius > Region.GridSize (12).
                 LordMaker.MakeNewLord(guardFaction,
-                    new LordJob_DefendPoint(prisonCell, wanderRadius: 20f,
-                        defendRadius: 30f, isCaravanSendable: false, addFleeToil: false),
+                    new LordJob_DefendPoint(prisonCell, wanderRadius: 8f,
+                        defendRadius: 28f, isCaravanSendable: false, addFleeToil: false),
                     map, guards);
                 encounterCreated = true;
                 Messages.Message("Aragorn ist hier gefangen! Besiege seine " + guards.Count
