@@ -165,14 +165,8 @@ namespace AragornArmy
 
             Quest quest = Quest.MakeRaw();
             quest.root = root;
-            quest.name = "Aragorn finden – der gefangene König";
-            quest.description = "Kundschafter berichten von einem gefangenen Krieger namens Aragorn. "
-                + "Nimm diesen Auftrag an, um den Gefängnisort auf der Weltkarte aufzudecken. "
-                + "Reise mit einer Karawane dorthin und besiege seine Profaned-Bewacher. "
-                + "Sobald die Wachen besiegt sind, wird Aragorn befreit und schließt sich dir an. "
-                + "\n\nDies ist die erste spielbare Rettungsmission (Teststand): Die individuell "
-                + "gestaltete Kryptenkarte folgt später. Der Auftrag hat kein Ablaufdatum. "
-                + "Eine Profaned-Weltfraktion ist nicht erforderlich.";
+            quest.name = AragornText.T("AR_Rescue_Title");
+            quest.description = AragornText.T("AR_Rescue_Description");
             quest.acceptanceExpireTick = -1;
             quest.SetNotYetAccepted();
             quest.hidden = false;
@@ -210,15 +204,14 @@ namespace AragornArmy
                     ifHostileThenMustRemainHostile: false,
                     threatPoints: StorytellerUtility.DefaultSiteThreatPointsNow());
                 if (created == null) return;
-                created.customLabel = "Aragorns Gefängnis";
+                created.customLabel = AragornText.T("AR_Rescue_Site");
                 Find.WorldObjects.Add(created);
                 rescueSite = created;
                 siteCreated = true;
                 var link = rescueQuest.GetFirstPartOfType<QuestPart_AragornRescueTarget>();
                 if (link != null) link.site = created;
-                Find.LetterStack.ReceiveLetter("Aragorns Gefängnis gefunden",
-                    "Der Rettungsort ist jetzt auf der Weltkarte markiert. Reise dorthin, "
-                    + "besiege die Profaned-Bewacher und befreie Aragorn.",
+                Find.LetterStack.ReceiveLetter(AragornText.T("AR_Rescue_ArrivalTitle"),
+                    AragornText.T("AR_Rescue_ArrivalBody"),
                     LetterDefOf.NeutralEvent, created);
                 Log.Message("[Aragorn] Rettungsort auf Weltkarte erstellt: " + tile);
             }
@@ -281,8 +274,8 @@ namespace AragornArmy
                         defendRadius: 28f, isCaravanSendable: false, addFleeToil: false),
                     map, guards);
                 encounterCreated = true;
-                Messages.Message("Aragorn ist hier gefangen! Besiege seine " + guards.Count
-                    + " Profaned-Bewacher.", prisoner, MessageTypeDefOf.ThreatBig);
+                Messages.Message(AragornText.F("AR_Rescue_Encounter", guards.Count),
+                    prisoner, MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Rettungsmission gestartet: " + guards.Count + " Wachen.");
             }
             catch (Exception ex)
@@ -312,7 +305,7 @@ namespace AragornArmy
                 if (anesthetic != null) captive.health.RemoveHediff(anesthetic);
                 captive.SetFaction(Faction.OfPlayer);
                 Finish(QuestEndOutcome.Success);
-                Messages.Message("Aragorn ist gerettet und schließt sich deiner Kolonie an!",
+                Messages.Message(AragornText.T("AR_Rescue_Success"),
                     captive, MessageTypeDefOf.PositiveEvent);
             }
             catch (Exception ex)
