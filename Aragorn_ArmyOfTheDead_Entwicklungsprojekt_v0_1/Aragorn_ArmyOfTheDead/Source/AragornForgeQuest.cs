@@ -136,6 +136,23 @@ namespace AragornArmy
             if (aragorn.Position.DistanceTo(forge.Position) > 4.5f)
                 return; // stops while Aragorn is away, fleeing or fighting elsewhere
             if (smith.Downed || aragorn.Downed) return;
+            // Keep the Divine Order smith working at the actual vanilla bench.
+            // Unlike Aragorn, this NPC may have zero crafting skill.
+            JobDef smithJob = DefDatabase<JobDef>.GetNamedSilentFail("AR_SmithAnduril");
+            if (smithJob != null && smith.jobs != null &&
+                smith.jobs.curJob?.def != smithJob)
+            {
+                try
+                {
+                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge),
+                        JobCondition.InterruptForced);
+                }
+                catch (Exception ex)
+                {
+                    Log.WarningOnce("[Aragorn] Smith work animation job failed: " +
+                        ex.Message, 190734);
+                }
+            }
 
             // The smith is an actual Divine Order NPC, but progress is scripted
             // independently of pawn crafting skills or any workstation bill.
@@ -239,8 +256,12 @@ namespace AragornArmy
                 smith.Name = new NameSingle("Meisterschmied der Divine Order");
                 IntVec3 smithCell = CellFinder.RandomClosewalkCellNear(forge.Position, map, 3);
                 GenSpawn.Spawn(smith, smithCell, map);
-                // Prevent an unarmed smith from being drafted into the combat AI.
-                // He remains physically present and can be killed during the siege.
+                // The Divine Order blacksmith is a neutral quest NPC, never a colonist.
+                // He can still be attacked or killed by invading Profaned.
+                JobDef smithJob = DefDatabase<JobDef>.GetNamedSilentFail("AR_SmithAnduril");
+                if (smithJob != null && smith.jobs != null)
+                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge),
+                        JobCondition.InterruptForced);
                 built = true;
                 Messages.Message("Die Divine Order wartet auf Aragorn. Wähle Aragorn "
                     + "und klicke auf 'An der Schmiede wachen'.",
@@ -370,6 +391,17 @@ namespace AragornArmy
         }
 
         private const int ForgeWaitLength = 25000;
+    }
+
+    public class JobDriver_DivineOrderForgeAnduril : JobDriver
+    {
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => true;
+        protected override IEnumerable<Toil> MakeNewToils()
+        {
+            this.FailOnDespawnedOrNull(TargetIndex.A);
+            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
+            yield return Toils_General.Wait(25000, TargetIndex.A);
+        }
     }
 
     public static class AndurilForgeBuilder
