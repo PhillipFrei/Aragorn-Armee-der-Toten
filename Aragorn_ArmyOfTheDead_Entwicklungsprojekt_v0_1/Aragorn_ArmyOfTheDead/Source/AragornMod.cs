@@ -34,6 +34,12 @@ namespace AragornArmy
                 Messages.Message(status, MessageTypeDefOf.NeutralEvent);
             }
             ls.GapLine();
+            var forgeQuest = Current.Game?.GetComponent<AragornForgeGame>();
+            if (forgeQuest != null && forgeQuest.Completed &&
+                ls.ButtonText("Andúril-Schmiedequest erneut testen (Entwicklungsmodus)"))
+            {
+                Messages.Message(forgeQuest.RestartForTesting(), MessageTypeDefOf.NeutralEvent);
+            }
             ls.Label("Beschwörungsdauer: " + Config.summonHours + " Ingame-Stunden (Cooldown: 13 h)");
             Config.summonHours = Mathf.RoundToInt(ls.Slider(Config.summonHours, 6, 13));
             ls.Label("Rüstungsstufe: " + Config.armorLevel + " / 20   (Stufe 1: 50 %, 10: 1000 %, 20: 2000 %)");
