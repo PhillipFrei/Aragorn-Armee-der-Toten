@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_Rescue_Title>The Lost Heir</AR_Rescue_Title>
+  <AR_Rescue_Description>Rumors speak of a man of noble blood, held fast by dark hands. He is called Aragorn. If this be true, he must not be left to perish in shadow.
+
+Find his prison on the world map. Defeat the Profaned who guard him and bring him home.</AR_Rescue_Description>
+  <AR_Rescue_Site>Aragorn's Prison</AR_Rescue_Site>
+  <AR_Rescue_ArrivalTitle>The Prison Revealed</AR_Rescue_ArrivalTitle>
+  <AR_Rescue_ArrivalBody>The trail leads to a Profaned stronghold. Go forth and free the heir.</AR_Rescue_ArrivalBody>
+  <AR_Rescue_Encounter>Aragorn is held here. Defeat his {0} Profaned guards.</AR_Rescue_Encounter>
+  <AR_Rescue_Success>Aragorn is free, and has joined your people.</AR_Rescue_Success>
+  <AR_Forge_Title>The Blade Reforged</AR_Forge_Title>
+  <AR_Forge_Description>The shards of an ancient sword await the fire once more. In the halls of the Divine Order, a smith yet keeps the old craft. Guard the forge and endure until the blade is made whole again.
+
+Aragorn must stand before the forge for twelve in-game hours. Every hour of forging brings another, stronger Profaned assault. If Aragorn leaves his post, both work and incoming waves pause. When Andúril is complete, take the blade and withdraw.</AR_Forge_Description>
+  <AR_Forge_Site>Golden Forge of the Divine Order</AR_Forge_Site>
+  <AR_Forge_ArrivalTitle>The Golden Forge</AR_Forge_ArrivalTitle>
+  <AR_Forge_ArrivalBody>The forge of the Divine Order has been found. Bring Aragorn there, and let the work begin.</AR_Forge_ArrivalBody>
+  <AR_Forge_SmithName>Master Smith of the Divine Order</AR_Forge_SmithName>
+  <AR_Forge_Ready>The smith awaits. Select Aragorn and speak with the master at the forge.</AR_Forge_Ready>
+  <AR_Forge_SiegeStart>The hammers ring. The siege begins: twelve hours, twelve waves. Hold the forge!</AR_Forge_SiegeStart>
+  <AR_Forge_Wave>Profaned Wave {0}/12: {1} new foes. Andúril: {2}% forged.</AR_Forge_Wave>
+  <AR_Forge_Guarding>Aragorn stands watch. Twelve hours of work lie ahead. Progress: {0}%.</AR_Forge_Guarding>
+  <AR_Forge_FinishedTitle>Andúril Reforged</AR_Forge_FinishedTitle>
+  <AR_Forge_FinishedBody>From the shards of Narsil, Andúril has arisen. Aragorn bears the blade once more, and the oathbound spirits may now answer his call. Gather the survivors and leave the golden forge while you still can.</AR_Forge_FinishedBody>
+  <AR_Forge_Failed>The reforging has failed: {0}. The way may yet open again.</AR_Forge_Failed>
+  <AR_Forge_Progress>Andúril: {0}%  |  Wave {1}/12  |  {2}</AR_Forge_Progress>
+  <AR_Forge_Running>Forging</AR_Forge_Running>
+  <AR_Forge_Paused>Paused</AR_Forge_Paused>
+  <AR_Forge_GuardTitle>Guard the Forge</AR_Forge_GuardTitle>
+  <AR_Forge_GuardDesc>Take Aragorn to his place before the forge. The Divine Order smith will reforge Andúril as your companions withstand the Profaned.</AR_Forge_GuardDesc>
+  <AR_Forge_GuardBlocked>The place before the forge is obstructed.</AR_Forge_GuardBlocked>
+  <AR_Forge_SmithDialogueTitle>Smith of the Divine Order</AR_Forge_SmithDialogueTitle>
+  <AR_Forge_SmithDialogue>The fire is ready.
+Set Aragorn before the forge, and I shall reforge the blade.
+But know this: once the work begins, the enemy will come.</AR_Forge_SmithDialogue>
+  <AR_Forge_SmithBegin>Begin the Reforging</AR_Forge_SmithBegin>
+  <AR_Forge_SmithNotYet>Not Yet</AR_Forge_SmithNotYet>
+  <AR_Trial_Title>An Oath Unfulfilled — Trial {0}/13: {1}</AR_Trial_Title>
+  <AR_Trial_Description>Beneath stone and silence lingers one of the oathbreakers of old. Only Aragorn, bearer of Andúril, may bring the spirit to heel and bind it once more to service.
+
+Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profaned guard to release the next soul.</AR_Trial_Description>
+  <AR_Trial_Site>Crypt of the Oathbound {0} — {1}</AR_Trial_Site>
+  <AR_Trial_ArrivalTitle>An Oath Stirs</AR_Trial_ArrivalTitle>
+  <AR_Trial_ArrivalBody>Trial {0}/13: {1}. The crypt is marked upon the world map.</AR_Trial_ArrivalBody>
+  <AR_Trial_Encounter>Trial {0}/13: Overcome the oathbound spirit and its Profaned guards.</AR_Trial_Encounter>
+  <AR_Trial_Unlocked>Spirit liberated: {0} ({1}/13).</AR_Trial_Unlocked>
+  <AR_Trial_Failed>The trial is lost. Aragorn must survive upon the crypt's map.</AR_Trial_Failed>
+  <AR_Trial_GizmoTitle>Seek the Next Crypt</AR_Trial_GizmoTitle>
+  <AR_Trial_GizmoDesc>Reveal the next of thirteen oathbound crypts upon the world map. Travel there with Andúril and release the spirit within.</AR_Trial_GizmoDesc>
+  <AR_Gizmo_SummonTitle>Summon the Oathbound</AR_Gizmo_SummonTitle>
+  <AR_Gizmo_SummonDesc>Call upon the spirits already liberated. They will fight at Aragorn's side until dismissed.</AR_Gizmo_SummonDesc>
+  <AR_Gizmo_RecallTitle>Recall the Oathbound</AR_Gizmo_RecallTitle>
+  <AR_Gizmo_RecallDesc>Dismiss all summoned spirits, even those left behind on another loaded map.</AR_Gizmo_RecallDesc>
+  <AR_Gizmo_RecallNone>No spirits are summoned.</AR_Gizmo_RecallNone>
+  <AR_Gizmo_WhirlTitle>Andúril — Sweeping Strike</AR_Gizmo_WhirlTitle>
+  <AR_Gizmo_WhirlDesc>Unleash a wide, powerful sweep of Andúril, striking nearby foes.</AR_Gizmo_WhirlDesc>
+  <AR_Gizmo_StormTitle>Wrath of the Dead</AR_Gizmo_StormTitle>
+  <AR_Gizmo_StormDesc>Call down spectral lightning upon an enemy position.</AR_Gizmo_StormDesc>
+  <AR_Gizmo_RestoreTitle>Restore Andúril (Test)</AR_Gizmo_RestoreTitle>
+  <AR_Gizmo_RestoreDesc>Development tool for older saves missing the sword.</AR_Gizmo_RestoreDesc>
+  <AR_Smith_Died>the master smith or forge was destroyed</AR_Smith_Died>
+  <AR_Rescue_QuestHint>A rescue quest awaits under Quests → Available.</AR_Rescue_QuestHint>
+</LanguageData>
