@@ -128,6 +128,22 @@ namespace AragornArmy
             foreach (var gizmo in vanilla) yield return gizmo;
             if (game == null || !GhostDefinitions.IsAragorn(pawn)) yield break;
 
+            var forgeGame = Current.Game?.GetComponent<AragornForgeGame>();
+            if (forgeGame != null && forgeGame.IsForgeMap(pawn.Map) && !forgeGame.Completed)
+            {
+                Command_Action forgeWatch = new Command_Action {
+                    defaultLabel = "An der Schmiede wachen",
+                    defaultDesc = "Aragorn geht zur goldenen Schmiede und bleibt dort. "
+                        + "Der Meisterschmied der Divine Order fertigt Andúril, "
+                        + "während die Profaned Legion in Wellen angreift. "
+                        + "Die übrigen Kämpfer können den Ort verteidigen.",
+                    action = () => forgeGame.StartGuarding(pawn)
+                };
+                if (!forgeGame.CanWaitAtForge(pawn, out string forgeReason))
+                    forgeWatch.Disable(forgeReason);
+                yield return forgeWatch;
+            }
+
             // Keep recall visible even without the sword. A lost Anduril should
             // not strand previously summoned specters permanently.
             Command_Action recall = new Command_Action {
@@ -140,12 +156,14 @@ namespace AragornArmy
 
             if (!GhostDefinitions.HasAnduril(pawn))
             {
-                // Repair tool for old v0.1 saves in which the sword was dropped.
-                yield return new Command_Action {
-                    defaultLabel = "Andúril wiederherstellen (Test)",
-                    defaultDesc = "Entwicklungswerkzeug für alte Testspielstände: Andúril anlegen, falls die Waffe verlorenging.",
-                    action = () => GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril")
-                };
+                // Once the forging quest has been completed, the old test repair
+                // remains available in case a save loses the unique sword.
+                if (forgeGame != null && forgeGame.Completed)
+                    yield return new Command_Action {
+                        defaultLabel = "Andúril wiederherstellen (Test)",
+                        defaultDesc = "Testwerkzeug für ältere Spielstände mit verlorenem Andúril.",
+                        action = () => GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril")
+                    };
                 yield break;
             }
 
