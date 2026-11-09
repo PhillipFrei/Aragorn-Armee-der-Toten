@@ -3,7 +3,7 @@
   <name>Aragorn – Armee der Toten (Entwicklungsstand)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>Aragorn, Andúril und 13 freischaltbare, nicht-menschliche Wraith-Geister. Version 0.11: Spielbare Rettungsquest und 13 Weltkarten-Geisterprüfungen mit Profaned-Wachen und einfachen Testkrypten. Beschworene Wraith-Geister tragen jetzt echte, fest gebundene Waffen und können auch nach Spielstandswechsel zuverlässig zurückgerufen werden. Individuelle Grafiken folgen später.</description>
+  <description>Version 0.12: Aragorn retten, Andúril in einer goldenen Schmiedehalle der Divine Order neu schmieden lassen und dabei mehrere Profaned-Angriffswellen abwehren. Danach sind die 13 Weltkarten-Geisterprüfungen und bewaffnete Wraith-Beschwörungen spielbar. Die goldenen Gebäude bestehen aus echten Vanilla-Materialien. Kartenbau und Schmiedeanimation sind noch Prototypen; eigene Grafiken folgen.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
