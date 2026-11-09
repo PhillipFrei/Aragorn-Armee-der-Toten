@@ -108,6 +108,7 @@ namespace AragornArmy
                         {
                             // Repairs older saved Aragorns as well: traits were not deterministic in v0.1.
                             EnsureAragornTraits(pawn);
+                            EnsureAragornAppearance(pawn);
                         }
                     }
                 }
@@ -520,9 +521,11 @@ namespace AragornArmy
             ("SpeedOffset", 2), ("FastLearner", 0), ("NaturalMood", 1), ("Beauty", 2)
         };
 
-        private static void PrepareAragorn(Pawn pawn)
+        internal static void PrepareAragorn(Pawn pawn, bool showMessage = true)
         {
+            if (pawn == null) return;
             pawn.Name = new NameSingle("Aragorn");
+            EnsureAragornAppearance(pawn);
             if (pawn.genes != null)
                 foreach (string name in AragornGenes)
                 {
@@ -537,8 +540,27 @@ namespace AragornArmy
             }
             // After rescue, Aragorn must visit the Divine Order smith.
             // Never give the sword here: the reforging quest is now the real unlock.
-            Messages.Message("Aragorn ist gerettet! Nun muss Andúril bei der Divine Order neu geschmiedet werden.",
-                MessageTypeDefOf.PositiveEvent);
+            if (showMessage)
+                Messages.Message("Aragorn ist gerettet! Nun muss Andúril bei der Divine Order neu geschmiedet werden.",
+                    MessageTypeDefOf.PositiveEvent);
+        }
+
+        private static void EnsureAragornAppearance(Pawn pawn)
+        {
+            if (pawn?.story == null) return;
+            pawn.gender = Gender.Male;
+            pawn.story.bodyType = BodyTypeDefOf.Male;
+            // Vanilla hair: favor a definite Long-style def, but tolerate
+            // heavily modded hair collections where names differ.
+            HairDef longHair = DefDatabase<HairDef>.GetNamedSilentFail("Long")
+                ?? DefDatabase<HairDef>.AllDefsListForReading.FirstOrDefault(h =>
+                    h.defName.IndexOf("Long", StringComparison.OrdinalIgnoreCase) >= 0)
+                ?? DefDatabase<HairDef>.AllDefsListForReading.FirstOrDefault(h =>
+                    h.defName.IndexOf("Shaggy", StringComparison.OrdinalIgnoreCase) >= 0);
+            if (longHair != null) pawn.story.hairDef = longHair;
+            else Log.WarningOnce("[Aragorn] No long hair style found among installed HairDefs.", 683124);
+            if (pawn.style != null) pawn.style.beardDef = BeardDefOf.NoBeard;
+            if (pawn.Drawer?.renderer != null) pawn.Drawer.renderer.SetAllGraphicsDirty();
         }
 
         private static void EnsureAragornTraits(Pawn pawn)
@@ -571,6 +593,8 @@ namespace AragornArmy
         {
             ThingDef def = DefDatabase<ThingDef>.GetNamedSilentFail(defName);
             if (def == null) return;
+            if (pawn.apparel != null && pawn.apparel.WornApparel.Any(x => x.def == def))
+                return; // Preserves quest armor on rescue; no second copy.
             Apparel ap = ThingMaker.MakeThing(def, def.MadeFromStuff ? ThingDefOf.Steel : null) as Apparel;
             if (ap != null) pawn.apparel.Wear(ap);
         }
