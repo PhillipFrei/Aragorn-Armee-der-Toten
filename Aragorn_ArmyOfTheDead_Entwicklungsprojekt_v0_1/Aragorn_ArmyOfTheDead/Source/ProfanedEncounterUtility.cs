@@ -155,6 +155,101 @@ namespace AragornArmy
     // Does not depend on Custom Quest Framework / removed underground maps.
     public static class AragornCryptBuilder
     {
+        // The actual Profaned mod provides KCSG layout BotchJob_DarkCrypt.
+        // We use its native slate, lanterns, tombs and braziers as inspiration
+        // rather than depending on a KCSG internal layout-generation API.
+        public static IntVec3 BuildRescuePrison(Map map, IntVec3 near, out IntVec3 guardPost)
+        {
+            guardPost = Build(map, near); // hostile keep on the opposite side
+            ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
+            ThingDef door = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
+            ThingDef stone = DefDatabase<ThingDef>.GetNamedSilentFail("BlocksSlate");
+            TerrainDef floor = DefDatabase<TerrainDef>.GetNamedSilentFail("ProfanedTileSlate")
+                ?? DefDatabase<TerrainDef>.GetNamedSilentFail("FlagstoneSlate");
+            IntVec3 jail = guardPost + new IntVec3(23, 0, 0);
+            if (wall == null || door == null || stone == null ||
+                !jail.InBounds(map)) return guardPost + new IntVec3(12, 0, 0);
+            for (int dx = -6; dx <= 6; dx++)
+            for (int dz = -5; dz <= 5; dz++)
+            {
+                IntVec3 cell = jail + new IntVec3(dx, 0, dz);
+                if (!cell.InBounds(map)) continue;
+                if (floor != null && cell.Standable(map))
+                {
+                    try { map.terrainGrid.SetTerrain(cell, floor); } catch { }
+                }
+                if (Math.Abs(dx) != 6 && Math.Abs(dz) != 5) continue;
+                ThingDef structure = (dx == -6 && dz == 0) ? door : wall;
+                if (cell.GetThingList(map).Any(t => t is Building)) continue;
+                try
+                {
+                    Thing thing = ThingMaker.MakeThing(structure, stone);
+                    GenSpawn.Spawn(thing, cell, map, WipeMode.Vanish);
+                }
+                catch (Exception e) { Log.Warning("[Aragorn] Prison wall failed: " + e.Message); }
+            }
+            ThingDef bed = DefDatabase<ThingDef>.GetNamedSilentFail("Bed");
+            if (bed != null)
+            {
+                IntVec3 bedCell = jail + new IntVec3(2, 0, -2);
+                if (bedCell.InBounds(map) && bedCell.Standable(map))
+                {
+                    try { GenSpawn.Spawn(ThingMaker.MakeThing(bed,
+                        bed.MadeFromStuff ? stone : null),
+                        bedCell, map, WipeMode.Vanish); }
+                    catch { }
+                }
+            }
+            Log.Message("[Aragorn] Separate prison cell generated at " + jail +
+                " (Profaned guards remain by " + guardPost + ").");
+            return jail;
+        }
+
+        private static void MakeWing(Map map, IntVec3 center, ThingDef wall,
+            ThingDef door, ThingDef stone, TerrainDef floor)
+        {
+            for (int dx = -5; dx <= 5; dx++)
+            for (int dz = -4; dz <= 4; dz++)
+            {
+                IntVec3 c = center + new IntVec3(dx, 0, dz);
+                if (!c.InBounds(map)) continue;
+                if (floor != null && c.Standable(map))
+                {
+                    try { map.terrainGrid.SetTerrain(c, floor); } catch { }
+                }
+                if (Math.Abs(dx) != 5 && Math.Abs(dz) != 4) continue;
+                ThingDef structure = dx == 0 && Math.Abs(dz) == 4 ? door : wall;
+                if (c.GetThingList(map).Any(t => t is Building)) continue;
+                try { GenSpawn.Spawn(ThingMaker.MakeThing(structure, stone),
+                    c, map, WipeMode.Vanish); }
+                catch { }
+            }
+            AddCryptProp(map, center + new IntVec3(3, 0, 0),
+                "BotchJob_ProfanedBrazier", stone);
+            AddCryptProp(map, center + new IntVec3(-3, 0, 0),
+                "BotchJob_ProfanedLantern", stone);
+            AddCryptProp(map, center + new IntVec3(0, 0, 1),
+                "Sarcophagus", stone);
+        }
+
+        private static void AddCryptProp(Map map, IntVec3 cell,
+            string defName, ThingDef stuff)
+        {
+            ThingDef def = DefDatabase<ThingDef>.GetNamedSilentFail(defName);
+            if (def == null || !cell.InBounds(map) ||
+                cell.GetThingList(map).Any(t => t is Building)) return;
+            try
+            {
+                GenSpawn.Spawn(ThingMaker.MakeThing(def,
+                    def.MadeFromStuff ? stuff : null), cell, map, WipeMode.Vanish);
+            }
+            catch (Exception e)
+            {
+                Log.WarningOnce("[Aragorn] Profaned crypt prop " + defName +
+                    " failed: " + e.Message, 731116);
+            }
+        }
+
         public static IntVec3 Build(Map map, IntVec3 near)
         {
             ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
@@ -207,7 +302,17 @@ namespace AragornArmy
                     catch { }
                 }
             }
-            Log.Message("[Aragorn] Test crypt structure generated at " + center);
+            // Two connected-looking crypt chapels using the Profaned mod's
+            // original lanterns and braziers. These are open, lootable ruins.
+            MakeWing(map, center + new IntVec3(0, 0, 14),
+                wall, door, stone, floor);
+            MakeWing(map, center + new IntVec3(0, 0, -14),
+                wall, door, stone, floor);
+            AddCryptProp(map, center + new IntVec3(0, 0, -2),
+                "BotchJob_ProfanedThrone", stone);
+            AddCryptProp(map, center + new IntVec3(0, 0, 3),
+                "BotchJob_ProfanedBrazierDarklight", stone);
+            Log.Message("[Aragorn] Three-room Profaned crypt with DarkCrypt-inspired decorations generated at " + center);
             return center;
         }
     }
