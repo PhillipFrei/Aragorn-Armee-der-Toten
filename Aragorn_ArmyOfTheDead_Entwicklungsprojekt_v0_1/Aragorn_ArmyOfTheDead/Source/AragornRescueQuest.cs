@@ -243,13 +243,17 @@ namespace AragornArmy
 
             try
             {
-                IntVec3 prisonCell = AragornCryptBuilder.Build(map, map.Center);
+                IntVec3 guardPost;
+                IntVec3 prisonCell = AragornCryptBuilder.BuildRescuePrison(map, map.Center,
+                    out guardPost);
                 PawnGenerationRequest request = new PawnGenerationRequest(aragornKind,
                     faction: null, forceGenerateNewPawn: true,
                     canGeneratePawnRelations: false, allowAddictions: false,
                     forceBaselinerChance: 1f, fixedGender: Gender.Male);
                 Pawn prisoner = PawnGenerator.GeneratePawn(request);
-                prisoner.Name = new NameSingle("Aragorn");
+                // Aragorn is recognizably Aragorn even before the guards are
+                // defeated: his traits, genes, armor, hair, beard and body are set now.
+                AragornGame.PrepareAragorn(prisoner, showMessage: false);
                 GenSpawn.Spawn(prisoner, prisonCell, map);
                 // Keeps the prisoner from wandering off while the guards are alive.
                 prisoner.health.AddHediff(HediffDefOf.Anesthetic);
@@ -263,8 +267,9 @@ namespace AragornArmy
                 }
                 if (rescueSite.Faction != guardFaction) rescueSite.SetFaction(guardFaction);
                 int count = Mathf.Clamp(AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount, 5, 50);
-                // The captive was placed at the center of the crypt above.
-                guards.AddRange(ProfanedEncounterUtility.SpawnGuards(map, prisonCell, guardFaction, count));
+                // The prisoner is in a separate locked-looking cell annex.
+                // All Profaned guards initially occupy the OUTSIDE crypt court.
+                guards.AddRange(ProfanedEncounterUtility.SpawnGuards(map, guardPost, guardFaction, count));
                 if (guards.Count == 0)
                 {
                     Log.Error("[Aragorn] Rettungslager hat keine Wachen erhalten.");
@@ -272,7 +277,7 @@ namespace AragornArmy
                 }
                 // RimWorld's LordToil_DefendPoint breaks for wanderRadius > Region.GridSize (12).
                 LordMaker.MakeNewLord(guardFaction,
-                    new LordJob_DefendPoint(prisonCell, wanderRadius: 8f,
+                    new LordJob_DefendPoint(guardPost, wanderRadius: 8f,
                         defendRadius: 28f, isCaravanSendable: false, addFleeToil: false),
                     map, guards);
                 encounterCreated = true;
