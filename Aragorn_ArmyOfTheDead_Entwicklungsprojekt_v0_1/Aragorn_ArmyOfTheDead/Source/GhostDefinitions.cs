@@ -55,30 +55,42 @@ namespace AragornArmy
             return 0f;
         }
 
-        private static readonly HashSet<int> InitializedNaturalAttacks = new HashSet<int>();
-
-        // Animal-like spirits cannot carry human equipment. The original weapon's
-        // intrinsic Tool and VerbProperties are instead installed on the matching
-        // spirit race. This keeps attack mechanics/projectile defs, but NO gear item.
-        public static void ConfigureNaturalAttacks(int index)
+        // Gives a spectral ToolUser its immutable original weapon.
+        // Also repairs already-summoned ghosts saved while the race was Animal.
+        public static bool EnsureGhostWeapon(Pawn pawn)
         {
-            if (index < 0 || index >= PawnKinds.Length || InitializedNaturalAttacks.Contains(index)) return;
-            PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail(PawnKinds[index]);
-            if (kind == null || kind.race == null) return;
+            if (!IsGhost(pawn) || pawn.kindDef == null) return false;
+            int index = Array.IndexOf(PawnKinds, pawn.kindDef.defName);
+            if (index < 0) return false; // legacy human kinds keep their existing gear
+
+            if (!pawn.RaceProps.ToolUser)
+            {
+                Log.ErrorOnce("[Aragorn] Ghost race is not ToolUser: " + pawn.def.defName, 504021);
+                return false;
+            }
+            if (pawn.equipment == null)
+                PawnComponentsUtility.CreateInitialComponents(pawn);
+            if (pawn.equipment == null)
+            {
+                Log.ErrorOnce("[Aragorn] Ghost equipment tracker not created for " + pawn.kindDef.defName, 504022);
+                return false;
+            }
+
             ThingDef weapon = ResolveWeapon(Weapons[index]);
             if (weapon == null)
             {
-                Log.Warning("[Aragorn] Natural attack source missing: " + Weapons[index]);
-                return;
+                Log.ErrorOnce("[Aragorn] Ghost weapon definition missing: " + Weapons[index], 504023 + index);
+                return false;
             }
-            if (weapon.tools != null && weapon.tools.Count > 0)
-                kind.race.tools = new List<Tool>(weapon.tools);
-            if (weapon.Verbs != null && weapon.Verbs.Count > 0)
+            if (pawn.equipment.Primary?.def == weapon) return true;
+            SetFixedWeapon(pawn, Weapons[index]);
+            if (pawn.equipment.Primary?.def != weapon)
             {
-                var field = HarmonyLib.AccessTools.Field(typeof(ThingDef), "verbs");
-                if (field != null) field.SetValue(kind.race, new List<VerbProperties>(weapon.Verbs));
+                Log.ErrorOnce("[Aragorn] Could not equip " + weapon.defName + " on " + pawn.kindDef.defName,
+                    504041 + index);
+                return false;
             }
-            InitializedNaturalAttacks.Add(index);
+            return true;
         }
 
         private static ThingDef ResolveWeapon(string defName)
