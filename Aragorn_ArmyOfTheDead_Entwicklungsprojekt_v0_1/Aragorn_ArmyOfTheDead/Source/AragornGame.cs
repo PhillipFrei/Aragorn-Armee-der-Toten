@@ -322,17 +322,13 @@ namespace AragornArmy
                 Site site = SiteMaker.MakeSite(part, tile, hostile,
                     ifHostileThenMustRemainHostile: false,
                     threatPoints: StorytellerUtility.DefaultSiteThreatPointsNow());
-                site.customLabel = "Geisterkrypta " + (Unlocked + 1) + " – " + GhostDefinitions.Names[Unlocked];
+                site.customLabel = AragornText.F("AR_Trial_Site", Unlocked + 1, GhostDefinitions.Names[Unlocked]);
                 Find.WorldObjects.Add(site);
 
                 Quest quest = Quest.MakeRaw();
                 quest.root = root;
-                quest.name = "Geisterprüfung " + (Unlocked + 1) + "/13 – " + GhostDefinitions.Names[Unlocked];
-                quest.description = "Aragorn spürt das Grab eines gefesselten Geisterkriegers. "
-                    + "Reise mit Aragorn und Andúril zur markierten Krypta, "
-                    + "besiege den verfluchten Geist und seine Profaned-Wachen. "
-                    + "Die Seele wird danach für Aragorns Armee freigeschaltet. "
-                    + "The Profaned muss geladen sein, braucht aber keine Weltkarten-Siedlung.";
+                quest.name = AragornText.F("AR_Trial_Title", Unlocked + 1, GhostDefinitions.Names[Unlocked]);
+                quest.description = AragornText.T("AR_Trial_Description");
                 quest.acceptanceExpireTick = -1;
                 quest.SetNotYetAccepted();
                 quest.AddPart(new QuestPart_AragornRescueTarget { site = site });
@@ -347,9 +343,8 @@ namespace AragornArmy
                 trialBoss = null;
                 trialGuards.Clear();
                 Find.LetterStack.ReceiveLetter(
-                    "Neue Geisterkrypta entdeckt",
-                    "Prüfung " + (Unlocked + 1) + "/13: " + GhostDefinitions.Names[Unlocked]
-                    + ". Reise mit Aragorn zur Krypta auf der Weltkarte.",
+                    AragornText.T("AR_Trial_ArrivalTitle"),
+                    AragornText.F("AR_Trial_ArrivalBody", Unlocked + 1, GhostDefinitions.Names[Unlocked]),
                     LetterDefOf.NeutralEvent, site);
                 Log.Message("[Aragorn] Trial " + trialIndex + " created at world tile " + tile);
             }
@@ -388,8 +383,7 @@ namespace AragornArmy
                     new LordJob_DefendPoint(crypt, wanderRadius: 8f,
                         defendRadius: 30f, isCaravanSendable: false, addFleeToil: false),
                     map, defenders);
-                Messages.Message("Geisterprüfung " + (trialIndex + 1)
-                    + "/13: Besiege den Geisterboss und alle Profaned-Wachen.",
+                Messages.Message(AragornText.F("AR_Trial_Encounter", trialIndex + 1),
                     boss, MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Trial site populated: " + (trialIndex + 1)
                     + "/13; " + guards.Count + " Profaned guards.");
@@ -414,13 +408,14 @@ namespace AragornArmy
                 Unlocked++;
                 if (trialQuest != null && !trialQuest.Historical)
                     trialQuest.End(QuestEndOutcome.Success, sendLetter: true);
-                Messages.Message("Geist freigeschaltet: " + GhostDefinitions.Names[trialIndex] + " (" + Unlocked + "/13).", MessageTypeDefOf.PositiveEvent);
+                Messages.Message(AragornText.F("AR_Trial_Unlocked", GhostDefinitions.Names[trialIndex], Unlocked),
+                    MessageTypeDefOf.PositiveEvent);
             }
             else
             {
                 if (trialQuest != null && !trialQuest.Historical)
                     trialQuest.End(QuestEndOutcome.Fail, sendLetter: true);
-                Messages.Message("Prüfung nicht bestanden: Aragorn muss lebend auf der Kryptenkarte sein.", MessageTypeDefOf.RejectInput);
+                Messages.Message(AragornText.T("AR_Trial_Failed"), MessageTypeDefOf.RejectInput);
             }
             trialBoss = null;
             trialMap = null;
