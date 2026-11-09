@@ -149,6 +149,9 @@ namespace AragornArmy
                 reason = "Aragorn muss Andúril tragen.";
                 return false;
             }
+            var forgeQuest = Current.Game?.GetComponent<AragornForgeGame>();
+            if (forgeQuest == null || !forgeQuest.Completed)
+            { reason = "Andúril muss zuerst bei der Divine Order neu geschmiedet werden."; return false; }
             if (Unlocked == 0) { reason = "Erst eine Geisterprüfung bestehen."; return false; }
             if (AnySummoned) { reason = "Die Armee ist bereits beschworen."; return false; }
             if (SummonCooldownRemaining > 0)
@@ -279,6 +282,9 @@ namespace AragornArmy
         public bool CanStartTrial(Pawn aragorn, out string reason)
         {
             reason = null;
+            var forgeQuest = Current.Game?.GetComponent<AragornForgeGame>();
+            if (forgeQuest == null || !forgeQuest.Completed)
+            { reason = "Zuerst die Quest 'Andúril – Die Klinge neu schmieden' abschließen."; return false; }
             if (!GhostDefinitions.HasAnduril(aragorn)) { reason = "Aragorn benötigt Andúril."; return false; }
             if (Unlocked >= 13) { reason = "Alle 13 Geister sind freigeschaltet."; return false; }
             if (trialIndex >= 0)
@@ -529,10 +535,10 @@ namespace AragornArmy
                 WearAragorn(pawn, "BotchJob_CrusaderArmor");
                 WearAragorn(pawn, "BotchJob_DivineOrderTunic");
             }
-            // Development bootstrap: Aragorn receives Andúril immediately.
-            // Replace with the rescue / sword quest reward during the quest milestone.
-            GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril");
-            Messages.Message("Aragorn ist bereit. Andúril enthält Beschwörung und lokale Testprüfungen.", MessageTypeDefOf.PositiveEvent);
+            // After rescue, Aragorn must visit the Divine Order smith.
+            // Never give the sword here: the reforging quest is now the real unlock.
+            Messages.Message("Aragorn ist gerettet! Nun muss Andúril bei der Divine Order neu geschmiedet werden.",
+                MessageTypeDefOf.PositiveEvent);
         }
 
         private static void EnsureAragornTraits(Pawn pawn)
