@@ -43,8 +43,8 @@ namespace AragornArmy
             map != null && IsForgeMap(map) && built && !completed &&
             quest != null && quest.State == QuestState.Ongoing;
         public string ForgeProgressLabel =>
-            "Andúril: " + ProgressPercent + "%  |  Welle " + waves + "/12"
-            + (IsForgingNow() ? "  |  Schmieden läuft" : "  |  Schmieden pausiert");
+            AragornText.F("AR_Forge_Progress", ProgressPercent, waves,
+                AragornText.T(IsForgingNow() ? "AR_Forge_Running" : "AR_Forge_Paused"));
         public float ForgeProgressFraction => Mathf.Clamp01(progress / (float)ForgeTicksRequired);
         private IntVec3 SmithStandCell =>
             forge == null ? IntVec3.Invalid : forge.Position + new IntVec3(0, 0, -2);
@@ -150,14 +150,8 @@ namespace AragornArmy
             // the new quest. This avoids changing saved pawns merely on mod load.
             Quest q = Quest.MakeRaw();
             q.root = root;
-            q.name = "Andúril – Die Klinge neu schmieden";
-            q.description = "Ein Meisterschmied der Divine Order bewahrt die Bruchstücke von Narsil. "
-                + "Reise mit Aragorn zur goldenen Schmiedehalle. Während der Meister die Klinge neu schmiedet, "
-                + "muss Aragorn zwölf Ingame-Stunden an der Schmiede Wache halten. Deine übrigen Kämpfer verteidigen den Ort "
-                + "gegen zwölf stündlich eintreffende, immer stärkere Wellen der Profaned Legion. Überlebende Feinde früherer Wellen bleiben auf der Karte. Sobald Andúril fertig ist, "
-                + "nimm das Schwert und verlasse das Gelände. Die goldenen Bauteile sind echte Materialien "
-                + "und könnten zerlegt werden – wenn du während des Angriffs Zeit dafür findest. "
-                + "\n\nKein Zeitlimit für die Annahme.";
+            q.name = AragornText.T("AR_Forge_Title");
+            q.description = AragornText.T("AR_Forge_Description");
             q.acceptanceExpireTick = -1;
             q.SetNotYetAccepted();
             q.hidden = false;
@@ -192,7 +186,7 @@ namespace AragornArmy
             if (site == null || !site.HasMap || !built) return;
             if (smith == null || smith.Dead || smith.Destroyed || forge == null || forge.Destroyed)
             {
-                FailForge("Der Meisterschmied oder die Schmiede wurde zerstört.");
+                FailForge(AragornText.T("AR_Smith_Died"));
                 return;
             }
             int now = Find.TickManager.TicksGame;
@@ -229,9 +223,7 @@ namespace AragornArmy
             if (siegeStartTick < 0)
             {
                 siegeStartTick = now;
-                Messages.Message("Die Schmiedebelagerung hat begonnen: zwölf Stunden, "
-                    + "zwölf stündliche Angriffswellen. Unterbrechungen halten "
-                    + "sowohl die Arbeit als auch die nächste Welle an.",
+                Messages.Message(AragornText.T("AR_Forge_SiegeStart"),
                     forge, MessageTypeDefOf.ThreatBig);
             }
             while (waves < TotalWaves && progress >= waves * WaveIntervalTicks)
@@ -264,14 +256,14 @@ namespace AragornArmy
                 Site found = SiteMaker.MakeSite(part, tile, divine,
                     ifHostileThenMustRemainHostile: false,
                     threatPoints: StorytellerUtility.DefaultSiteThreatPointsNow());
-                found.customLabel = "Goldene Schmiede der Divine Order";
+                found.customLabel = AragornText.T("AR_Forge_Site");
                 Find.WorldObjects.Add(found);
                 site = found;
                 QuestPart_AragornRescueTarget target = quest.GetFirstPartOfType<QuestPart_AragornRescueTarget>();
                 if (target != null) target.site = found;
-                Find.LetterStack.ReceiveLetter("Die Klinge wartet",
-                    "Die goldene Schmiedehalle der Divine Order ist auf der Weltkarte markiert. "
-                    + "Reise mit Aragorn und deinen Verteidigern dorthin.",
+                Find.LetterStack.ReceiveLetter(
+                    AragornText.T("AR_Forge_ArrivalTitle"),
+                    AragornText.T("AR_Forge_ArrivalBody"),
                     LetterDefOf.NeutralEvent, found);
                 Log.Message("[Aragorn] Anduril forge world site placed: " + tile);
             }
@@ -333,7 +325,7 @@ namespace AragornArmy
                 if (kind == null) { Log.Error("[Aragorn] Divine Order Champion PawnKind missing."); return; }
                 Faction divine = site.Faction;
                 smith = PawnGenerator.GeneratePawn(kind, divine);
-                smith.Name = new NameSingle("Meisterschmied der Divine Order");
+                smith.Name = new NameSingle(AragornText.T("AR_Forge_SmithName"));
                 IntVec3 smithCell = SmithStandCell;
                 if (!smithCell.InBounds(map) || !smithCell.Standable(map))
                 {
@@ -349,8 +341,7 @@ namespace AragornArmy
                     smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge, SmithStandCell),
                         JobCondition.InterruptForced);
                 built = true;
-                Messages.Message("Die Divine Order wartet auf Aragorn. Wähle Aragorn "
-                    + "und klicke auf 'An der Schmiede wachen'.",
+                Messages.Message(AragornText.T("AR_Forge_Ready"),
                     forge, MessageTypeDefOf.PositiveEvent);
                 Log.Message("[Aragorn] Golden forge site generated, Divine Order smith at " + smithCell);
             }
@@ -379,9 +370,8 @@ namespace AragornArmy
                     new LordJob_AragornSiegeNoRetreat(),
                     map, attackers);
                 // Messages never forcibly pause combat like ThreatBig letters.
-                Messages.Message("Profaned-Welle " + (index + 1) + "/12: "
-                    + attackers.Count + " neue Feinde! Andúril "
-                    + ProgressPercent + "% geschmiedet.",
+                Messages.Message(
+                    AragornText.F("AR_Forge_Wave", index + 1, attackers.Count, ProgressPercent),
                     forge, MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Forge assault wave " + (index + 1) +
                     " spawned: " + attackers.Count + " Profaned.");
@@ -425,9 +415,32 @@ namespace AragornArmy
             if (forge == null || !forge.Spawned || !IsForgeMap(pawn.Map))
             { reason = "Aragorn muss sich auf der Schmiedekarte befinden."; return false; }
             if (!AragornStandCell.InBounds(pawn.Map) || !AragornStandCell.Standable(pawn.Map))
-            { reason = "Der Wachposten vor der Schmiede ist blockiert."; return false; }
+            { reason = AragornText.T("AR_Forge_GuardBlocked"); return false; }
             if (pawn.Downed) { reason = "Aragorn ist kampfunfähig."; return false; }
             return true;
+        }
+
+        // The blacksmith speaks when Aragorn first asks him to begin.
+        // On subsequent interruptions, selecting the gizmo resumes instantly.
+        public void SpeakToSmith(Pawn pawn)
+        {
+            if (!CanWaitAtForge(pawn, out string reason))
+            {
+                AragornGame.Reject(reason);
+                return;
+            }
+            if (siegeStartTick >= 0)
+            {
+                StartGuarding(pawn);
+                return;
+            }
+            Find.WindowStack.Add(new Dialog_MessageBox(
+                AragornText.T("AR_Forge_SmithDialogue"),
+                AragornText.T("AR_Forge_SmithBegin"),
+                () => StartGuarding(pawn),
+                AragornText.T("AR_Forge_SmithNotYet"),
+                () => { },
+                AragornText.T("AR_Forge_SmithDialogueTitle")));
         }
 
         public void StartGuarding(Pawn pawn)
@@ -440,9 +453,8 @@ namespace AragornArmy
             if (pawn.drafter != null && pawn.drafter.Drafted) pawn.drafter.Drafted = false;
             pawn.jobs.StartJob(JobMaker.MakeJob(jobDef, forge, AragornStandCell),
                 JobCondition.InterruptForced);
-            Messages.Message("Aragorn wacht beim Schmied. Die Fertigung dauert insgesamt 12 Ingame-Stunden, "
-                + "solange Aragorn in der Nähe bleibt. Fortschritt: "
-                + ProgressPercent + " %.", pawn, MessageTypeDefOf.PositiveEvent);
+            Messages.Message(AragornText.F("AR_Forge_Guarding", ProgressPercent),
+                pawn, MessageTypeDefOf.PositiveEvent);
         }
 
         private void CompleteForge()
@@ -457,12 +469,8 @@ namespace AragornArmy
             completed = true;
             if (quest != null && !quest.Historical)
                 quest.End(QuestEndOutcome.Success, sendLetter: true);
-            Find.LetterStack.ReceiveLetter("Andúril ist neu geschmiedet!",
-                "Der Schmied der Divine Order hat die Bruchstücke von Narsil "
-                + "zur Klinge Andúril vereint. Aragorn trägt sie nun. "
-                + "Die Geisterprüfungen sind freigeschaltet. "
-                + "Verlasse die goldene Schmiede mit deinen Überlebenden – "
-                + "die Profaned können noch auf der Karte sein!",
+            Find.LetterStack.ReceiveLetter(AragornText.T("AR_Forge_FinishedTitle"),
+                AragornText.T("AR_Forge_FinishedBody"),
                 LetterDefOf.PositiveEvent, aragorn);
             Log.Message("[Aragorn] Anduril reforged successfully; ghost trials unlocked.");
         }
@@ -472,8 +480,7 @@ namespace AragornArmy
             Log.Warning("[Aragorn] Anduril quest failed: " + reason);
             if (quest != null && !quest.Historical)
                 quest.End(QuestEndOutcome.Fail, sendLetter: true);
-            Messages.Message("Die Schmiedequest scheiterte: " + reason
-                + " Ein neuer Versuch wird später angeboten.",
+            Messages.Message(AragornText.F("AR_Forge_Failed", reason),
                 MessageTypeDefOf.NegativeEvent);
             quest = null;
             site = null;
