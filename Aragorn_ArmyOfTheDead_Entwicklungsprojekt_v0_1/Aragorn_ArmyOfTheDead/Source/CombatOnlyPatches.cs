@@ -82,6 +82,43 @@ namespace AragornArmy
         }
     }
 
+    // Gold rooms belong to the Divine Order. Ordinary deconstruction or
+    // claiming is prohibited, but deliberate violent salvage remains possible
+    // at a clear diplomacy cost (handled on damage below).
+    [HarmonyPatch(typeof(Building), nameof(Building.DeconstructibleBy))]
+    internal static class PreventDivineGoldDeconstruction
+    {
+        private static void Postfix(Building __instance, Faction faction,
+            ref AcceptanceReport __result)
+        {
+            if (faction == Faction.OfPlayer &&
+                Current.Game?.GetComponent<AragornForgeGame>()?.IsDivineGoldProperty(__instance) == true)
+                __result = false;
+        }
+    }
+
+    [HarmonyPatch(typeof(Building), nameof(Building.ClaimableBy))]
+    internal static class PreventDivineGoldClaiming
+    {
+        private static void Postfix(Building __instance, Faction by,
+            ref AcceptanceReport __result)
+        {
+            if (by == Faction.OfPlayer &&
+                Current.Game?.GetComponent<AragornForgeGame>()?.IsDivineGoldProperty(__instance) == true)
+                __result = false;
+        }
+    }
+
+    [HarmonyPatch(typeof(Thing), nameof(Thing.TakeDamage))]
+    internal static class PenalizeAttackOnDivineGold
+    {
+        private static void Prefix(Thing __instance, DamageInfo dinfo)
+        {
+            Current.Game?.GetComponent<AragornForgeGame>()?.NotifyGoldPropertyDamaged(
+                __instance, dinfo.Instigator);
+        }
+    }
+
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
     internal static class AragornAndGhostGizmos
     {
