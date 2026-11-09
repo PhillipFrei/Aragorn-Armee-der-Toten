@@ -3,7 +3,7 @@
   <name>Aragorn – Armee der Toten (Entwicklungsstand)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>Version 0.14: Die Andúril-Schmiede erhält einen schwer gepanzerten Divine-Order-Champion als Meisterschmied an einem festen Arbeitsplatz im Norden der Halle. Aragorn hält weiter südlich Wache. Ein sichtbarer Schmiedefortschrittsbalken und eine Prozentanzeige informieren über die zwölfstündige Verteidigung. Flieht Aragorn oder wird sein Wachjob unterbrochen, pausieren sowohl die Schmiedearbeit als auch die Profaned-Wellen. Wellen erscheinen als normale Spielnachrichten statt pausierender Briefe. Bei der Kartengenerierung werden Bäume und Büsche aus Schmiede, Krypten und Gefängnisräumen entfernt. Im Spiel zu testen.</description>
+  <description>Version 0.15: Story quests in atmospheric English with complete German localization (The Lost Heir, The Blade Reforged, An Oath Unfulfilled), bilingual forge letters, ghost ability labels and a short two-choice dialogue with the Divine Order smith before the first reforging. The 12-hour forge defense, 13 ghost crypt trials, reliable recall, Divine Order property rules and existing ghost mechanics remain unchanged. Gizmo and signature-art concepts are previews only and have not yet been installed in this version.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
