@@ -158,6 +158,14 @@ namespace AragornArmy
         // The actual Profaned mod provides KCSG layout BotchJob_DarkCrypt.
         // We use its native slate, lanterns, tombs and braziers as inspiration
         // rather than depending on a KCSG internal layout-generation API.
+        private static void ClearVegetation(Map map, IntVec3 cell)
+        {
+            if (!cell.InBounds(map)) return;
+            foreach (Thing thing in cell.GetThingList(map).ToList())
+                if (thing.def.category == ThingCategory.Plant)
+                    thing.Destroy(DestroyMode.Vanish);
+        }
+
         public static IntVec3 BuildRescuePrison(Map map, IntVec3 near, out IntVec3 guardPost)
         {
             guardPost = Build(map, near); // hostile keep on the opposite side
@@ -174,6 +182,7 @@ namespace AragornArmy
             {
                 IntVec3 cell = jail + new IntVec3(dx, 0, dz);
                 if (!cell.InBounds(map)) continue;
+                ClearVegetation(map, cell);
                 if (floor != null && cell.Standable(map))
                 {
                     try { map.terrainGrid.SetTerrain(cell, floor); } catch { }
@@ -213,6 +222,7 @@ namespace AragornArmy
             {
                 IntVec3 c = center + new IntVec3(dx, 0, dz);
                 if (!c.InBounds(map)) continue;
+                ClearVegetation(map, c);
                 if (floor != null && c.Standable(map))
                 {
                     try { map.terrainGrid.SetTerrain(c, floor); } catch { }
@@ -268,6 +278,7 @@ namespace AragornArmy
             {
                 IntVec3 cell = center + new IntVec3(dx, 0, dz);
                 if (!cell.InBounds(map)) continue;
+                ClearVegetation(map, cell);
                 if (floor != null && cell.Walkable(map))
                 {
                     try { map.terrainGrid.SetTerrain(cell, floor); } catch { }
