@@ -78,4 +78,9 @@
     <driverClass>AragornArmy.JobDriver_AragornWaitForAnduril</driverClass>
     <reportString>bewacht die Schmiede</reportString>
   </JobDef>
+  <JobDef>
+    <defName>AR_SmithAnduril</defName>
+    <driverClass>AragornArmy.JobDriver_DivineOrderForgeAnduril</driverClass>
+    <reportString>schmiedet Andúril</reportString>
+  </JobDef>
 </Defs>
