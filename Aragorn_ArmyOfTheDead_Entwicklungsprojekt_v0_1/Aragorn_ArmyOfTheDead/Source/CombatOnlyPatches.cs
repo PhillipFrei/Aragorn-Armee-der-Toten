@@ -6,6 +6,20 @@ using Verse;
 
 namespace AragornArmy
 {
+    // Also display the exact percentage when selecting the vanilla smithy.
+    [HarmonyPatch(typeof(ThingWithComps), nameof(ThingWithComps.GetInspectString))]
+    internal static class ShowAndurilForgeInspectProgress
+    {
+        private static void Postfix(ThingWithComps __instance, ref string __result)
+        {
+            AragornForgeGame game = Current.Game?.GetComponent<AragornForgeGame>();
+            if (game == null || game.ForgeBuilding != __instance ||
+                !game.ShowForgeProgress(__instance.Map)) return;
+            if (!string.IsNullOrEmpty(__result)) __result += "\\n";
+            __result += game.ForgeProgressLabel;
+        }
+    }
+
     [HarmonyPatch(typeof(Pawn_NeedsTracker), "ShouldHaveNeed")]
     internal static class SuppressGhostNeeds
     {
