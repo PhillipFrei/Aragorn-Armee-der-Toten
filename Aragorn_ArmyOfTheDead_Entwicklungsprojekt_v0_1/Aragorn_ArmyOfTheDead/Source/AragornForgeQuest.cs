@@ -58,6 +58,34 @@ namespace AragornArmy
             Scribe_Values.Look(ref lastPropertyPenaltyTick, "arForgePropertyPenaltyTick", -999999);
         }
 
+        // Development-only convenience: rerun v0.13 without needing a save
+        // from before the previously completed v0.12 smithing quest.
+        public string RestartForTesting()
+        {
+            if (Current.ProgramState != ProgramState.Playing || Find.QuestManager == null)
+                return "Bitte zunächst einen Spielstand laden.";
+            if (!completed)
+                return "Schmiedequest ist noch nicht abgeschlossen. Wiederholung ist nur nach Erfolg möglich.";
+            completed = false;
+            quest = null;
+            site = null;
+            smith = null;
+            forge = null;
+            aragorn = null;
+            offeredLetter = false;
+            built = false;
+            provisionalAndurilRemoved = false;
+            progress = 0;
+            waves = 0;
+            siegeStartTick = -1;
+            nextWaveTick = -1;
+            lastPropertyPenaltyTick = -999999;
+            retryTick = Find.TickManager.TicksGame;
+            Log.Message("[Aragorn] Forge quest reset for development testing.");
+            return "Neue Andúril-Schmiedequest wird sofort wieder angeboten. "
+                + "Vorhandenes Andúril bleibt bis zur Annahme erhalten.";
+        }
+
         private static Pawn FindSavedAragorn()
         {
             if (Find.Maps == null) return null;
