@@ -91,6 +91,14 @@ namespace AragornArmy
                     if (gizmo is Command_Action && !(gizmo is Command_Toggle)) continue;
                     yield return gizmo;
                 }
+                // Every selected summoned ghost can recall the entire army.
+                // This is useful if Aragorn is off-map or temporarily loses Anduril.
+                if (game != null && game.IsSummoned(pawn))
+                    yield return new Command_Action {
+                        defaultLabel = "Geister zurückrufen",
+                        defaultDesc = "Entfernt alle beschworenen Spieler-Geister auf allen geladenen Karten, auch verlorene Geister aus älteren Spielständen.",
+                        action = () => game.RecallAll()
+                    };
                 if (game != null && game.IsSummonedKing(pawn))
                 {
                     var lightning = new Command_Action {
@@ -107,6 +115,17 @@ namespace AragornArmy
 
             foreach (var gizmo in vanilla) yield return gizmo;
             if (game == null || !GhostDefinitions.IsAragorn(pawn)) yield break;
+
+            // Keep recall visible even without the sword. A lost Anduril should
+            // not strand previously summoned specters permanently.
+            Command_Action recall = new Command_Action {
+                defaultLabel = "Geister zurückrufen",
+                defaultDesc = "Ruft alle beschworenen Geister auf allen geladenen Karten sofort zurück (inklusive verwaister Geister aus älteren Versionen).",
+                action = () => game.RecallAll()
+            };
+            if (!game.HasSummonedGhosts) recall.Disable("Zurzeit keine Geister beschworen.");
+            yield return recall;
+
             if (!GhostDefinitions.HasAnduril(pawn))
             {
                 // Repair tool for old v0.1 saves in which the sword was dropped.
@@ -125,12 +144,6 @@ namespace AragornArmy
             };
             if (!game.CanSummon(pawn, out string summoningReason)) summon.Disable(summoningReason);
             yield return summon;
-
-            yield return new Command_Action {
-                defaultLabel = "Geister zurückrufen",
-                defaultDesc = "Ruft alle aktuell beschworenen Geister augenblicklich zurück.",
-                action = () => game.RecallAll()
-            };
 
             Command_Action spin = new Command_Action {
                 defaultLabel = "Andúril – Rundumschlag",
