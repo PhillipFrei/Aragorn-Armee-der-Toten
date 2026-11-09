@@ -30,6 +30,7 @@ namespace AragornArmy
         private int siegeStartTick = -1;
         private int nextWaveTick = -1;
         private int retryTick;
+        private int lastPropertyPenaltyTick = -999999;
         private const int WaveIntervalTicks = 2500; // exactly one in-game hour
         private const int TotalWaves = 12;
 
@@ -54,6 +55,7 @@ namespace AragornArmy
             Scribe_Values.Look(ref siegeStartTick, "arForgeSiegeStartTick", -1);
             Scribe_Values.Look(ref nextWaveTick, "arForgeNextWaveTick", -1);
             Scribe_Values.Look(ref retryTick, "arForgeRetry");
+            Scribe_Values.Look(ref lastPropertyPenaltyTick, "arForgePropertyPenaltyTick", -999999);
         }
 
         private static Pawn FindSavedAragorn()
@@ -275,7 +277,7 @@ namespace AragornArmy
             if (site == null || map == null || map.Parent != site || built) return;
             try
             {
-                forge = AndurilForgeBuilder.Build(map, map.Center);
+                forge = AndurilForgeBuilder.Build(map, map.Center, site.Faction);
                 if (forge == null)
                 {
                     Log.Error("[Aragorn] Forge building not created. No encounter started.");
@@ -333,6 +335,33 @@ namespace AragornArmy
                 Log.Message("[Aragorn] Forge assault wave " + (index + 1) +
                     " spawned: " + attackers.Count + " Profaned.");
             }
+        }
+
+        public bool IsDivineGoldProperty(Thing thing)
+        {
+            if (thing == null || site == null || !site.HasMap || !thing.Spawned ||
+                thing.Map != site.Map || !(thing is Building)) return false;
+            return thing.Faction == site.Faction &&
+                (thing.Stuff == ThingDefOf.Gold || thing == forge);
+        }
+
+        public void NotifyGoldPropertyDamaged(Thing property, Thing instigator)
+        {
+            if (!IsDivineGoldProperty(property) || instigator == null ||
+                instigator.Faction != Faction.OfPlayer) return;
+            int now = Find.TickManager.TicksGame;
+            if (now - lastPropertyPenaltyTick < 2500) return;
+            lastPropertyPenaltyTick = now;
+            Faction divine = Find.FactionManager.AllFactionsListForReading.FirstOrDefault(
+                f => f != null && f.def == site.Faction.def && !f.Hidden && !f.defeated);
+            divine = divine ?? site.Faction;
+            divine.TryAffectGoodwillWith(Faction.OfPlayer, -20, canSendMessage: true,
+                canSendHostilityLetter: true, reason: HistoryEventDefOf.AttackedBuilding,
+                lookTarget: property);
+            Messages.Message("Das Zerstören der goldenen Divine-Order-Schmiede gilt als Sakrileg! "
+                + "Rufverlust bei der Divine Order (-20).", property,
+                MessageTypeDefOf.NegativeEvent);
+            Log.Warning("[Aragorn] Divine Order golden property attacked by player: " + property);
         }
 
         public bool CanWaitAtForge(Pawn pawn, out string reason)
@@ -457,7 +486,7 @@ namespace AragornArmy
     public static class AndurilForgeBuilder
     {
         // All architecture is vanilla, with gold as real stuff. No graphics files.
-        public static Thing Build(Map map, IntVec3 near)
+        public static Thing Build(Map map, IntVec3 near, Faction owner)
         {
             ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
             ThingDef door = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
@@ -489,12 +518,12 @@ namespace AragornArmy
                 if (outside && (Math.Abs(dx) < 2 && Math.Abs(dz) == rz)) // main gates
                 {
                     if (dx == 0 && door != null)
-                        SpawnBuilding(door, ThingDefOf.Gold, c, map);
+                        SpawnBuilding(door, ThingDefOf.Gold, c, map, owner);
                     continue;
                 }
                 // Broken gold walls on the western side: tempting salvage.
                 if (dx == -rx && dz >= 2 && dz <= 4) continue;
-                SpawnBuilding(wall, ThingDefOf.Gold, c, map);
+                SpawnBuilding(wall, ThingDefOf.Gold, c, map, owner);
             }
 
             if (sarcophagus != null)
@@ -502,24 +531,27 @@ namespace AragornArmy
                 foreach (int dx in new[] { -9, 9 })
                 foreach (int dz in new[] { -5, 0, 5 })
                     SpawnBuilding(sarcophagus, ThingDefOf.Gold,
-                        center + new IntVec3(dx, 0, dz), map);
+                        center + new IntVec3(dx, 0, dz), map, owner);
             }
             IntVec3 forgePos = center + new IntVec3(0, 0, 2);
-            Thing bench = SpawnBuilding(smithy, ThingDefOf.Gold, forgePos, map);
+            Thing bench = SpawnBuilding(smithy, ThingDefOf.Gold, forgePos, map, owner);
             Log.Message("[Aragorn] Gold forge hall built (" + (2 * rx + 1)
                 + " x " + (2 * rz + 1) + ") at " + center
                 + "; workstation: " + smithy.defName + ".");
             return bench;
         }
 
-        private static Thing SpawnBuilding(ThingDef def, ThingDef stuff, IntVec3 cell, Map map)
+        private static Thing SpawnBuilding(ThingDef def, ThingDef stuff, IntVec3 cell, Map map, Faction owner)
         {
             if (def == null || !cell.InBounds(map)) return null;
             if (cell.GetThingList(map).Any(t => t is Building)) return null;
             try
             {
                 Thing thing = ThingMaker.MakeThing(def, def.MadeFromStuff ? stuff : null);
-                return GenSpawn.Spawn(thing, cell, map, WipeMode.Vanish);
+                Thing placed = GenSpawn.Spawn(thing, cell, map, WipeMode.Vanish);
+                if (placed != null && owner != null && placed.def.CanHaveFaction)
+                    placed.SetFaction(owner);
+                return placed;
             }
             catch (Exception ex)
             {
