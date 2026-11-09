@@ -18,6 +18,30 @@
     <description>Ein verborgenes Lager, in dem Aragorn von den Profaned gefangen gehalten wird.</description>
     <workerClass>AragornArmy.SitePartWorker_AragornRescue</workerClass>
     <siteTexture>World/WorldObjects/ProfanedFactionIcon</siteTexture>
+    <expandingIconTexture>World/WorldObjects/ProfanedFactionIcon</expandingIconTexture>
+    <requiresFaction>false</requiresFaction>
+    <showFactionInInspectString>false</showFactionInInspectString>
+    <increasesPopulation>true</increasesPopulation>
+    <wantsThreatPoints>true</wantsThreatPoints>
+    <forceExitAndRemoveMapCountdownDurationDays>4</forceExitAndRemoveMapCountdownDurationDays>
+  </SitePartDef>
+
+  <!-- One sequential quest per liberated spirit; created by AragornGame.StartTrial. -->
+  <QuestScriptDef>
+    <defName>AR_GhostTrialQuest</defName>
+    <root Class="AragornArmy.QuestNode_PermanentAragorn" />
+    <randomlySelectable>false</randomlySelectable>
+    <autoAccept>false</autoAccept>
+    <sendAvailableLetter>false</sendAvailableLetter>
+    <rootSelectionWeight>0</rootSelectionWeight>
+  </QuestScriptDef>
+  <SitePartDef>
+    <defName>AR_GhostTrialCamp</defName>
+    <label>Geisterkrypta</label>
+    <description>Eine von Profaned-Wachen besetzte Krypta mit einem verfluchten Geisterkrieger.</description>
+    <workerClass>AragornArmy.SitePartWorker_AragornTrial</workerClass>
+    <siteTexture>World/WorldObjects/ProfanedFactionIcon</siteTexture>
+    <expandingIconTexture>World/WorldObjects/ProfanedFactionIcon</expandingIconTexture>
     <requiresFaction>false</requiresFaction>
     <showFactionInInspectString>false</showFactionInInspectString>
     <increasesPopulation>true</increasesPopulation>
