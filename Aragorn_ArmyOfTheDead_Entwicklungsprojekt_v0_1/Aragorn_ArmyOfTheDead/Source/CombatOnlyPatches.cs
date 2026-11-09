@@ -158,15 +158,15 @@ namespace AragornArmy
                 // This is useful if Aragorn is off-map or temporarily loses Anduril.
                 if (game != null && game.IsSummoned(pawn))
                     yield return new Command_Action {
-                        defaultLabel = "Geister zurückrufen",
-                        defaultDesc = "Entfernt alle beschworenen Spieler-Geister auf allen geladenen Karten, auch verlorene Geister aus älteren Spielständen.",
+                        defaultLabel = AragornText.T("AR_Gizmo_RecallTitle"),
+                        defaultDesc = AragornText.T("AR_Gizmo_RecallDesc"),
                         action = () => game.RecallAll()
                     };
                 if (game != null && game.IsSummonedKing(pawn))
                 {
                     var lightning = new Command_Action {
-                        defaultLabel = "Geistersturm",
-                        defaultDesc = "5 türkise Blitze mit je 20 Schaden und 300 % Durchdringung in Radius 6. Zielpunkt in 15 Feldern. 3 Ingame-Stunden Abklingzeit.",
+                        defaultLabel = AragornText.T("AR_Gizmo_StormTitle"),
+                        defaultDesc = AragornText.T("AR_Gizmo_StormDesc"),
                         action = () => game.TargetKingLightning(pawn)
                     };
                     if (game.LightningCooldownRemaining > 0)
@@ -183,12 +183,9 @@ namespace AragornArmy
             if (forgeGame != null && forgeGame.IsForgeMap(pawn.Map) && !forgeGame.Completed)
             {
                 Command_Action forgeWatch = new Command_Action {
-                    defaultLabel = "An der Schmiede wachen",
-                    defaultDesc = "Aragorn geht zur goldenen Schmiede und bleibt dort. "
-                        + "Der Meisterschmied der Divine Order fertigt Andúril, "
-                        + "während die Profaned Legion in Wellen angreift. "
-                        + "Die übrigen Kämpfer können den Ort verteidigen.",
-                    action = () => forgeGame.StartGuarding(pawn)
+                    defaultLabel = AragornText.T("AR_Forge_GuardTitle"),
+                    defaultDesc = AragornText.T("AR_Forge_GuardDesc"),
+                    action = () => forgeGame.SpeakToSmith(pawn)
                 };
                 if (!forgeGame.CanWaitAtForge(pawn, out string forgeReason))
                     forgeWatch.Disable(forgeReason);
@@ -198,11 +195,11 @@ namespace AragornArmy
             // Keep recall visible even without the sword. A lost Anduril should
             // not strand previously summoned specters permanently.
             Command_Action recall = new Command_Action {
-                defaultLabel = "Geister zurückrufen",
-                defaultDesc = "Ruft alle beschworenen Geister auf allen geladenen Karten sofort zurück (inklusive verwaister Geister aus älteren Versionen).",
+                defaultLabel = AragornText.T("AR_Gizmo_RecallTitle"),
+                defaultDesc = AragornText.T("AR_Gizmo_RecallDesc"),
                 action = () => game.RecallAll()
             };
-            if (!game.HasSummonedGhosts) recall.Disable("Zurzeit keine Geister beschworen.");
+            if (!game.HasSummonedGhosts) recall.Disable(AragornText.T("AR_Gizmo_RecallNone"));
             yield return recall;
 
             if (!GhostDefinitions.HasAnduril(pawn))
@@ -211,32 +208,32 @@ namespace AragornArmy
                 // remains available in case a save loses the unique sword.
                 if (forgeGame != null && forgeGame.Completed)
                     yield return new Command_Action {
-                        defaultLabel = "Andúril wiederherstellen (Test)",
-                        defaultDesc = "Testwerkzeug für ältere Spielstände mit verlorenem Andúril.",
+                        defaultLabel = AragornText.T("AR_Gizmo_RestoreTitle"),
+                        defaultDesc = AragornText.T("AR_Gizmo_RestoreDesc"),
                         action = () => GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril")
                     };
                 yield break;
             }
 
             Command_Action summon = new Command_Action {
-                defaultLabel = "Geister beschwören",
-                defaultDesc = "Beschwört alle freigeschalteten Geister. 6–13 Stunden Dauer, 13 Stunden Cooldown.",
+                defaultLabel = AragornText.T("AR_Gizmo_SummonTitle"),
+                defaultDesc = AragornText.T("AR_Gizmo_SummonDesc"),
                 action = () => game.Summon(pawn)
             };
             if (!game.CanSummon(pawn, out string summoningReason)) summon.Disable(summoningReason);
             yield return summon;
 
             Command_Action spin = new Command_Action {
-                defaultLabel = "Andúril – Rundumschlag",
-                defaultDesc = "60 Schaden, 150 % Durchdringung, Radius 3 und ein leichter Rückstoß. Prototyp-Cooldown: 1500 Ticks.",
+                defaultLabel = AragornText.T("AR_Gizmo_WhirlTitle"),
+                defaultDesc = AragornText.T("AR_Gizmo_WhirlDesc"),
                 action = () => game.StartSpin(pawn)
             };
             if (game.SpinCooldownRemaining > 0) spin.Disable("Rundumschlag noch auf Abklingzeit.");
             yield return spin;
 
             Command_Action trial = new Command_Action {
-                defaultLabel = "Nächste Geisterkrypta entdecken",
-                defaultDesc = "Startet die nächste der 13 Weltkartenprüfungen. Reise mit Aragorn zur Krypta, besiege den Geisterboss und die Profaned-Legion, um den Geist freizuschalten.",
+                defaultLabel = AragornText.T("AR_Trial_GizmoTitle"),
+                defaultDesc = AragornText.T("AR_Trial_GizmoDesc"),
                 action = () => game.StartTrial(pawn)
             };
             if (!game.CanStartTrial(pawn, out string trialReason)) trial.Disable(trialReason);
