@@ -15,7 +15,7 @@ namespace AragornArmy
             AragornForgeGame game = Current.Game?.GetComponent<AragornForgeGame>();
             if (game == null || game.ForgeBuilding != __instance ||
                 !game.ShowForgeProgress(__instance.Map)) return;
-            if (!string.IsNullOrEmpty(__result)) __result += "\\n";
+            if (!string.IsNullOrEmpty(__result)) __result += "\n";
             __result += game.ForgeProgressLabel;
         }
     }
