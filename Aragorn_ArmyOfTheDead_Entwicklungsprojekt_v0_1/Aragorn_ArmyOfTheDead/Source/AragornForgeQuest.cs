@@ -38,6 +38,30 @@ namespace AragornArmy
         public bool Completed => completed;
         public int ProgressPercent => Mathf.Clamp(Mathf.RoundToInt(progress * 100f / ForgeTicksRequired), 0, 100);
         public bool IsForgeMap(Map map) => site != null && site.HasMap && site.Map == map && forge != null;
+        public bool ShowForgeProgress(Map map) =>
+            map != null && IsForgeMap(map) && built && !completed &&
+            quest != null && quest.State == QuestState.Ongoing;
+        public string ForgeProgressLabel =>
+            "Andúril: " + ProgressPercent + "%  |  Welle " + waves + "/12"
+            + (IsForgingNow() ? "  |  Schmieden läuft" : "  |  Schmieden pausiert");
+        public float ForgeProgressFraction => Mathf.Clamp01(progress / (float)ForgeTicksRequired);
+        private IntVec3 SmithStandCell =>
+            forge == null ? IntVec3.Invalid : forge.Position + new IntVec3(0, 0, -2);
+        private IntVec3 AragornStandCell =>
+            forge == null ? IntVec3.Invalid : forge.Position + new IntVec3(0, 0, -5);
+        private bool IsForgingNow()
+        {
+            if (forge == null || !forge.Spawned || smith == null || smith.Dead ||
+                smith.Downed || !smith.Spawned || aragorn == null ||
+                aragorn.Dead || aragorn.Downed || !aragorn.Spawned ||
+                aragorn.Map != forge.Map || smith.Map != forge.Map) return false;
+            JobDef guardJob = DefDatabase<JobDef>.GetNamedSilentFail("AR_WaitForAnduril");
+            JobDef smithJob = DefDatabase<JobDef>.GetNamedSilentFail("AR_SmithAnduril");
+            return aragorn.jobs?.curJob?.def == guardJob &&
+                smith.jobs?.curJob?.def == smithJob &&
+                aragorn.Position.DistanceTo(AragornStandCell) <= 1.5f &&
+                smith.Position.DistanceTo(SmithStandCell) <= 1.5f;
+        }
 
         public override void ExposeData()
         {
@@ -170,33 +194,14 @@ namespace AragornArmy
                 FailForge("Der Meisterschmied oder die Schmiede wurde zerstört.");
                 return;
             }
-            // Once started, the siege timer never pauses: an hour later another
-            // wave arrives even if Aragorn steps away or previous enemies survive.
             int now = Find.TickManager.TicksGame;
-            if (siegeStartTick >= 0 && waves < TotalWaves && now >= nextWaveTick)
-            {
-                SpawnWave();
-                nextWaveTick += WaveIntervalTicks;
-            }
             if (aragorn == null || aragorn.Dead || aragorn.Destroyed)
             {
                 aragorn = FindSavedAragorn();
                 if (aragorn == null) return; // waiting for the player to arrive with Aragorn
             }
             if (!aragorn.Spawned || aragorn.Map != site.Map) return;
-            if (aragorn.Position.DistanceTo(forge.Position) > 4.5f)
-                return; // stops while Aragorn is away, fleeing or fighting elsewhere
             if (smith.Downed || aragorn.Downed) return;
-            if (siegeStartTick < 0)
-            {
-                siegeStartTick = now;
-                nextWaveTick = now; // the first attack begins immediately
-                SpawnWave();
-                nextWaveTick += WaveIntervalTicks;
-                Messages.Message("Die Belagerung beginnt! Zwölf Stunden, zwölf Wellen. "
-                    + "Andúril wird nur geschmiedet, solange Aragorn bei der Esse bleibt.",
-                    forge, MessageTypeDefOf.ThreatBig);
-            }
             // Keep the Divine Order smith working at the actual vanilla bench.
             // Unlike Aragorn, this NPC may have zero crafting skill.
             JobDef smithJob = DefDatabase<JobDef>.GetNamedSilentFail("AR_SmithAnduril");
@@ -205,7 +210,7 @@ namespace AragornArmy
             {
                 try
                 {
-                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge),
+                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge, smithCell),
                         JobCondition.InterruptForced);
                 }
                 catch (Exception ex)
@@ -215,17 +220,27 @@ namespace AragornArmy
                 }
             }
 
-            // The smith is an actual Divine Order NPC, but progress is scripted
-            // independently of pawn crafting skills or any workstation bill.
+            // Both smith and Aragorn must physically hold their posts AND
+            // execute their dedicated jobs. A forced retreat freezes everything.
+            // WAVE TIMING IS BASED ON FORGING PROGRESS, not world time.
+            // Thus waves cannot stack while the ritual is interrupted.
+            if (!IsForgingNow()) return;
+            if (siegeStartTick < 0)
+            {
+                siegeStartTick = now;
+                Messages.Message("Die Schmiedebelagerung hat begonnen: zwölf Stunden, "
+                    + "zwölf stündliche Angriffswellen. Unterbrechungen halten "
+                    + "sowohl die Arbeit als auch die nächste Welle an.",
+                    forge, MessageTypeDefOf.ThreatBig);
+            }
+            while (waves < TotalWaves && progress >= waves * WaveIntervalTicks)
+                SpawnWave();
             progress += 60;
             if (progress % 360 == 0)
                 FleckMaker.ThrowDustPuffThick(forge.DrawPos, site.Map, 1.2f,
                     new Color(1f, .68f, .20f));
             if (progress >= ForgeTicksRequired)
             {
-                // Complete only once all 12 hourly attacks have been scheduled.
-                while (waves < TotalWaves)
-                    SpawnWave();
                 CompleteForge();
             }
         }
@@ -311,18 +326,26 @@ namespace AragornArmy
                     Log.Error("[Aragorn] Forge building not created. No encounter started.");
                     return;
                 }
-                PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail("BotchJob_DivineOrderCommoner");
-                if (kind == null) { Log.Error("[Aragorn] Divine Order Commoner PawnKind missing."); return; }
+                // Champion receives the original Divine Order plate armor and open
+                // plate helmet by default, much tougher than a commoner.
+                PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail("BotchJob_DivineOrderChampion");
+                if (kind == null) { Log.Error("[Aragorn] Divine Order Champion PawnKind missing."); return; }
                 Faction divine = site.Faction;
                 smith = PawnGenerator.GeneratePawn(kind, divine);
                 smith.Name = new NameSingle("Meisterschmied der Divine Order");
-                IntVec3 smithCell = CellFinder.RandomClosewalkCellNear(forge.Position, map, 3);
+                IntVec3 smithCell = SmithStandCell;
+                if (!smithCell.InBounds(map) || !smithCell.Standable(map))
+                {
+                    Log.Error("[Aragorn] Fixed smith workstation cell obstructed at " + smithCell);
+                    return;
+                }
                 GenSpawn.Spawn(smith, smithCell, map);
+                smith.Rotation = Rot4.North;
                 // The Divine Order blacksmith is a neutral quest NPC, never a colonist.
                 // He can still be attacked or killed by invading Profaned.
                 JobDef smithJob = DefDatabase<JobDef>.GetNamedSilentFail("AR_SmithAnduril");
                 if (smithJob != null && smith.jobs != null)
-                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge),
+                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge, SmithStandCell),
                         JobCondition.InterruptForced);
                 built = true;
                 Messages.Message("Die Divine Order wartet auf Aragorn. Wähle Aragorn "
@@ -354,12 +377,11 @@ namespace AragornArmy
                 LordMaker.MakeNewLord(enemy,
                     new LordJob_AragornSiegeNoRetreat(),
                     map, attackers);
-                Find.LetterStack.ReceiveLetter("Profaned-Welle " + (index + 1),
-                    "Die Profaned Legion greift die goldene Schmiede an! "
-                    + attackers.Count + " Feinde nähern sich. Noch "
-                    + (TotalWaves - waves) + " Angriffswellen bis zur letzten Welle. Andúril: "
-                    + ProgressPercent + " % geschmiedet.",
-                    LetterDefOf.ThreatBig, forge);
+                // Messages never forcibly pause combat like ThreatBig letters.
+                Messages.Message("Profaned-Welle " + (index + 1) + "/12: "
+                    + attackers.Count + " neue Feinde! Andúril "
+                    + ProgressPercent + "% geschmiedet.",
+                    forge, MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Forge assault wave " + (index + 1) +
                     " spawned: " + attackers.Count + " Profaned.");
             }
@@ -401,6 +423,8 @@ namespace AragornArmy
             { reason = "Die Schmiedequest ist nicht aktiv."; return false; }
             if (forge == null || !forge.Spawned || !IsForgeMap(pawn.Map))
             { reason = "Aragorn muss sich auf der Schmiedekarte befinden."; return false; }
+            if (!AragornStandCell.InBounds(pawn.Map) || !AragornStandCell.Standable(pawn.Map))
+            { reason = "Der Wachposten vor der Schmiede ist blockiert."; return false; }
             if (pawn.Downed) { reason = "Aragorn ist kampfunfähig."; return false; }
             return true;
         }
@@ -413,7 +437,8 @@ namespace AragornArmy
             if (jobDef == null) { AragornGame.Reject("AR_WaitForAnduril JobDef fehlt."); return; }
             aragorn = pawn;
             if (pawn.drafter != null && pawn.drafter.Drafted) pawn.drafter.Drafted = false;
-            pawn.jobs.StartJob(JobMaker.MakeJob(jobDef, forge), JobCondition.InterruptForced);
+            pawn.jobs.StartJob(JobMaker.MakeJob(jobDef, forge, AragornStandCell),
+                JobCondition.InterruptForced);
             Messages.Message("Aragorn wacht beim Schmied. Die Fertigung dauert insgesamt 12 Ingame-Stunden, "
                 + "solange Aragorn in der Nähe bleibt. Fortschritt: "
                 + ProgressPercent + " %.", pawn, MessageTypeDefOf.PositiveEvent);
@@ -493,7 +518,7 @@ namespace AragornArmy
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedOrNull(TargetIndex.A);
-            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
+            yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
             yield return Toils_General.Wait(ForgeWaitLength, TargetIndex.A);
         }
 
@@ -506,7 +531,7 @@ namespace AragornArmy
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedOrNull(TargetIndex.A);
-            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
+            yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
             yield return Toils_General.Wait(40000, TargetIndex.A);
         }
     }
