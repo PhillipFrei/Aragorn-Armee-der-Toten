@@ -55,9 +55,28 @@ namespace AragornArmy
         }
 
         private static int Ticks => Find.TickManager.TicksGame;
-        private bool AnySummoned => ghosts.Any(p => p != null && p.Spawned && !p.Dead && !p.Downed);
-        public bool IsSummonedKing(Pawn pawn) => pawn != null && (pawn.kindDef.defName == "AR_GhostSpiritKing" || pawn.kindDef.defName == "AR_GhostKing") && ghosts.Contains(pawn) && pawn.Spawned && !pawn.Dead && !pawn.Downed;
-        public bool IsSummoned(Pawn pawn) => pawn != null && ghosts.Contains(pawn);
+        private static bool IsPlayerGhost(Pawn pawn) =>
+            pawn != null && !pawn.Destroyed && pawn.Faction == Faction.OfPlayer
+            && GhostDefinitions.IsGhost(pawn);
+
+        // Recover previously summoned specters even when an old save or an
+        // earlier Summon() call lost them from the saved reference list.
+        private List<Pawn> CollectPlayerGhosts()
+        {
+            var found = new HashSet<Pawn>();
+            foreach (Pawn ghost in ghosts)
+                if (IsPlayerGhost(ghost)) found.Add(ghost);
+            if (Find.Maps != null)
+                foreach (Map map in Find.Maps)
+                    foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned)
+                        if (IsPlayerGhost(pawn)) found.Add(pawn);
+            return found.ToList();
+        }
+
+        private bool AnySummoned => CollectPlayerGhosts().Any(p => p.Spawned && !p.Dead);
+        public bool HasSummonedGhosts => CollectPlayerGhosts().Any(p => p.Spawned || p.Corpse != null);
+        public bool IsSummonedKing(Pawn pawn) => IsSummoned(pawn) && (pawn.kindDef.defName == "AR_GhostSpiritKing" || pawn.kindDef.defName == "AR_GhostKing") && pawn.Spawned && !pawn.Dead && !pawn.Downed;
+        public bool IsSummoned(Pawn pawn) => IsPlayerGhost(pawn) && (ghosts.Contains(pawn) || pawn.Spawned);
         public int SummonCooldownRemaining => Math.Max(0, lastSummonTick + 32500 - Ticks);
         public int LightningCooldownRemaining => Math.Max(0, lastKingLightning + 7500 - Ticks);
         public int SpinCooldownRemaining => Math.Max(0, lastSpinTick + 1500 - Ticks); // Prototype: 0.6 in-game hours.
@@ -73,6 +92,11 @@ namespace AragornArmy
                 {
                     // Captive quest Aragorn is prepared only AFTER joining the player.
                     // This avoids handing Anduril to the prisoner's hostile captors.
+                    if (IsPlayerGhost(pawn) && !ghosts.Contains(pawn))
+                    {
+                        ghosts.Add(pawn);
+                        Log.Message("[Aragorn] Recovered orphaned summoned spirit: " + pawn.LabelShortCap);
+                    }
                     if (GhostDefinitions.IsAragorn(pawn) && pawn.Faction == Faction.OfPlayer)
                     {
                         if (!initializedAragornIds.Contains(pawn.thingIDNumber))
@@ -98,6 +122,9 @@ namespace AragornArmy
                     ghosts.RemoveAt(i);
                     continue;
                 }
+                // ToolUser spirits carry their fixed weapon, including survivors
+                // from v0.10 whose equipment tracker was still absent.
+                GhostDefinitions.EnsureGhostWeapon(ghost);
                 // Always drafted: combat commands only; no work schedule/hauling.
                 if (ghost.drafter != null && !ghost.drafter.Drafted) ghost.drafter.Drafted = true;
                 if (ghost.needs != null) ghost.needs.AddOrRemoveNeedsAsAppropriate();
@@ -135,8 +162,14 @@ namespace AragornArmy
         public void Summon(Pawn aragorn)
         {
             if (!CanSummon(aragorn, out string reason)) { Reject(reason); return; }
-            // Every summon produces fresh Pawns and fresh original-mod weapons.
-            ghosts.Clear();
+            // Never erase references to existing ghosts; otherwise they become
+            // unrecallable and subsequent waves keep accumulating on the map.
+            if (CollectPlayerGhosts().Any(p => p.Spawned && !p.Dead))
+            {
+                Reject("Erst die bereits beschworenen Geister zurückrufen.");
+                return;
+            }
+            ghosts.RemoveAll(p => p == null || p.Destroyed || p.Dead || !p.Spawned);
             for (int i = 0; i < Unlocked && i < 13; i++)
             {
                 Pawn ghost = CreateGhost(i, Faction.OfPlayer);
@@ -158,9 +191,18 @@ namespace AragornArmy
             cleanUpInProgress = true;
             try
             {
-                foreach (Pawn ghost in ghosts.ToList()) RemoveGhost(ghost);
+                var targets = CollectPlayerGhosts();
+                foreach (Pawn ghost in targets)
+                {
+                    try { RemoveGhost(ghost); }
+                    catch (Exception ex)
+                    {
+                        Log.Error("[Aragorn] Rückruf fehlgeschlagen für " + ghost?.LabelShortCap + ": " + ex);
+                    }
+                }
                 ghosts.Clear();
                 summonedUntil = -1;
+                Log.Message("[Aragorn] Rückruf: " + targets.Count + " Spieler-Geister erfasst.");
             }
             finally { cleanUpInProgress = false; }
             Messages.Message("Die Armee der Toten ist zurückgerufen.", MessageTypeDefOf.NeutralEvent);
@@ -179,8 +221,7 @@ namespace AragornArmy
             if (i < 0 || i >= GhostDefinitions.PawnKinds.Length) return null;
             PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail(GhostDefinitions.PawnKinds[i]);
             if (kind == null) { Log.Error("[Aragorn] Missing PawnKind for index " + i); return null; }
-            GhostDefinitions.ConfigureNaturalAttacks(i);
-            // Generate a combat-only pawn without random backgrounds, apparel,
+            // Generate a combat-only ToolUser without human backgrounds, apparel,
             // equipment, relationships, ideology, addictions or age traits.
             var request = new PawnGenerationRequest(kind, faction,
                 forceGenerateNewPawn: true, canGeneratePawnRelations: false,
@@ -214,10 +255,9 @@ namespace AragornArmy
                 pawn.Drawer.renderer.SetAllGraphicsDirty();
             }
             if (pawn.needs != null) pawn.needs.AddOrRemoveNeedsAsAppropriate();
-            // New wraith-like races use intrinsic weapon attacks, never inventory gear.
-            // Legacy human ghosts from old saved games may still use equipment.
-            if (pawn.RaceProps.Humanlike)
-                GhostDefinitions.SetFixedWeapon(pawn, GhostDefinitions.Weapons[i]);
+            // ToolUser is non-humanlike but has a real weapon tracker.
+            // The original weapon is permanently locked via Harmony patches.
+            GhostDefinitions.EnsureGhostWeapon(pawn);
             return pawn;
         }
 
