@@ -15,7 +15,7 @@ namespace AragornArmy
     // Divine Order smith does the forging; Aragorn only needs to remain near the forge.
     public sealed class AragornForgeGame : GameComponent
     {
-        public const int ForgeTicksRequired = 10000; // 4 in-game hours while Aragorn guards the smith.
+        public const int ForgeTicksRequired = 30000; // 12 in-game hours of nearby guard duty.
         private Quest quest;
         private Site site;
         private Pawn smith;
@@ -27,8 +27,11 @@ namespace AragornArmy
         private bool provisionalAndurilRemoved;
         private int progress;
         private int waves;
+        private int siegeStartTick = -1;
+        private int nextWaveTick = -1;
         private int retryTick;
-        private readonly float[] waveFractions = { 0f, .24f, .50f, .76f, .91f };
+        private const int WaveIntervalTicks = 2500; // exactly one in-game hour
+        private const int TotalWaves = 12;
 
         public AragornForgeGame(Game game) { }
         public bool Completed => completed;
@@ -48,6 +51,8 @@ namespace AragornArmy
             Scribe_Values.Look(ref provisionalAndurilRemoved, "arForgeProvisionalSwordRemoved");
             Scribe_Values.Look(ref progress, "arForgeProgress");
             Scribe_Values.Look(ref waves, "arForgeWaves");
+            Scribe_Values.Look(ref siegeStartTick, "arForgeSiegeStartTick", -1);
+            Scribe_Values.Look(ref nextWaveTick, "arForgeNextWaveTick", -1);
             Scribe_Values.Look(ref retryTick, "arForgeRetry");
         }
 
@@ -93,8 +98,8 @@ namespace AragornArmy
             q.name = "Andúril – Die Klinge neu schmieden";
             q.description = "Ein Meisterschmied der Divine Order bewahrt die Bruchstücke von Narsil. "
                 + "Reise mit Aragorn zur goldenen Schmiedehalle. Während der Meister die Klinge neu schmiedet, "
-                + "muss Aragorn an seiner Schmiede Wache halten. Deine übrigen Kämpfer verteidigen den Ort "
-                + "gegen immer größere Wellen der Profaned Legion. Sobald Andúril fertig ist, "
+                + "muss Aragorn zwölf Ingame-Stunden an der Schmiede Wache halten. Deine übrigen Kämpfer verteidigen den Ort "
+                + "gegen zwölf stündlich eintreffende, immer stärkere Wellen der Profaned Legion. Überlebende Feinde früherer Wellen bleiben auf der Karte. Sobald Andúril fertig ist, "
                 + "nimm das Schwert und verlasse das Gelände. Die goldenen Bauteile sind echte Materialien "
                 + "und könnten zerlegt werden – wenn du während des Angriffs Zeit dafür findest. "
                 + "\n\nKein Zeitlimit für die Annahme.";
@@ -135,6 +140,14 @@ namespace AragornArmy
                 FailForge("Der Meisterschmied oder die Schmiede wurde zerstört.");
                 return;
             }
+            // Once started, the siege timer never pauses: an hour later another
+            // wave arrives even if Aragorn steps away or previous enemies survive.
+            int now = Find.TickManager.TicksGame;
+            if (siegeStartTick >= 0 && waves < TotalWaves && now >= nextWaveTick)
+            {
+                SpawnWave();
+                nextWaveTick += WaveIntervalTicks;
+            }
             if (aragorn == null || aragorn.Dead || aragorn.Destroyed)
             {
                 aragorn = FindSavedAragorn();
@@ -144,6 +157,16 @@ namespace AragornArmy
             if (aragorn.Position.DistanceTo(forge.Position) > 4.5f)
                 return; // stops while Aragorn is away, fleeing or fighting elsewhere
             if (smith.Downed || aragorn.Downed) return;
+            if (siegeStartTick < 0)
+            {
+                siegeStartTick = now;
+                nextWaveTick = now; // the first attack begins immediately
+                SpawnWave();
+                nextWaveTick += WaveIntervalTicks;
+                Messages.Message("Die Belagerung beginnt! Zwölf Stunden, zwölf Wellen. "
+                    + "Andúril wird nur geschmiedet, solange Aragorn bei der Esse bleibt.",
+                    forge, MessageTypeDefOf.ThreatBig);
+            }
             // Keep the Divine Order smith working at the actual vanilla bench.
             // Unlike Aragorn, this NPC may have zero crafting skill.
             JobDef smithJob = DefDatabase<JobDef>.GetNamedSilentFail("AR_SmithAnduril");
@@ -168,12 +191,13 @@ namespace AragornArmy
             if (progress % 360 == 0)
                 FleckMaker.ThrowDustPuffThick(forge.DrawPos, site.Map, 1.2f,
                     new Color(1f, .68f, .20f));
-            while (waves < waveFractions.Length &&
-                progress >= ForgeTicksRequired * waveFractions[waves])
-                SpawnWave();
-
             if (progress >= ForgeTicksRequired)
+            {
+                // Complete only once all 12 hourly attacks have been scheduled.
+                while (waves < TotalWaves)
+                    SpawnWave();
                 CompleteForge();
+            }
         }
 
         private void CreateForgeSite()
@@ -289,18 +313,21 @@ namespace AragornArmy
                 map, CellFinder.EdgeRoadChance_Hostile, out IntVec3 edge))
                 edge = CellFinder.RandomEdgeCell(map);
 
-            int baseCount = AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount;
-            int count = Mathf.Clamp(Mathf.RoundToInt(baseCount * (.65f + index * .20f)), 5, 50);
-            List<Pawn> attackers = ProfanedEncounterUtility.SpawnGuards(map, edge, enemy, count);
+            int baseCount = AragornMod.Config == null ? 26 : AragornMod.Config.forgeWaveBaseCount;
+            int count = Mathf.Clamp(baseCount + index * 2, 10, 80);
+            // Progressively replace weak ordinary infantry with armored elites,
+            // Colossi and Wraiths from the ORIGINAL Profaned PawnKindDefs.
+            List<Pawn> attackers = ProfanedEncounterUtility.SpawnSiegeWave(
+                map, edge, enemy, count, index);
             if (attackers.Count > 0)
             {
                 LordMaker.MakeNewLord(enemy,
-                    new LordJob_AssaultColony(enemy, canKidnap: false,
-                        canTimeoutOrFlee: false, canSteal: false),
+                    new LordJob_AragornSiegeNoRetreat(),
                     map, attackers);
                 Find.LetterStack.ReceiveLetter("Profaned-Welle " + (index + 1),
                     "Die Profaned Legion greift die goldene Schmiede an! "
-                    + attackers.Count + " Feinde nähern sich. Andúril: "
+                    + attackers.Count + " Feinde nähern sich. Noch "
+                    + (TotalWaves - waves) + " Angriffswellen bis zur letzten Welle. Andúril: "
                     + ProgressPercent + " % geschmiedet.",
                     LetterDefOf.ThreatBig, forge);
                 Log.Message("[Aragorn] Forge assault wave " + (index + 1) +
@@ -330,7 +357,7 @@ namespace AragornArmy
             aragorn = pawn;
             if (pawn.drafter != null && pawn.drafter.Drafted) pawn.drafter.Drafted = false;
             pawn.jobs.StartJob(JobMaker.MakeJob(jobDef, forge), JobCondition.InterruptForced);
-            Messages.Message("Aragorn wacht beim Schmied. Die Fertigung dauert insgesamt 4 Ingame-Stunden, "
+            Messages.Message("Aragorn wacht beim Schmied. Die Fertigung dauert insgesamt 12 Ingame-Stunden, "
                 + "solange Aragorn in der Nähe bleibt. Fortschritt: "
                 + ProgressPercent + " %.", pawn, MessageTypeDefOf.PositiveEvent);
         }
@@ -375,6 +402,8 @@ namespace AragornArmy
             provisionalAndurilRemoved = false;
             progress = 0;
             waves = 0;
+            siegeStartTick = -1;
+            nextWaveTick = -1;
             retryTick = Find.TickManager.TicksGame + 2500;
         }
     }
