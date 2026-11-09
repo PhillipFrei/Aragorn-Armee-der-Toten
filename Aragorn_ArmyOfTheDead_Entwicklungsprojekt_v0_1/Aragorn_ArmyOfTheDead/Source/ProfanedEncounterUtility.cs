@@ -88,6 +88,67 @@ namespace AragornArmy
                 + " original Profaned pawns, allegiance=" + faction.Name);
             return result;
         }
+        // Heavier military group specifically for the Anduril siege.
+        // The regular crypt encounters keep their existing difficulty.
+        public static List<Pawn> SpawnSiegeWave(Map map, IntVec3 edge,
+            Faction faction, int requested, int waveIndex)
+        {
+            var result = new List<Pawn>();
+            if (map == null || faction == null) return result;
+            FactionDef factionDef = DefDatabase<FactionDef>.GetNamedSilentFail(ProfanedDefName);
+            var combat = factionDef?.pawnGroupMakers?.FirstOrDefault(x =>
+                x.kindDef == PawnGroupKindDefOf.Combat);
+            var common = combat?.options?.Where(x =>
+                x.kind != null && x.selectionWeight > 0).ToList()
+                ?? new List<PawnGenOption>();
+            if (common.Count == 0)
+            {
+                Log.Error("[Aragorn] Profaned siege cannot find its Combat pawn pool.");
+                return result;
+            }
+            // These are the actual Profaned 1.6 PawnKindDefs, not generic medieval fighters.
+            string[] hardNames = {
+                "BotchJob_ScourgeKnight", "BotchJob_Gravetender",
+                "BotchJob_CryptLurker", "BotchJob_ScourgeLord",
+                "BotchJob_ProfanedCursebearer", "BotchJob_UndeadColossus",
+                "BotchJob_UndeadWarg", "BotchJob_Wraith"
+            };
+            var hard = hardNames.Select(DefDatabase<PawnKindDef>.GetNamedSilentFail)
+                .Where(k => k != null).ToList();
+            int total = Mathf.Clamp(requested, 10, 80);
+            int eliteCount = hard.Count == 0 ? 0 :
+                Mathf.Clamp(Mathf.RoundToInt(total * (.25f + waveIndex * .018f)), 0, total);
+            for (int i = 0; i < total; i++)
+            {
+                PawnKindDef kind;
+                if (i < eliteCount)
+                {
+                    // Stronger creatures become common in later waves.
+                    int eliteIndex = (waveIndex >= 7 && i % 5 == 0)
+                        ? Rand.Range(Math.Min(3, hard.Count), hard.Count)
+                        : Rand.Range(0, hard.Count);
+                    kind = hard[eliteIndex];
+                }
+                else
+                    kind = common.RandomElementByWeight(x => x.selectionWeight).kind;
+                try
+                {
+                    Pawn pawn = PawnGenerator.GeneratePawn(kind, faction);
+                    IntVec3 pos = CellFinder.RandomClosewalkCellNear(edge, map, 12);
+                    GenSpawn.Spawn(pawn, pos, map);
+                    result.Add(pawn);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("[Aragorn] Siege enemy failed to spawn (" +
+                        kind?.defName + "): " + ex.Message);
+                }
+            }
+            Log.Message("[Aragorn] Forge siege wave " + (waveIndex + 1) +
+                ": " + result.Count + " undead, including up to " + eliteCount +
+                " elite units.");
+            return result;
+        }
     }
 
     // A small walkable crypt as the first playable structure prototype.
