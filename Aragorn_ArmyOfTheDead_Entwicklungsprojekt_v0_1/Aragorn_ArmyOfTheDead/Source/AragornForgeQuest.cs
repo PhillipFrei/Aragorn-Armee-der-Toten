@@ -24,6 +24,7 @@ namespace AragornArmy
         private bool completed;
         private bool offeredLetter;
         private bool built;
+        private bool provisionalAndurilRemoved;
         private int progress;
         private int waves;
         private int retryTick;
@@ -44,6 +45,7 @@ namespace AragornArmy
             Scribe_Values.Look(ref completed, "arForgeCompleted");
             Scribe_Values.Look(ref offeredLetter, "arForgeLetter");
             Scribe_Values.Look(ref built, "arForgeBuilt");
+            Scribe_Values.Look(ref provisionalAndurilRemoved, "arForgeProvisionalSwordRemoved");
             Scribe_Values.Look(ref progress, "arForgeProgress");
             Scribe_Values.Look(ref waves, "arForgeWaves");
             Scribe_Values.Look(ref retryTick, "arForgeRetry");
@@ -84,11 +86,8 @@ namespace AragornArmy
 
         private void OfferForgeQuest(Pawn hero, QuestScriptDef root)
         {
-            // Old developer builds handed Anduril to Aragorn immediately.
-            // Take that provisional sword away so the reforging can be played in existing saves.
-            if (hero.equipment?.Primary?.def?.defName == "AR_Anduril")
-                hero.equipment.DestroyAllEquipment();
-
+            // Do not remove existing v0.11 Anduril until the player actually accepts
+            // the new quest. This avoids changing saved pawns merely on mod load.
             Quest q = Quest.MakeRaw();
             q.root = root;
             q.name = "Andúril – Die Klinge neu schmieden";
@@ -115,6 +114,15 @@ namespace AragornArmy
         {
             if (Find.TickManager.TicksGame % 60 != 0 || quest == null || completed) return;
             if (quest.State != QuestState.Ongoing) return;
+            // Older test versions gave Anduril immediately. Once this quest is
+            // accepted, replace that provisional reward with the reforged sword.
+            if (!provisionalAndurilRemoved)
+            {
+                Pawn hero = FindSavedAragorn();
+                if (hero != null && hero.equipment?.Primary?.def?.defName == "AR_Anduril")
+                    hero.equipment.DestroyAllEquipment();
+                provisionalAndurilRemoved = true;
+            }
 
             if (site == null && Find.TickManager.TicksGame >= retryTick)
             {
@@ -364,6 +372,7 @@ namespace AragornArmy
             aragorn = null;
             built = false;
             offeredLetter = false;
+            provisionalAndurilRemoved = false;
             progress = 0;
             waves = 0;
             retryTick = Find.TickManager.TicksGame + 2500;
