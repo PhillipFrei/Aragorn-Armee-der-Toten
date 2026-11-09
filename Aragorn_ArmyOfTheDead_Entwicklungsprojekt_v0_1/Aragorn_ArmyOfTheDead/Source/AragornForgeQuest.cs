@@ -408,6 +408,18 @@ namespace AragornArmy
         }
     }
 
+    // Unlike generic raids this siege has no retreat, timeout or theft transition.
+    // Downed/dead attackers naturally drop out of the Lord without ordering others home.
+    public class LordJob_AragornSiegeNoRetreat : LordJob
+    {
+        public override StateGraph CreateGraph()
+        {
+            StateGraph graph = new StateGraph();
+            graph.AddToil(new LordToil_AssaultColony());
+            return graph;
+        }
+    }
+
     public class SitePartWorker_AndurilForge : SitePartWorker
     {
         public override void PostMapGenerate(Map map)
