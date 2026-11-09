@@ -48,4 +48,34 @@
     <wantsThreatPoints>true</wantsThreatPoints>
     <forceExitAndRemoveMapCountdownDurationDays>4</forceExitAndRemoveMapCountdownDurationDays>
   </SitePartDef>
+
+  <!-- Story quest that follows Aragorn's rescue. No quest expiration. -->
+  <QuestScriptDef>
+    <defName>AR_ReforgeAndurilQuest</defName>
+    <root Class="AragornArmy.QuestNode_PermanentAragorn" />
+    <randomlySelectable>false</randomlySelectable>
+    <autoAccept>false</autoAccept>
+    <sendAvailableLetter>false</sendAvailableLetter>
+    <rootSelectionWeight>0</rootSelectionWeight>
+  </QuestScriptDef>
+  <SitePartDef>
+    <defName>AR_AndurilForgeSite</defName>
+    <label>goldene Schmiede der Divine Order</label>
+    <description>Ein goldener Schmiedetempel, in dem die zerbrochene Klinge neu geschmiedet werden kann.</description>
+    <workerClass>AragornArmy.SitePartWorker_AndurilForge</workerClass>
+    <siteTexture>World/WorldObjects/DivineOrderIcon</siteTexture>
+    <expandingIconTexture>World/WorldObjects/DivineOrderIcon</expandingIconTexture>
+    <requiresFaction>false</requiresFaction>
+    <showFactionInInspectString>false</showFactionInInspectString>
+    <increasesPopulation>true</increasesPopulation>
+    <wantsThreatPoints>true</wantsThreatPoints>
+    <forceExitAndRemoveMapCountdownDurationDays>4</forceExitAndRemoveMapCountdownDurationDays>
+  </SitePartDef>
+
+  <!-- The smith performs the ritual; Aragorn has no crafting requirement. -->
+  <JobDef>
+    <defName>AR_WaitForAnduril</defName>
+    <driverClass>AragornArmy.JobDriver_AragornWaitForAnduril</driverClass>
+    <reportString>bewacht die Schmiede</reportString>
+  </JobDef>
 </Defs>
