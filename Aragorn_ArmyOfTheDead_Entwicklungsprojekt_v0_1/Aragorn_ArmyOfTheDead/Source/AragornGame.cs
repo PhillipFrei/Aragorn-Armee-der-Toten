@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using RimWorld.Planet;
+using RimWorld.QuestGen;
 using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
 namespace AragornArmy
 {
-    // Saved once per RimWorld save. For this development version, trials take place on the active map.
+    // Saved once per RimWorld save. Trial encounters take place in separate world-map crypts.
     public sealed class AragornGame : GameComponent
     {
         public AragornGame(Game game) { }
@@ -20,6 +22,9 @@ namespace AragornArmy
         private List<Pawn> ghosts = new List<Pawn>();
         private List<int> initializedAragornIds = new List<int>();
         private Pawn trialBoss;
+        private Site trialSite;
+        private Quest trialQuest;
+        private List<Pawn> trialGuards = new List<Pawn>();
         private Pawn trialAragorn; // Save the original, sword-bearing quest participant.
         private Map trialMap;
         private int trialIndex = -1;
@@ -36,11 +41,15 @@ namespace AragornArmy
             Scribe_Collections.Look(ref ghosts, "ghosts", LookMode.Reference);
             Scribe_Collections.Look(ref initializedAragornIds, "initializedAragornIds", LookMode.Value);
             Scribe_References.Look(ref trialBoss, "trialBoss");
+            Scribe_References.Look(ref trialSite, "trialSite");
+            Scribe_References.Look(ref trialQuest, "trialQuest");
+            Scribe_Collections.Look(ref trialGuards, "trialGuards", LookMode.Reference);
             Scribe_References.Look(ref trialAragorn, "trialAragorn");
             Scribe_References.Look(ref trialMap, "trialMap");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (ghosts == null) ghosts = new List<Pawn>();
+                if (trialGuards == null) trialGuards = new List<Pawn>();
                 if (initializedAragornIds == null) initializedAragornIds = new List<int>();
             }
         }
@@ -232,94 +241,146 @@ namespace AragornArmy
             reason = null;
             if (!GhostDefinitions.HasAnduril(aragorn)) { reason = "Aragorn benötigt Andúril."; return false; }
             if (Unlocked >= 13) { reason = "Alle 13 Geister sind freigeschaltet."; return false; }
-            if (trialBoss != null && !trialBoss.Dead && !trialBoss.Downed && trialBoss.Spawned)
-            { reason = "Eine Prüfung läuft bereits."; return false; }
+            if (trialIndex >= 0)
+            { reason = "Eine Prüfung läuft bereits. Reise zum Geistergrab auf der Weltkarte."; return false; }
             return true;
         }
 
-        // Local-map combat prototype. World-map quests, rescue camp and crypt layouts are NOT yet part of this build.
+        // The gizmo now opens a real world-map trial; no hostiles spawn on home maps.
         public void StartTrial(Pawn aragorn)
         {
             if (!CanStartTrial(aragorn, out string reason)) { Reject(reason); return; }
-            // The Profaned mod supplies its faction definition and its PawnGroupMaker,
-            // but a Profaned world faction is NOT necessary. It might never have spawned
-            // or have been eliminated earlier in this save.
-            var factionDef = DefDatabase<FactionDef>.GetNamedSilentFail("BotchJob_ProfanedFaction");
-            if (factionDef == null)
-            {
-                Reject("Profaned-Fraktionsdefinition fehlt. Ist The Profaned geladen?");
-                Log.Error("[Aragorn] Missing BotchJob_ProfanedFaction def. Trial requires the loaded mod, not its world faction.");
-                return;
-            }
-            // A guaranteed hostile, hidden vanilla faction provides ownership and AI.
-            // The combatants are still generated from the REAL Profaned PawnKindDefs and
-            // the Profaned PawnGroupMaker weights; we do not alter world factions or diplomacy.
-            Faction hostile = Faction.OfAncientsHostile;
+            Faction hostile = ProfanedEncounterUtility.GetOrCreateFaction();
             if (hostile == null)
             {
-                Reject("Keine feindliche Test-Fraktion verfügbar (AncientsHostile).");
+                Reject("Die Profaned-Kampfdefinitionen konnten nicht geladen werden.");
                 return;
             }
-            // Prepare the boss before saving a trial state. A generation failure
-            // must not leave an invisible or irrecoverably half-started trial.
-            Pawn boss;
+            SitePartDef part = DefDatabase<SitePartDef>.GetNamedSilentFail("AR_GhostTrialCamp");
+            QuestScriptDef root = DefDatabase<QuestScriptDef>.GetNamedSilentFail("AR_GhostTrialQuest");
+            if (part == null || root == null)
+            {
+                Reject("Geisterprüfung: Weltkarten- oder Questdefinition fehlt. Siehe Player.log.");
+                Log.Error("[Aragorn] Missing AR_GhostTrialCamp or AR_GhostTrialQuest.");
+                return;
+            }
+            if (!TileFinder.TryFindNewSiteTile(out PlanetTile tile, minDist: 5, maxDist: 20)
+                && !TileFinder.TryFindNewSiteTile(out tile, minDist: 2, maxDist: 35))
+            {
+                Reject("Kein freies Weltkartenfeld für die nächste Geisterkrypta gefunden.");
+                return;
+            }
             try
             {
-                boss = CreateGhost(Unlocked, hostile);
+                Site site = SiteMaker.MakeSite(part, tile, hostile,
+                    ifHostileThenMustRemainHostile: false,
+                    threatPoints: StorytellerUtility.DefaultSiteThreatPointsNow());
+                site.customLabel = "Geisterkrypta " + (Unlocked + 1) + " – " + GhostDefinitions.Names[Unlocked];
+                Find.WorldObjects.Add(site);
+
+                Quest quest = Quest.MakeRaw();
+                quest.root = root;
+                quest.name = "Geisterprüfung " + (Unlocked + 1) + "/13 – " + GhostDefinitions.Names[Unlocked];
+                quest.description = "Aragorn spürt das Grab eines gefesselten Geisterkriegers. "
+                    + "Reise mit Aragorn und Andúril zur markierten Krypta, "
+                    + "besiege den verfluchten Geist und seine Profaned-Wachen. "
+                    + "Die Seele wird danach für Aragorns Armee freigeschaltet. "
+                    + "The Profaned muss geladen sein, braucht aber keine Weltkarten-Siedlung.";
+                quest.acceptanceExpireTick = -1;
+                quest.SetNotYetAccepted();
+                quest.AddPart(new QuestPart_AragornRescueTarget { site = site });
+                Find.QuestManager.Add(quest);
+                quest.Accept(aragorn);
+
+                trialIndex = Unlocked;
+                trialSite = site;
+                trialQuest = quest;
+                trialAragorn = aragorn;
+                trialMap = null;
+                trialBoss = null;
+                trialGuards.Clear();
+                Find.LetterStack.ReceiveLetter(
+                    "Neue Geisterkrypta entdeckt",
+                    "Prüfung " + (Unlocked + 1) + "/13: " + GhostDefinitions.Names[Unlocked]
+                    + ". Reise mit Aragorn zur Krypta auf der Weltkarte.",
+                    LetterDefOf.NeutralEvent, site);
+                Log.Message("[Aragorn] Trial " + trialIndex + " created at world tile " + tile);
             }
             catch (Exception ex)
             {
-                Log.Error("[Aragorn] Fehler beim Erzeugen des Prüfungsgeistes " + (Unlocked + 1) + ": " + ex);
-                Reject("Geisterprüfung konnte nicht gestartet werden. Details im Player.log unter [Aragorn].");
-                return;
+                Log.Error("[Aragorn] Geisterkrypta konnte nicht erstellt werden: " + ex);
+                Reject("Geisterprüfung konnte nicht erstellt werden. Siehe Player.log.");
             }
-            if (boss == null)
+        }
+
+        public void PopulateTrialMap(Map map)
+        {
+            if (map == null || trialSite == null || trialSite != map.Parent
+                || trialIndex < 0 || trialBoss != null) return;
+            Faction hostile = ProfanedEncounterUtility.GetOrCreateFaction();
+            if (hostile == null) { Log.Error("[Aragorn] No Profaned faction for trial map."); return; }
+            try
             {
-                Reject("Geisterprüfung konnte nicht gestartet werden: Geisterdefinition fehlt.");
-                return;
-            }
-            trialIndex = Unlocked;
-            trialMap = aragorn.Map;
-            trialAragorn = aragorn; // Anduril was equipped when starting the fight.
-            trialBoss = boss;
-            IntVec3 location = CellFinder.RandomClosewalkCellNear(aragorn.Position, aragorn.Map, 24);
-            GenSpawn.Spawn(trialBoss, location, aragorn.Map);
-            List<Pawn> attackers = new List<Pawn> { trialBoss };
-            var group = factionDef.pawnGroupMakers.FirstOrDefault(x => x.kindDef == PawnGroupKindDefOf.Combat);
-            var valid = group == null ? new List<PawnGenOption>() : group.options.Where(o => o.kind != null && o.selectionWeight > 0).ToList();
-            for (int i = 0; i < AragornMod.Config.profanedCount && valid.Count > 0; i++)
-            {
-                PawnGenOption option = valid.RandomElementByWeight(o => o.selectionWeight);
-                try
+                IntVec3 crypt = AragornCryptBuilder.Build(map, map.Center);
+                Pawn boss = CreateGhost(trialIndex, hostile);
+                if (boss == null) { Log.Error("[Aragorn] Trial boss could not be generated."); return; }
+                IntVec3 location = CellFinder.RandomClosewalkCellNear(crypt, map, 4);
+                GenSpawn.Spawn(boss, location, map);
+                int count = AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount;
+                var guards = ProfanedEncounterUtility.SpawnGuards(map, crypt, hostile, count);
+                if (guards.Count == 0)
                 {
-                    Pawn extra = PawnGenerator.GeneratePawn(option.kind, hostile);
-                    IntVec3 point = CellFinder.RandomClosewalkCellNear(location, aragorn.Map, 9);
-                    GenSpawn.Spawn(extra, point, aragorn.Map);
-                    attackers.Add(extra);
+                    Log.Error("[Aragorn] Trial site guard generation failed.");
+                    return;
                 }
-                catch (Exception ex) { Log.Warning("[Aragorn] Profaned cannot spawn: " + option.kind + " / " + ex.Message); }
+                trialBoss = boss;
+                trialMap = map;
+                trialGuards = guards;
+                var defenders = new List<Pawn>(guards) { boss };
+                LordMaker.MakeNewLord(hostile,
+                    new LordJob_DefendPoint(crypt, wanderRadius: 8f,
+                        defendRadius: 30f, isCaravanSendable: false, addFleeToil: false),
+                    map, defenders);
+                Messages.Message("Geisterprüfung " + (trialIndex + 1)
+                    + "/13: Besiege den Geisterboss und alle Profaned-Wachen.",
+                    boss, MessageTypeDefOf.ThreatBig);
+                Log.Message("[Aragorn] Trial site populated: " + (trialIndex + 1)
+                    + "/13; " + guards.Count + " Profaned guards.");
             }
-            LordMaker.MakeNewLord(hostile, new LordJob_AssaultColony(hostile, canKidnap: false, canTimeoutOrFlee: false, canSteal: false), aragorn.Map, attackers);
-            Messages.Message("Prüfung " + (trialIndex + 1) + "/13: " + GhostDefinitions.Names[trialIndex] + ". Aragorn muss mit Andúril auf dieser Karte bleiben.", MessageTypeDefOf.ThreatBig);
+            catch (Exception ex)
+            {
+                Log.Error("[Aragorn] Geisterprüfung-Karte konnte nicht aufgebaut werden: " + ex);
+            }
         }
 
         private void CheckTrialOutcome()
         {
             if (trialBoss == null || trialIndex < 0) return;
             if (!trialBoss.Dead && !trialBoss.Downed) return;
+            if (trialGuards.Any(g => g != null && g.Spawned && !g.Dead && !g.Downed))
+                return;
             // Knocked-down Aragorn still counts if he started armed and stays alive on the map.
             bool validAragorn = trialMap != null && trialAragorn != null &&
                 trialAragorn.Spawned && !trialAragorn.Dead && trialAragorn.Map == trialMap;
             if (validAragorn && trialIndex == Unlocked)
             {
                 Unlocked++;
+                if (trialQuest != null && !trialQuest.Historical)
+                    trialQuest.End(QuestEndOutcome.Success, sendLetter: true);
                 Messages.Message("Geist freigeschaltet: " + GhostDefinitions.Names[trialIndex] + " (" + Unlocked + "/13).", MessageTypeDefOf.PositiveEvent);
             }
             else
-                Messages.Message("Prüfung nicht bestanden: Aragorn muss mit Andúril auf der Karte sein.", MessageTypeDefOf.RejectInput);
+            {
+                if (trialQuest != null && !trialQuest.Historical)
+                    trialQuest.End(QuestEndOutcome.Fail, sendLetter: true);
+                Messages.Message("Prüfung nicht bestanden: Aragorn muss lebend auf der Kryptenkarte sein.", MessageTypeDefOf.RejectInput);
+            }
             trialBoss = null;
             trialMap = null;
             trialAragorn = null;
+            trialSite = null;
+            trialQuest = null;
+            trialGuards.Clear();
             trialIndex = -1;
         }
 
