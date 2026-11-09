@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_Rescue_Title>Der verlorene Erbe</AR_Rescue_Title>
+  <AR_Rescue_Description>Gerüchte sprechen von einem Mann edlen Blutes, gefangen in finsteren Händen. Man nennt ihn Aragorn. Wenn dies wahr ist, darf er nicht im Schatten vergehen.
+
+Finde sein Gefängnis auf der Weltkarte. Besiege die Profaned-Wachen und bringe ihn nach Hause.</AR_Rescue_Description>
+  <AR_Rescue_Site>Aragorns Gefängnis</AR_Rescue_Site>
+  <AR_Rescue_ArrivalTitle>Das Gefängnis entdeckt</AR_Rescue_ArrivalTitle>
+  <AR_Rescue_ArrivalBody>Die Spur führt zu einer Festung der Profaned. Zieh aus und befreie den Erben.</AR_Rescue_ArrivalBody>
+  <AR_Rescue_Encounter>Hier wird Aragorn gefangen gehalten. Besiege seine {0} Profaned-Wachen.</AR_Rescue_Encounter>
+  <AR_Rescue_Success>Aragorn ist frei und hat sich deiner Kolonie angeschlossen.</AR_Rescue_Success>
+  <AR_Forge_Title>Die Klinge neu geschmiedet</AR_Forge_Title>
+  <AR_Forge_Description>Die Bruchstücke eines uralten Schwertes warten erneut auf das Feuer. In den Hallen der Divine Order bewahrt ein Schmied noch das alte Handwerk. Bewache die Esse und harre aus, bis die Klinge wieder ganz ist.
+
+Aragorn muss zwölf Ingame-Stunden an der Schmiede wachen. Jede Stunde des Schmiedens bringt einen stärkeren Angriff der Profaned. Verlässt Aragorn seinen Posten, pausieren Arbeit und neue Wellen. Sobald Andúril vollendet ist, nimm die Klinge und zieh dich zurück.</AR_Forge_Description>
+  <AR_Forge_Site>Goldene Schmiede der Divine Order</AR_Forge_Site>
+  <AR_Forge_ArrivalTitle>Die goldene Schmiede</AR_Forge_ArrivalTitle>
+  <AR_Forge_ArrivalBody>Die Schmiede der Divine Order wurde gefunden. Bringe Aragorn dorthin und lasse das Werk beginnen.</AR_Forge_ArrivalBody>
+  <AR_Forge_SmithName>Meisterschmied der Divine Order</AR_Forge_SmithName>
+  <AR_Forge_Ready>Der Schmied erwartet dich. Wähle Aragorn und sprich mit dem Meister an der Schmiede.</AR_Forge_Ready>
+  <AR_Forge_SiegeStart>Die Hämmer erklingen. Die Belagerung beginnt: zwölf Stunden, zwölf Wellen. Haltet die Schmiede!</AR_Forge_SiegeStart>
+  <AR_Forge_Wave>Profaned-Welle {0}/12: {1} neue Feinde. Andúril: {2}% geschmiedet.</AR_Forge_Wave>
+  <AR_Forge_Guarding>Aragorn hält Wache. Zwölf Stunden Arbeit liegen vor uns. Fortschritt: {0}%.</AR_Forge_Guarding>
+  <AR_Forge_FinishedTitle>Andúril neu geschmiedet</AR_Forge_FinishedTitle>
+  <AR_Forge_FinishedBody>Aus den Bruchstücken Narsils ist Andúril neu erstanden. Aragorn trägt die Klinge, und die eidverpflichteten Geister können nun seinem Ruf folgen. Sammle die Überlebenden und verlasse die goldene Schmiede, solange es noch möglich ist.</AR_Forge_FinishedBody>
+  <AR_Forge_Failed>Die Neuschmiedung ist gescheitert: {0}. Vielleicht öffnet sich der Weg erneut.</AR_Forge_Failed>
+  <AR_Forge_Progress>Andúril: {0}%  |  Welle {1}/12  |  {2}</AR_Forge_Progress>
+  <AR_Forge_Running>Schmieden läuft</AR_Forge_Running>
+  <AR_Forge_Paused>Pausiert</AR_Forge_Paused>
+  <AR_Forge_GuardTitle>An der Schmiede wachen</AR_Forge_GuardTitle>
+  <AR_Forge_GuardDesc>Führe Aragorn zu seinem Platz vor der Schmiede. Der Schmied der Divine Order schmiedet Andúril neu, während deine Gefährten die Profaned abwehren.</AR_Forge_GuardDesc>
+  <AR_Forge_GuardBlocked>Der Platz vor der Schmiede ist blockiert.</AR_Forge_GuardBlocked>
+  <AR_Forge_SmithDialogueTitle>Schmied der Divine Order</AR_Forge_SmithDialogueTitle>
+  <AR_Forge_SmithDialogue>Das Feuer ist bereit.
+Stelle Aragorn vor die Schmiede, und ich werde die Klinge neu schmieden.
+Doch wisse: Sobald das Werk beginnt, wird der Feind kommen.</AR_Forge_SmithDialogue>
+  <AR_Forge_SmithBegin>Mit dem Schmieden beginnen</AR_Forge_SmithBegin>
+  <AR_Forge_SmithNotYet>Noch nicht</AR_Forge_SmithNotYet>
+  <AR_Trial_Title>Ein unerfüllter Eid — Prüfung {0}/13: {1}</AR_Trial_Title>
+  <AR_Trial_Description>Unter Stein und Schweigen verweilt einer der Eidbrecher vergangener Tage. Nur Aragorn, Träger Andúrils, kann den Geist bezwingen und ihn erneut an seinen Dienst binden.
+
+Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine Profaned-Wachen, um die nächste Seele zu befreien.</AR_Trial_Description>
+  <AR_Trial_Site>Krypta der Eidverpflichteten {0} — {1}</AR_Trial_Site>
+  <AR_Trial_ArrivalTitle>Ein Eid erwacht</AR_Trial_ArrivalTitle>
+  <AR_Trial_ArrivalBody>Prüfung {0}/13: {1}. Die Krypta ist auf der Weltkarte markiert.</AR_Trial_ArrivalBody>
+  <AR_Trial_Encounter>Prüfung {0}/13: Bezwinge den eidverpflichteten Geist und seine Profaned-Wachen.</AR_Trial_Encounter>
+  <AR_Trial_Unlocked>Geist befreit: {0} ({1}/13).</AR_Trial_Unlocked>
+  <AR_Trial_Failed>Die Prüfung ist verloren. Aragorn muss auf der Kryptenkarte überleben.</AR_Trial_Failed>
+  <AR_Trial_GizmoTitle>Nächste Geisterkrypta entdecken</AR_Trial_GizmoTitle>
+  <AR_Trial_GizmoDesc>Entdecke die nächste der dreizehn Krypten auf der Weltkarte. Reise mit Andúril dorthin und befreie den gebundenen Geist.</AR_Trial_GizmoDesc>
+  <AR_Gizmo_SummonTitle>Eidverpflichtete Geister rufen</AR_Gizmo_SummonTitle>
+  <AR_Gizmo_SummonDesc>Rufe die bereits befreiten Geister. Sie kämpfen an Aragorns Seite, bis du sie zurückrufst.</AR_Gizmo_SummonDesc>
+  <AR_Gizmo_RecallTitle>Geister zurückrufen</AR_Gizmo_RecallTitle>
+  <AR_Gizmo_RecallDesc>Rufe alle beschworenen Geister zurück, auch jene auf anderen geladenen Karten.</AR_Gizmo_RecallDesc>
+  <AR_Gizmo_RecallNone>Es sind keine Geister beschworen.</AR_Gizmo_RecallNone>
+  <AR_Gizmo_WhirlTitle>Andúril — Rundumschlag</AR_Gizmo_WhirlTitle>
+  <AR_Gizmo_WhirlDesc>Führe einen weiten, mächtigen Rundumschlag mit Andúril gegen nahe Feinde aus.</AR_Gizmo_WhirlDesc>
+  <AR_Gizmo_StormTitle>Zorn der Toten</AR_Gizmo_StormTitle>
+  <AR_Gizmo_StormDesc>Rufe geisterhafte Blitze auf eine feindliche Stellung herab.</AR_Gizmo_StormDesc>
+  <AR_Gizmo_RestoreTitle>Andúril wiederherstellen (Test)</AR_Gizmo_RestoreTitle>
+  <AR_Gizmo_RestoreDesc>Entwicklungswerkzeug für ältere Spielstände ohne Andúril.</AR_Gizmo_RestoreDesc>
+  <AR_Smith_Died>der Meisterschmied oder die Schmiede wurde zerstört</AR_Smith_Died>
+  <AR_Rescue_QuestHint>Unter Aufträge → Verfügbar wartet eine Rettungsquest.</AR_Rescue_QuestHint>
+</LanguageData>
