@@ -558,6 +558,8 @@ namespace AragornArmy
             {
                 IntVec3 c = center + new IntVec3(dx, 0, dz);
                 if (!c.InBounds(map)) continue;
+                // Remove all existing trees and bushes before applying floors.
+                ClearVegetation(map, c);
                 if (floor != null && c.Standable(map))
                 {
                     try { map.terrainGrid.SetTerrain(c, floor); } catch { }
@@ -586,12 +588,21 @@ namespace AragornArmy
                     SpawnBuilding(sarcophagus, ThingDefOf.Gold,
                         center + new IntVec3(dx, 0, dz), map, owner);
             }
-            IntVec3 forgePos = center + new IntVec3(0, 0, 2);
+            // Forge in the NORTH of the hall, smith and Aragorn face it from south.
+            IntVec3 forgePos = center + new IntVec3(0, 0, 5);
             Thing bench = SpawnBuilding(smithy, ThingDefOf.Gold, forgePos, map, owner);
             Log.Message("[Aragorn] Gold forge hall built (" + (2 * rx + 1)
                 + " x " + (2 * rz + 1) + ") at " + center
                 + "; workstation: " + smithy.defName + ".");
             return bench;
+        }
+
+        private static void ClearVegetation(Map map, IntVec3 cell)
+        {
+            if (!cell.InBounds(map)) return;
+            foreach (Thing thing in cell.GetThingList(map).ToList())
+                if (thing.def.category == ThingCategory.Plant)
+                    thing.Destroy(DestroyMode.Vanish);
         }
 
         private static Thing SpawnBuilding(ThingDef def, ThingDef stuff, IntVec3 cell, Map map, Faction owner)
@@ -601,7 +612,8 @@ namespace AragornArmy
             try
             {
                 Thing thing = ThingMaker.MakeThing(def, def.MadeFromStuff ? stuff : null);
-                Thing placed = GenSpawn.Spawn(thing, cell, map, WipeMode.Vanish);
+                ClearVegetation(map, cell);
+                Thing placed = GenSpawn.Spawn(thing, cell, map, Rot4.North, WipeMode.Vanish);
                 if (placed != null && owner != null && placed.def.CanHaveFaction)
                     placed.SetFaction(owner);
                 return placed;
