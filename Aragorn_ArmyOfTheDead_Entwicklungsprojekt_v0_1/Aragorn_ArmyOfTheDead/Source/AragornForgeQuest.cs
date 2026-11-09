@@ -37,6 +37,7 @@ namespace AragornArmy
         public AragornForgeGame(Game game) { }
         public bool Completed => completed;
         public int ProgressPercent => Mathf.Clamp(Mathf.RoundToInt(progress * 100f / ForgeTicksRequired), 0, 100);
+        public Thing ForgeBuilding => forge;
         public bool IsForgeMap(Map map) => site != null && site.HasMap && site.Map == map && forge != null;
         public bool ShowForgeProgress(Map map) =>
             map != null && IsForgeMap(map) && built && !completed &&
@@ -210,7 +211,7 @@ namespace AragornArmy
             {
                 try
                 {
-                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge, smithCell),
+                    smith.jobs.StartJob(JobMaker.MakeJob(smithJob, forge, SmithStandCell),
                         JobCondition.InterruptForced);
                 }
                 catch (Exception ex)
