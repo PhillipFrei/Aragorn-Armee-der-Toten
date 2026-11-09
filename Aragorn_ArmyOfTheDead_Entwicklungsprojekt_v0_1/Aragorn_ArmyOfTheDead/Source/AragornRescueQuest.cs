@@ -243,7 +243,7 @@ namespace AragornArmy
 
             try
             {
-                IntVec3 prisonCell = CellFinder.RandomClosewalkCellNear(map.Center, map, 25);
+                IntVec3 prisonCell = AragornCryptBuilder.Build(map, map.Center);
                 PawnGenerationRequest request = new PawnGenerationRequest(aragornKind,
                     faction: null, forceGenerateNewPawn: true,
                     canGeneratePawnRelations: false, allowAddictions: false,
@@ -263,8 +263,7 @@ namespace AragornArmy
                 }
                 if (rescueSite.Faction != guardFaction) rescueSite.SetFaction(guardFaction);
                 int count = Mathf.Clamp(AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount, 5, 50);
-                // A small slate crypt is now generated rather than only an empty map.
-                prisonCell = AragornCryptBuilder.Build(map, prisonCell);
+                // The captive was placed at the center of the crypt above.
                 guards.AddRange(ProfanedEncounterUtility.SpawnGuards(map, prisonCell, guardFaction, count));
                 if (guards.Count == 0)
                 {
