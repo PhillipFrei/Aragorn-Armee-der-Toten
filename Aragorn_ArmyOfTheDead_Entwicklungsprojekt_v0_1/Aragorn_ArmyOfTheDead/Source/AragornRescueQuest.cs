@@ -354,6 +354,15 @@ namespace AragornArmy
         }
     }
 
+    public class SitePartWorker_AragornTrial : SitePartWorker
+    {
+        public override void PostMapGenerate(Map map)
+        {
+            base.PostMapGenerate(map);
+            Current.Game?.GetComponent<AragornGame>()?.PopulateTrialMap(map);
+        }
+    }
+
     public class SitePartWorker_AragornRescue : SitePartWorker
     {
         public override void PostMapGenerate(Map map)
