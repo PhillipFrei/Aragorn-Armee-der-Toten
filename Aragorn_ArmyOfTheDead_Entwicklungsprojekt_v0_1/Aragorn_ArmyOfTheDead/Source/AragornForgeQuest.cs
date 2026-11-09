@@ -469,7 +469,7 @@ namespace AragornArmy
             yield return Toils_General.Wait(ForgeWaitLength, TargetIndex.A);
         }
 
-        private const int ForgeWaitLength = 25000;
+        private const int ForgeWaitLength = 40000;
     }
 
     public class JobDriver_DivineOrderForgeAnduril : JobDriver
@@ -479,7 +479,7 @@ namespace AragornArmy
         {
             this.FailOnDespawnedOrNull(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
-            yield return Toils_General.Wait(25000, TargetIndex.A);
+            yield return Toils_General.Wait(40000, TargetIndex.A);
         }
     }
 
