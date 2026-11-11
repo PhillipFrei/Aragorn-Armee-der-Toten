@@ -45,8 +45,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.44</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.44</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.44</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.44</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
