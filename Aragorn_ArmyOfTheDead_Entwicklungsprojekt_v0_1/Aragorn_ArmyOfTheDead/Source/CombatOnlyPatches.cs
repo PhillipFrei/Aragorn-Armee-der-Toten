@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace AragornArmy
@@ -84,15 +85,16 @@ namespace AragornArmy
         }
     }
 
-    // VEF's animal-style draft controls do not always set Pawn.Drafted.
-    // Ensure a fixed ToolUser weapon is visible even when the spirit is idle.
-    [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.CarryWeaponOpenly))]
-    internal static class ShowBoundGhostWeapons
+    // The v0.16 spectral sprites ALREADY have directional weapons painted in
+    // all three graphics. Do not draw RimWorld's second, offset equipment mesh,
+    // which otherwise appears to float or remain pointed the wrong way.
+    // The primary equipment tracker and verbs remain intact for actual combat.
+    [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.DrawEquipmentAndApparelExtras))]
+    internal static class DoNotDoubleDrawSpectralWeapons
     {
-        private static void Postfix(Pawn pawn, ref bool __result)
+        private static bool Prefix(Pawn pawn)
         {
-            if (GhostDefinitions.IsGhost(pawn) && pawn.equipment?.Primary != null)
-                __result = true;
+            return !GhostDefinitions.IsGhost(pawn);
         }
     }
 
@@ -136,6 +138,9 @@ namespace AragornArmy
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
     internal static class AragornAndGhostGizmos
     {
+        private static Texture2D Icon(string name) =>
+            ContentFinder<Texture2D>.Get("Aragorn/Gizmos/" + name, false);
+
         private static void Postfix(Pawn __instance, ref IEnumerable<Gizmo> __result)
         {
             IEnumerable<Gizmo> vanilla = __result;
@@ -159,6 +164,7 @@ namespace AragornArmy
                 if (game != null && game.IsSummoned(pawn))
                     yield return new Command_Action {
                         defaultLabel = AragornText.T("AR_Gizmo_RecallTitle"),
+                        defaultIcon = Icon("RecallGhosts"),
                         defaultDesc = AragornText.T("AR_Gizmo_RecallDesc"),
                         action = () => game.RecallAll()
                     };
@@ -166,6 +172,7 @@ namespace AragornArmy
                 {
                     var lightning = new Command_Action {
                         defaultLabel = AragornText.T("AR_Gizmo_StormTitle"),
+                        defaultIcon = Icon("KingsLightning"),
                         defaultDesc = AragornText.T("AR_Gizmo_StormDesc"),
                         action = () => game.TargetKingLightning(pawn)
                     };
@@ -179,11 +186,24 @@ namespace AragornArmy
             foreach (var gizmo in vanilla) yield return gizmo;
             if (game == null || !GhostDefinitions.IsAragorn(pawn)) yield break;
 
+            if (Prefs.DevMode && pawn.Faction == Faction.OfPlayer)
+            {
+                yield return new Command_Action {
+                    defaultLabel = "DEV: All Aragorn Quests Complete",
+                    defaultDesc = "Development only: complete this mod's rescue, "
+                        + "reforging and 13 spirit trials, equip Andúril, "
+                        + "and allow immediate summoning. Does not complete unrelated quests.",
+                    defaultIcon = Icon("DevComplete"),
+                    action = () => game.DevCompleteAragornStory(pawn)
+                };
+            }
+
             var forgeGame = Current.Game?.GetComponent<AragornForgeGame>();
             if (forgeGame != null && forgeGame.IsForgeMap(pawn.Map) && !forgeGame.Completed)
             {
                 Command_Action forgeWatch = new Command_Action {
                     defaultLabel = AragornText.T("AR_Forge_GuardTitle"),
+                    defaultIcon = Icon("BeginReforging"),
                     defaultDesc = AragornText.T("AR_Forge_GuardDesc"),
                     action = () => forgeGame.SpeakToSmith(pawn)
                 };
@@ -196,6 +216,7 @@ namespace AragornArmy
             // not strand previously summoned specters permanently.
             Command_Action recall = new Command_Action {
                 defaultLabel = AragornText.T("AR_Gizmo_RecallTitle"),
+                        defaultIcon = Icon("RecallGhosts"),
                 defaultDesc = AragornText.T("AR_Gizmo_RecallDesc"),
                 action = () => game.RecallAll()
             };
@@ -209,6 +230,7 @@ namespace AragornArmy
                 if (forgeGame != null && forgeGame.Completed)
                     yield return new Command_Action {
                         defaultLabel = AragornText.T("AR_Gizmo_RestoreTitle"),
+                        defaultIcon = Icon("BeginReforging"),
                         defaultDesc = AragornText.T("AR_Gizmo_RestoreDesc"),
                         action = () => GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril")
                     };
@@ -217,6 +239,7 @@ namespace AragornArmy
 
             Command_Action summon = new Command_Action {
                 defaultLabel = AragornText.T("AR_Gizmo_SummonTitle"),
+                defaultIcon = Icon("SummonGhosts"),
                 defaultDesc = AragornText.T("AR_Gizmo_SummonDesc"),
                 action = () => game.Summon(pawn)
             };
@@ -225,6 +248,7 @@ namespace AragornArmy
 
             Command_Action spin = new Command_Action {
                 defaultLabel = AragornText.T("AR_Gizmo_WhirlTitle"),
+                defaultIcon = Icon("SwordWhirl"),
                 defaultDesc = AragornText.T("AR_Gizmo_WhirlDesc"),
                 action = () => game.StartSpin(pawn)
             };
@@ -233,6 +257,7 @@ namespace AragornArmy
 
             Command_Action trial = new Command_Action {
                 defaultLabel = AragornText.T("AR_Trial_GizmoTitle"),
+                defaultIcon = Icon("GhostTrial"),
                 defaultDesc = AragornText.T("AR_Trial_GizmoDesc"),
                 action = () => game.StartTrial(pawn)
             };
