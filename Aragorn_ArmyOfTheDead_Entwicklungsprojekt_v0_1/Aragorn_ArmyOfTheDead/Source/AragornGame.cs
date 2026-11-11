@@ -188,6 +188,18 @@ namespace AragornArmy
             }
         }
 
+        // Separate developer shortcut for repeated skill/targeting tests.
+        public void DevResetCooldowns(Pawn pawn)
+        {
+            if (!Prefs.DevMode || !GhostDefinitions.IsAragorn(pawn) ||
+                pawn.Faction != Faction.OfPlayer) return;
+            lastSummonTick = -1000000;
+            lastKingLightning = -1000000;
+            lastSpinTick = -1000000;
+            Messages.Message("Aragorn: Alle Abklingzeiten zurückgesetzt.",
+                pawn, MessageTypeDefOf.PositiveEvent);
+        }
+
         public bool CanSummon(Pawn pawn, out string reason)
         {
             reason = null;
@@ -495,20 +507,44 @@ namespace AragornArmy
             FleckMaker.ThrowDustPuffThick(aragorn.DrawPos, aragorn.Map, 3f, new Color(.30f, .86f, .80f));
         }
 
+        private static bool KingLightningTargetValid(Pawn king, LocalTargetInfo target)
+        {
+            return king != null && king.Spawned && !king.Dead && !king.Downed &&
+                king.Map != null && target.IsValid &&
+                target.Cell.InBounds(king.Map) &&
+                target.Cell.DistanceTo(king.Position) <= 15f;
+        }
+
         public void TargetKingLightning(Pawn king)
         {
             if (!IsSummonedKing(king)) return;
-            if (LightningCooldownRemaining > 0) { Reject("Geistersturm noch auf Abklingzeit."); return; }
-            var targetParams = new TargetingParameters { canTargetLocations = true, canTargetPawns = true, canTargetBuildings = false };
+            if (LightningCooldownRemaining > 0)
+            {
+                Reject("Geistersturm noch auf Abklingzeit.");
+                return;
+            }
+            var targetParams = new TargetingParameters
+            {
+                canTargetLocations = true,
+                canTargetPawns = true,
+                canTargetBuildings = false,
+                validator = info => king != null && king.Spawned &&
+                    info.Map == king.Map && info.Cell.InBounds(king.Map) &&
+                    info.Cell.DistanceTo(king.Position) <= 15f
+            };
             Find.Targeter.BeginTargeting(targetParams, target =>
             {
-                if (target.IsValid && target.Cell.InBounds(king.Map)) CastKingLightning(king, target.Cell);
+                if (KingLightningTargetValid(king, target))
+                    CastKingLightning(king, target.Cell);
+                else
+                    Reject("Der Geistersturm hat höchstens 15 Felder Reichweite.");
             }, target =>
             {
+                if (king == null || !king.Spawned) return;
                 GenDraw.DrawRadiusRing(king.Position, 15f);
-                if (target.IsValid && target.Cell.InBounds(king.Map)) GenDraw.DrawRadiusRing(target.Cell, 6f);
-            }, target => target.IsValid && target.Cell.InBounds(king.Map) &&
-                         target.Cell.DistanceTo(king.Position) <= 15f, king);
+                if (KingLightningTargetValid(king, target))
+                    GenDraw.DrawRadiusRing(target.Cell, 6f);
+            }, target => KingLightningTargetValid(king, target), king);
         }
 
         private void AutoCastBossKing()
