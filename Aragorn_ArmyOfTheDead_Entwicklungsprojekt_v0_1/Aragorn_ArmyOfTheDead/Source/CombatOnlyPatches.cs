@@ -164,7 +164,7 @@ namespace AragornArmy
                 if (game != null && game.IsSummoned(pawn))
                     yield return new Command_Action {
                         defaultLabel = AragornText.T("AR_Gizmo_RecallTitle"),
-                        defaultIcon = Icon("RecallGhosts"),
+                        icon = Icon("RecallGhosts"),
                         defaultDesc = AragornText.T("AR_Gizmo_RecallDesc"),
                         action = () => game.RecallAll()
                     };
@@ -172,7 +172,7 @@ namespace AragornArmy
                 {
                     var lightning = new Command_Action {
                         defaultLabel = AragornText.T("AR_Gizmo_StormTitle"),
-                        defaultIcon = Icon("KingsLightning"),
+                        icon = Icon("KingsLightning"),
                         defaultDesc = AragornText.T("AR_Gizmo_StormDesc"),
                         action = () => game.TargetKingLightning(pawn)
                     };
@@ -193,7 +193,7 @@ namespace AragornArmy
                     defaultDesc = "Development only: complete this mod's rescue, "
                         + "reforging and 13 spirit trials, equip Andúril, "
                         + "and allow immediate summoning. Does not complete unrelated quests.",
-                    defaultIcon = Icon("DevComplete"),
+                    icon = Icon("DevComplete"),
                     action = () => game.DevCompleteAragornStory(pawn)
                 };
             }
@@ -203,7 +203,7 @@ namespace AragornArmy
             {
                 Command_Action forgeWatch = new Command_Action {
                     defaultLabel = AragornText.T("AR_Forge_GuardTitle"),
-                    defaultIcon = Icon("BeginReforging"),
+                    icon = Icon("BeginReforging"),
                     defaultDesc = AragornText.T("AR_Forge_GuardDesc"),
                     action = () => forgeGame.SpeakToSmith(pawn)
                 };
@@ -216,7 +216,7 @@ namespace AragornArmy
             // not strand previously summoned specters permanently.
             Command_Action recall = new Command_Action {
                 defaultLabel = AragornText.T("AR_Gizmo_RecallTitle"),
-                        defaultIcon = Icon("RecallGhosts"),
+                        icon = Icon("RecallGhosts"),
                 defaultDesc = AragornText.T("AR_Gizmo_RecallDesc"),
                 action = () => game.RecallAll()
             };
@@ -230,7 +230,7 @@ namespace AragornArmy
                 if (forgeGame != null && forgeGame.Completed)
                     yield return new Command_Action {
                         defaultLabel = AragornText.T("AR_Gizmo_RestoreTitle"),
-                        defaultIcon = Icon("BeginReforging"),
+                        icon = Icon("BeginReforging"),
                         defaultDesc = AragornText.T("AR_Gizmo_RestoreDesc"),
                         action = () => GhostDefinitions.SetFixedWeapon(pawn, "AR_Anduril")
                     };
@@ -239,7 +239,7 @@ namespace AragornArmy
 
             Command_Action summon = new Command_Action {
                 defaultLabel = AragornText.T("AR_Gizmo_SummonTitle"),
-                defaultIcon = Icon("SummonGhosts"),
+                icon = Icon("SummonGhosts"),
                 defaultDesc = AragornText.T("AR_Gizmo_SummonDesc"),
                 action = () => game.Summon(pawn)
             };
@@ -248,7 +248,7 @@ namespace AragornArmy
 
             Command_Action spin = new Command_Action {
                 defaultLabel = AragornText.T("AR_Gizmo_WhirlTitle"),
-                defaultIcon = Icon("SwordWhirl"),
+                icon = Icon("SwordWhirl"),
                 defaultDesc = AragornText.T("AR_Gizmo_WhirlDesc"),
                 action = () => game.StartSpin(pawn)
             };
@@ -257,7 +257,7 @@ namespace AragornArmy
 
             Command_Action trial = new Command_Action {
                 defaultLabel = AragornText.T("AR_Trial_GizmoTitle"),
-                defaultIcon = Icon("GhostTrial"),
+                icon = Icon("GhostTrial"),
                 defaultDesc = AragornText.T("AR_Trial_GizmoDesc"),
                 action = () => game.StartTrial(pawn)
             };
