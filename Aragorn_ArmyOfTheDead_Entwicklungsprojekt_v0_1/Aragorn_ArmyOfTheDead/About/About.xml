@@ -3,7 +3,7 @@
   <name>Aragorn – Armee der Toten (Entwicklungsstand)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>Version 0.15: Story quests in atmospheric English with complete German localization (The Lost Heir, The Blade Reforged, An Oath Unfulfilled), bilingual forge letters, ghost ability labels and a short two-choice dialogue with the Divine Order smith before the first reforging. The 12-hour forge defense, 13 ghost crypt trials, reliable recall, Divine Order property rules and existing ghost mechanics remain unchanged. Gizmo and signature-art concepts are previews only and have not yet been installed in this version.</description>
+  <description>Version 0.17: Nine installed Gizmo icons, including a Dev-only complete-Aragorn-quests button; bespoke silver-blue Anduril world/inventory sprite; Aragorn gains the vanilla GreatMemory trait; all 13 directional spectral pawn sprites are approximately eight percent larger. Real equipped spirit weapons remain mechanically functional but the redundant second world-drawn weapon is suppressed, because these original three-direction sprites already show their own weapons. English and German story quests and Divine Order smith dialogue from 0.15 remain included. Test on a copy of your save.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
