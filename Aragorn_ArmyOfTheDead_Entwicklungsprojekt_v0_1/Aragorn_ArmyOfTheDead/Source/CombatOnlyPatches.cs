@@ -203,7 +203,7 @@ namespace AragornArmy
             {
                 Command_Action forgeWatch = new Command_Action {
                     defaultLabel = AragornText.T("AR_Forge_GuardTitle"),
-                    icon = Icon("BeginReforging"),
+                    icon = Icon("GuardForge"),
                     defaultDesc = AragornText.T("AR_Forge_GuardDesc"),
                     action = () => forgeGame.SpeakToSmith(pawn)
                 };
