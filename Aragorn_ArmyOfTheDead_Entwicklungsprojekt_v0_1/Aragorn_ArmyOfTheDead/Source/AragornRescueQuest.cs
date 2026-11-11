@@ -27,6 +27,27 @@ namespace AragornArmy
 
         public AragornRescueGame(Game game) { }
 
+        public void DevCompleteForTesting(Pawn hero)
+        {
+            if (!Prefs.DevMode || hero == null) return;
+            completed = true;
+            if (captive != null && !captive.Destroyed && captive != hero &&
+                captive.Faction != Faction.OfPlayer)
+            {
+                // A captive from a previously generated rescue map is already present.
+                // Prevent it from creating a second Aragorn upon returning to the site.
+                captive.SetFaction(Faction.OfPlayer);
+            }
+            if (rescueQuest != null && !rescueQuest.Historical)
+            {
+                if (rescueQuest.State == QuestState.NotYetAccepted)
+                    rescueQuest.Accept(hero);
+                rescueQuest.End(QuestEndOutcome.Success, sendLetter: false);
+            }
+            rescueOfferLetterSent = true;
+            Log.Message("[Aragorn] Dev completed rescue quest.");
+        }
+
         public string DiagnosticStatus
         {
             get
