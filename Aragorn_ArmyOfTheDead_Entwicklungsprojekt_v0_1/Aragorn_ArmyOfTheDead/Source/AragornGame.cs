@@ -142,6 +142,52 @@ namespace AragornArmy
             AutoCastBossKing();
         }
 
+        // Development-only shortcut, intentionally never accessible in a normal game.
+        // Completes this MOD's story quests; does not affect unrelated RimWorld quests.
+        public void DevCompleteAragornStory(Pawn aragorn)
+        {
+            if (!Prefs.DevMode || aragorn == null || !GhostDefinitions.IsAragorn(aragorn)
+                || aragorn.Faction != Faction.OfPlayer)
+                return;
+            try
+            {
+                var rescue = Current.Game?.GetComponent<AragornRescueGame>();
+                rescue?.DevCompleteForTesting(aragorn);
+
+                var forge = Current.Game?.GetComponent<AragornForgeGame>();
+                forge?.DevCompleteForTesting(aragorn);
+
+                if (trialQuest != null && !trialQuest.Historical)
+                {
+                    if (trialQuest.State == QuestState.NotYetAccepted)
+                        trialQuest.Accept(aragorn);
+                    trialQuest.End(QuestEndOutcome.Success, sendLetter: false);
+                }
+                trialQuest = null;
+                trialBoss = null;
+                trialSite = null;
+                trialMap = null;
+                trialAragorn = null;
+                trialIndex = -1;
+                trialGuards.Clear();
+
+                Unlocked = 13;
+                lastSummonTick = -1000000; // summon can be tested immediately
+                PrepareAragorn(aragorn, showMessage: false);
+                GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
+                Log.Message("[Aragorn] Dev only: rescued, forged Anduril, "
+                    + "and unlocked all 13 ghost trials in this save.");
+                Messages.Message("Aragorn: 13 Geisterquests, Rettung und Schmiede "
+                    + "für Testzwecke abgeschlossen.", aragorn, MessageTypeDefOf.PositiveEvent);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[Aragorn] Dev quest completion failed: " + ex);
+                Messages.Message("Aragorn-Dev-Test fehlgeschlagen: " + ex.Message,
+                    MessageTypeDefOf.RejectInput);
+            }
+        }
+
         public bool CanSummon(Pawn pawn, out string reason)
         {
             reason = null;
@@ -513,7 +559,7 @@ namespace AragornArmy
             "AptitudeTerrible_Plants", "AptitudeTerrible_Construction", "AptitudeTerrible_Crafting", "AptitudePoor_Artistic"
         };
         private static readonly (string defName, int degree)[] AragornTraits = {
-            ("SpeedOffset", 2), ("FastLearner", 0), ("NaturalMood", 1), ("Beauty", 2)
+            ("SpeedOffset", 2), ("FastLearner", 0), ("GreatMemory", 0), ("NaturalMood", 1), ("Beauty", 2)
         };
 
         internal static void PrepareAragorn(Pawn pawn, bool showMessage = true)
