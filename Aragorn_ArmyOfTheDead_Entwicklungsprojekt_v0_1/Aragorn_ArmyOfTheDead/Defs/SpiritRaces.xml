@@ -45,8 +45,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.44</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.44</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -95,8 +95,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.47</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.47</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -195,8 +195,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_04</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_04</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_04</texPath><drawSize>1.44</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_04</texPath><drawSize>1.44</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -245,8 +245,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_05</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_05</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_05</texPath><drawSize>1.47</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_05</texPath><drawSize>1.47</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -295,8 +295,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_06</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_06</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_06</texPath><drawSize>1.49</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_06</texPath><drawSize>1.49</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -345,8 +345,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_07</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_07</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_07</texPath><drawSize>1.56</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_07</texPath><drawSize>1.56</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -395,8 +395,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_08</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_08</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_08</texPath><drawSize>1.61</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_08</texPath><drawSize>1.61</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -445,8 +445,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_09</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_09</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_09</texPath><drawSize>1.54</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_09</texPath><drawSize>1.54</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -495,8 +495,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_10</texPath><drawSize>1.51</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_10</texPath><drawSize>1.51</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_10</texPath><drawSize>1.60</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_10</texPath><drawSize>1.60</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -545,8 +545,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_11</texPath><drawSize>1.73</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_11</texPath><drawSize>1.73</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_11</texPath><drawSize>1.65</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_11</texPath><drawSize>1.65</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -645,8 +645,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_13</texPath><drawSize>1.94</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_13</texPath><drawSize>1.94</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_13</texPath><drawSize>1.90</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_13</texPath><drawSize>1.90</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
