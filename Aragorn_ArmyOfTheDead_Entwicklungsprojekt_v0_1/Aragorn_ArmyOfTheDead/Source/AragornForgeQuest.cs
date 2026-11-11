@@ -35,6 +35,21 @@ namespace AragornArmy
         private const int TotalWaves = 12;
 
         public AragornForgeGame(Game game) { }
+
+        public void DevCompleteForTesting(Pawn hero)
+        {
+            if (!Prefs.DevMode || hero == null) return;
+            completed = true;
+            progress = ForgeTicksRequired;
+            waves = TotalWaves;
+            if (quest != null && !quest.Historical)
+            {
+                if (quest.State == QuestState.NotYetAccepted)
+                    quest.Accept(hero);
+                quest.End(QuestEndOutcome.Success, sendLetter: false);
+            }
+            Log.Message("[Aragorn] Dev completed Divine Order forging quest.");
+        }
         public bool Completed => completed;
         public int ProgressPercent => Mathf.Clamp(Mathf.RoundToInt(progress * 100f / ForgeTicksRequired), 0, 100);
         public Thing ForgeBuilding => forge;
