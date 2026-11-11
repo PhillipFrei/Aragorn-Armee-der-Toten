@@ -31,13 +31,8 @@ namespace AragornArmy
         {
             if (!Prefs.DevMode || hero == null) return;
             completed = true;
-            if (captive != null && !captive.Destroyed && captive != hero &&
-                captive.Faction != Faction.OfPlayer)
-            {
-                // A captive from a previously generated rescue map is already present.
-                // Prevent it from creating a second Aragorn upon returning to the site.
-                captive.SetFaction(Faction.OfPlayer);
-            }
+            // Do not change any other rescue pawn's faction: a Dev unlock on an
+            // already-recruited Aragorn must never duplicate the hero.
             if (rescueQuest != null && !rescueQuest.Historical)
             {
                 if (rescueQuest.State == QuestState.NotYetAccepted)
