@@ -85,17 +85,16 @@ namespace AragornArmy
         }
     }
 
-    // v0.17 hid EVERY equipped weapon, including bows, axes, and launchers.
-    // Only the first sword spirit has a sword baked into its body texture.
-    // Keep that single legacy exception until the body art is sword-free;
-    // all other ghosts must draw their actual weapon normally (aiming included).
-    [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.DrawEquipmentAndApparelExtras))]
-    internal static class DoNotDoubleDrawSpectralWeapons
+    // v0.17 suppressed ALL ghost equipment drawing, hiding every real weapon.
+    // All ghosts now use weapon-free body sprites. Let RimWorld render and rotate
+    // their actually equipped bows, axes, swords and launchers in every direction.
+    [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.CarryWeaponOpenly))]
+    internal static class ShowSpectralEquipmentWhileIdle
     {
-        private static bool Prefix(Pawn pawn)
+        private static void Postfix(Pawn pawn, ref bool __result)
         {
-            return pawn == null || pawn.kindDef == null ||
-                pawn.kindDef.defName != "AR_GhostSpiritSword01";
+            if (GhostDefinitions.IsGhost(pawn) && pawn.equipment?.Primary != null)
+                __result = true;
         }
     }
 
