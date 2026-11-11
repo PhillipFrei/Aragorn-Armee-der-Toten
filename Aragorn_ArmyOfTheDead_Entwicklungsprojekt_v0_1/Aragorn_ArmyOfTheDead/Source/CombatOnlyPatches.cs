@@ -85,16 +85,17 @@ namespace AragornArmy
         }
     }
 
-    // The v0.16 spectral sprites ALREADY have directional weapons painted in
-    // all three graphics. Do not draw RimWorld's second, offset equipment mesh,
-    // which otherwise appears to float or remain pointed the wrong way.
-    // The primary equipment tracker and verbs remain intact for actual combat.
+    // v0.17 hid EVERY equipped weapon, including bows, axes, and launchers.
+    // Only the first sword spirit has a sword baked into its body texture.
+    // Keep that single legacy exception until the body art is sword-free;
+    // all other ghosts must draw their actual weapon normally (aiming included).
     [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.DrawEquipmentAndApparelExtras))]
     internal static class DoNotDoubleDrawSpectralWeapons
     {
         private static bool Prefix(Pawn pawn)
         {
-            return !GhostDefinitions.IsGhost(pawn);
+            return pawn == null || pawn.kindDef == null ||
+                pawn.kindDef.defName != "AR_GhostSpiritSword01";
         }
     }
 
@@ -135,6 +136,22 @@ namespace AragornArmy
         }
     }
 
+    // In RimWorld normal-speed simulation 60 ticks ~= one real second.
+    // A dynamic label stays visible even while the command is disabled.
+    internal sealed class AragornCooldownCommand : Command_Action
+    {
+        public Func<int> RemainingTicks;
+
+        public override string TopRightLabel
+        {
+            get
+            {
+                int ticks = RemainingTicks == null ? 0 : Math.Max(0, RemainingTicks());
+                return ticks > 0 ? Mathf.CeilToInt(ticks / 60f) + "s" : null;
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
     internal static class AragornAndGhostGizmos
     {
@@ -159,25 +176,18 @@ namespace AragornArmy
                     if (gizmo is Command_Action && !(gizmo is Command_Toggle)) continue;
                     yield return gizmo;
                 }
-                // Every selected summoned ghost can recall the entire army.
-                // This is useful if Aragorn is off-map or temporarily loses Anduril.
-                if (game != null && game.IsSummoned(pawn))
-                    yield return new Command_Action {
-                        defaultLabel = AragornText.T("AR_Gizmo_RecallTitle"),
-                        icon = Icon("RecallGhosts"),
-                        defaultDesc = AragornText.T("AR_Gizmo_RecallDesc"),
-                        action = () => game.RecallAll()
-                    };
+                // Only Aragorn can recall the army; ghosts never receive this gizmo.
                 if (game != null && game.IsSummonedKing(pawn))
                 {
-                    var lightning = new Command_Action {
+                    var lightning = new AragornCooldownCommand {
                         defaultLabel = AragornText.T("AR_Gizmo_StormTitle"),
                         icon = Icon("KingsLightning"),
                         defaultDesc = AragornText.T("AR_Gizmo_StormDesc"),
-                        action = () => game.TargetKingLightning(pawn)
+                        action = () => game.TargetKingLightning(pawn),
+                        RemainingTicks = () => game.LightningCooldownRemaining
                     };
                     if (game.LightningCooldownRemaining > 0)
-                        lightning.Disable("Noch " + (game.LightningCooldownRemaining / 2500f).ToString("0.0") + " Ingame-Stunden Abklingzeit.");
+                        lightning.Disable("Abklingzeit: " + Mathf.CeilToInt(game.LightningCooldownRemaining / 60f) + " Sekunden (bei normaler Geschwindigkeit).");
                     yield return lightning;
                 }
                 yield break;
@@ -195,6 +205,13 @@ namespace AragornArmy
                         + "and allow immediate summoning. Does not complete unrelated quests.",
                     icon = Icon("DevComplete"),
                     action = () => game.DevCompleteAragornStory(pawn)
+                };
+                yield return new Command_Action {
+                    defaultLabel = "DEV: Abklingzeiten zurücksetzen",
+                    defaultDesc = "Setzt Beschwörung, Andúril-Rundumschlag und "
+                        + "Geistersturm sofort zurück. Nur bei aktivem Entwicklermodus.",
+                    icon = Icon("DevComplete"),
+                    action = () => game.DevResetCooldowns(pawn)
                 };
             }
 
@@ -237,22 +254,25 @@ namespace AragornArmy
                 yield break;
             }
 
-            Command_Action summon = new Command_Action {
+            AragornCooldownCommand summon = new AragornCooldownCommand {
                 defaultLabel = AragornText.T("AR_Gizmo_SummonTitle"),
                 icon = Icon("SummonGhosts"),
                 defaultDesc = AragornText.T("AR_Gizmo_SummonDesc"),
-                action = () => game.Summon(pawn)
+                action = () => game.Summon(pawn),
+                RemainingTicks = () => game.SummonCooldownRemaining
             };
             if (!game.CanSummon(pawn, out string summoningReason)) summon.Disable(summoningReason);
             yield return summon;
 
-            Command_Action spin = new Command_Action {
+            AragornCooldownCommand spin = new AragornCooldownCommand {
                 defaultLabel = AragornText.T("AR_Gizmo_WhirlTitle"),
                 icon = Icon("SwordWhirl"),
                 defaultDesc = AragornText.T("AR_Gizmo_WhirlDesc"),
-                action = () => game.StartSpin(pawn)
+                action = () => game.StartSpin(pawn),
+                RemainingTicks = () => game.SpinCooldownRemaining
             };
-            if (game.SpinCooldownRemaining > 0) spin.Disable("Rundumschlag noch auf Abklingzeit.");
+            if (game.SpinCooldownRemaining > 0)
+                spin.Disable("Abklingzeit: " + Mathf.CeilToInt(game.SpinCooldownRemaining / 60f) + " Sekunden (bei normaler Geschwindigkeit).");
             yield return spin;
 
             Command_Action trial = new Command_Action {
