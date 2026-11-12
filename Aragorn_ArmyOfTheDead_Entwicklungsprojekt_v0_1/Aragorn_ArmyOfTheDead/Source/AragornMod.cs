@@ -46,7 +46,7 @@ namespace AragornArmy
             Config.armorLevel = Mathf.RoundToInt(ls.Slider(Config.armorLevel, 1, 20));
             ls.Label("Profaned-Verstärkung pro Geisterprüfung: " + Config.profanedCount);
             Config.profanedCount = Mathf.RoundToInt(ls.Slider(Config.profanedCount, 5, 50));
-            ls.Label("Goldschmiede: 12 Stunden, alle 1 Stunde eine Profaned-Welle");
+            ls.Label("Goldschmiede: 6 Stunden, 7 Wellen (alle ca. 51 Ingame-Minuten)");
             ls.Label("Goldschmiede: Basiszahl pro Welle " + Config.forgeWaveBaseCount +
                 " (spätere Wellen: bis zu 22 weitere + viele Elitegegner)");
             Config.forgeWaveBaseCount = Mathf.RoundToInt(ls.Slider(Config.forgeWaveBaseCount, 12, 50));
