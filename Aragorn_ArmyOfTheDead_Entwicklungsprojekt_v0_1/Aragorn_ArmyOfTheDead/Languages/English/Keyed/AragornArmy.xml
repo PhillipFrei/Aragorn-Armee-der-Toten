@@ -12,19 +12,19 @@ Find his prison on the world map. Defeat the Profaned who guard him and bring hi
   <AR_Forge_Title>The Blade Reforged</AR_Forge_Title>
   <AR_Forge_Description>The shards of an ancient sword await the fire once more. In the halls of the Divine Order, a smith yet keeps the old craft. Guard the forge and endure until the blade is made whole again.
 
-Aragorn must stand before the forge for twelve in-game hours. Every hour of forging brings another, stronger Profaned assault. If Aragorn leaves his post, both work and incoming waves pause. When Andúril is complete, take the blade and withdraw.</AR_Forge_Description>
+Aragorn must stand before the forge for six in-game hours. Seven Profaned waves arrive about every 51 in-game minutes of active forging. If Aragorn leaves his post, both work and incoming waves pause. When Andúril is complete, take the blade and withdraw.</AR_Forge_Description>
   <AR_Forge_Site>Golden Forge of the Divine Order</AR_Forge_Site>
   <AR_Forge_ArrivalTitle>The Golden Forge</AR_Forge_ArrivalTitle>
   <AR_Forge_ArrivalBody>The forge of the Divine Order has been found. Bring Aragorn there, and let the work begin.</AR_Forge_ArrivalBody>
   <AR_Forge_SmithName>Master Smith of the Divine Order</AR_Forge_SmithName>
   <AR_Forge_Ready>The smith awaits. Select Aragorn and speak with the master at the forge.</AR_Forge_Ready>
-  <AR_Forge_SiegeStart>The hammers ring. The siege begins: twelve hours, twelve waves. Hold the forge!</AR_Forge_SiegeStart>
-  <AR_Forge_Wave>Profaned Wave {0}/12: {1} new foes. Andúril: {2}% forged.</AR_Forge_Wave>
-  <AR_Forge_Guarding>Aragorn stands watch. Twelve hours of work lie ahead. Progress: {0}%.</AR_Forge_Guarding>
+  <AR_Forge_SiegeStart>The hammers ring. The siege begins: six hours, seven waves. Hold the forge!</AR_Forge_SiegeStart>
+  <AR_Forge_Wave>Profaned Wave {0}/7: {1} new foes. Andúril: {2}% forged.</AR_Forge_Wave>
+  <AR_Forge_Guarding>Aragorn stands watch. Six hours of work lie ahead. Progress: {0}%.</AR_Forge_Guarding>
   <AR_Forge_FinishedTitle>Andúril Reforged</AR_Forge_FinishedTitle>
   <AR_Forge_FinishedBody>From the shards of Narsil, Andúril has arisen. Aragorn bears the blade once more, and the oathbound spirits may now answer his call. Gather the survivors and leave the golden forge while you still can.</AR_Forge_FinishedBody>
   <AR_Forge_Failed>The reforging has failed: {0}. The way may yet open again.</AR_Forge_Failed>
-  <AR_Forge_Progress>Andúril: {0}%  |  Wave {1}/12  |  {2}</AR_Forge_Progress>
+  <AR_Forge_Progress>Andúril: {0}%  |  Wave {1}/7  |  {2}</AR_Forge_Progress>
   <AR_Forge_Running>Forging</AR_Forge_Running>
   <AR_Forge_Paused>Paused</AR_Forge_Paused>
   <AR_Forge_GuardTitle>Guard the Forge</AR_Forge_GuardTitle>
@@ -61,4 +61,5 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Gizmo_RestoreDesc>Development tool for older saves missing the sword.</AR_Gizmo_RestoreDesc>
   <AR_Smith_Died>the master smith or forge was destroyed</AR_Smith_Died>
   <AR_Rescue_QuestHint>A rescue quest awaits under Quests → Available.</AR_Rescue_QuestHint>
+  <AR_KingLightning_DamageReport>Spectral lightning: {0}/5 damaging hits, {1} actual damage dealt.</AR_KingLightning_DamageReport>
 </LanguageData>
