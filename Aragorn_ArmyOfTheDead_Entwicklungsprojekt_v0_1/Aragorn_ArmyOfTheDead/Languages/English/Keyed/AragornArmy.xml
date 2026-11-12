@@ -56,7 +56,7 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Gizmo_WhirlTitle>Andúril — Sweeping Strike</AR_Gizmo_WhirlTitle>
   <AR_Gizmo_WhirlDesc>Unleash a wide, powerful sweep of Andúril, striking nearby foes.</AR_Gizmo_WhirlDesc>
   <AR_Gizmo_StormTitle>Wrath of the Dead</AR_Gizmo_StormTitle>
-  <AR_Gizmo_StormDesc>Call down spectral lightning upon an enemy position.</AR_Gizmo_StormDesc>
+  <AR_Gizmo_StormDesc>Call down five bolts of spectral fire. Each deals 20 Burn damage and ignores armor. Range: 15 cells; impact area: 6 cells. Only hostile pawns take damage.</AR_Gizmo_StormDesc>
   <AR_Gizmo_RestoreTitle>Restore Andúril (Test)</AR_Gizmo_RestoreTitle>
   <AR_Gizmo_RestoreDesc>Development tool for older saves missing the sword.</AR_Gizmo_RestoreDesc>
   <AR_Smith_Died>the master smith or forge was destroyed</AR_Smith_Died>
