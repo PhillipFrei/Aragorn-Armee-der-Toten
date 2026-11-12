@@ -56,7 +56,7 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Gizmo_WhirlTitle>Andúril — Rundumschlag</AR_Gizmo_WhirlTitle>
   <AR_Gizmo_WhirlDesc>Führe einen weiten, mächtigen Rundumschlag mit Andúril gegen nahe Feinde aus.</AR_Gizmo_WhirlDesc>
   <AR_Gizmo_StormTitle>Zorn der Toten</AR_Gizmo_StormTitle>
-  <AR_Gizmo_StormDesc>Rufe geisterhafte Blitze auf eine feindliche Stellung herab.</AR_Gizmo_StormDesc>
+  <AR_Gizmo_StormDesc>Rufe fünf Blitze geisterhaften Feuers herab. Jeder verursacht 20 Brandschaden und ignoriert Rüstung. Reichweite: 15 Felder; Wirkungsradius: 6 Felder. Nur feindliche Pawns erleiden Schaden.</AR_Gizmo_StormDesc>
   <AR_Gizmo_RestoreTitle>Andúril wiederherstellen (Test)</AR_Gizmo_RestoreTitle>
   <AR_Gizmo_RestoreDesc>Entwicklungswerkzeug für ältere Spielstände ohne Andúril.</AR_Gizmo_RestoreDesc>
   <AR_Smith_Died>der Meisterschmied oder die Schmiede wurde zerstört</AR_Smith_Died>
