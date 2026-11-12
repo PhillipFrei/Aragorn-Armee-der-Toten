@@ -586,8 +586,14 @@ namespace AragornArmy
                 FleckMaker.ThrowDustPuffThick(hitCell.ToVector3Shifted(), king.Map, 1.3f, new Color(.12f, .95f, .86f));
                 if (victim != null)
                 {
-                    DamageWorker.DamageResult result = victim.TakeDamage(
-                        new DamageInfo(DamageDefOf.Burn, 20f, 3f, -1f, king));
+                    // Spectral fire scorches flesh through plate, flak and other
+                    // ordinary armor. Keep a genuine Burn damage event so that
+                    // RimWorld applies a Burn injury and logs real damage.
+                    // This deliberately does not bypass genes, immunity, or
+                    // other modded damage resistance.
+                    DamageInfo burn = new DamageInfo(DamageDefOf.Burn, 20f, 0f, -1f, king);
+                    burn.SetIgnoreArmor(true);
+                    DamageWorker.DamageResult result = victim.TakeDamage(burn);
                     if (result != null && result.totalDamageDealt > 0f)
                     {
                         damagingHits++;
