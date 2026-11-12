@@ -562,7 +562,11 @@ namespace AragornArmy
             lastKingLightning = Ticks;
             var possible = king.Map.mapPawns.AllPawnsSpawned
                 .Where(p => p.Spawned && !p.Dead && p != king && p.HostileTo(king) && p.Position.DistanceTo(center) <= 6f).ToList();
-            // Five visual strikes; only enemies can be selected as damage targets.
+            // Five visual strikes; only enemy pawns can receive damage.
+            // Keep the actual RimWorld DamageResult: armor/genes/modded defenses
+            // may reduce or negate the nominal 20 burn damage per strike.
+            int damagingHits = 0;
+            float actualDamage = 0f;
             for (int i = 0; i < 5; i++)
             {
                 possible.RemoveAll(p => p == null || !p.Spawned || p.Dead);
@@ -580,8 +584,25 @@ namespace AragornArmy
                 }
                 FleckMaker.ThrowLightningGlow(hitCell.ToVector3Shifted(), king.Map, 1.5f);
                 FleckMaker.ThrowDustPuffThick(hitCell.ToVector3Shifted(), king.Map, 1.3f, new Color(.12f, .95f, .86f));
-                if (victim != null) victim.TakeDamage(new DamageInfo(DamageDefOf.Burn, 20f, 3f, -1f, king));
+                if (victim != null)
+                {
+                    DamageWorker.DamageResult result = victim.TakeDamage(
+                        new DamageInfo(DamageDefOf.Burn, 20f, 3f, -1f, king));
+                    if (result != null && result.totalDamageDealt > 0f)
+                    {
+                        damagingHits++;
+                        actualDamage += result.totalDamageDealt;
+                    }
+                }
             }
+            Log.Message("[Aragorn] King Lightning: " + damagingHits
+                + "/5 damaging hits, " + actualDamage.ToString("0.0")
+                + " actual damage (center " + center + ").");
+            if (king.Faction == Faction.OfPlayer)
+                Messages.Message(
+                    AragornText.F("AR_KingLightning_DamageReport", damagingHits,
+                        actualDamage.ToString("0.0")),
+                    king, MessageTypeDefOf.NeutralEvent);
         }
 
         public static void Reject(string text)
