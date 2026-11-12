@@ -15,7 +15,7 @@ namespace AragornArmy
     // Divine Order smith does the forging; Aragorn only needs to remain near the forge.
     public sealed class AragornForgeGame : GameComponent
     {
-        public const int ForgeTicksRequired = 30000; // 12 in-game hours of nearby guard duty.
+        public const int ForgeTicksRequired = 15000; // 6 in-game hours of guard duty (7 waves).
         private Quest quest;
         private Site site;
         private Pawn smith;
@@ -31,8 +31,8 @@ namespace AragornArmy
         private int nextWaveTick = -1;
         private int retryTick;
         private int lastPropertyPenaltyTick = -999999;
-        private const int WaveIntervalTicks = 2500; // exactly one in-game hour
-        private const int TotalWaves = 12;
+        private const int WaveIntervalTicks = 2143; // ~51.4 in-game minutes, 1/7 shorter than 2500
+        private const int TotalWaves = 7;
 
         public AragornForgeGame(Game game) { }
 
