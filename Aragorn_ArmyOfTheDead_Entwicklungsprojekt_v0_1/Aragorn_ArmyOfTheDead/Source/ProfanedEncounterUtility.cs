@@ -64,7 +64,7 @@ namespace AragornArmy
             // Guarantee visible undead creatures during every encounter rather than
             // relying solely on an unlucky weighted roll of 20 humanoid options.
             var guaranteed = new[] { "BotchJob_Skeleton", "BotchJob_Wraith", "BotchJob_Ghoul" };
-            int total = Mathf.Clamp(requested, 5, 50);
+            int total = Math.Min(AragornThreat.ScaleCount(map, faction, requested, 1.25f), AragornThreat.MaxEnemies);
             for (int i = 0; i < total; i++)
             {
                 PawnKindDef kind = null;
@@ -115,7 +115,7 @@ namespace AragornArmy
             };
             var hard = hardNames.Select(DefDatabase<PawnKindDef>.GetNamedSilentFail)
                 .Where(k => k != null).ToList();
-            int total = Mathf.Clamp(requested, 10, 80);
+            int total = AragornThreat.ScaleCount(map, faction, requested, 1.75f);
             int eliteCount = hard.Count == 0 ? 0 :
                 Mathf.Clamp(Mathf.RoundToInt(total * (.25f + waveIndex * .018f)), 0, total);
             for (int i = 0; i < total; i++)
