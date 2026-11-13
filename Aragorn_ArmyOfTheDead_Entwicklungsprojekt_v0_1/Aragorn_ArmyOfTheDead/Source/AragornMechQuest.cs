@@ -170,7 +170,7 @@ namespace AragornArmy
             lastPulseTick = -1000000;
             if (quest != null && !quest.Historical)
             {
-                if (quest.State == QuestState.NotYetAccepted) quest.Accept(null);
+                if (quest.State == QuestState.NotYetAccepted) quest.Accept(hero);
                 quest.End(QuestEndOutcome.Success, sendLetter: false);
             }
         }
