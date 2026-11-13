@@ -43,7 +43,11 @@ namespace AragornArmy
             // 5x = full storyteller-and-wealth scaling.
             float wealthWeight = Mathf.InverseLerp(.5f, 5f, difficulty);
             float adjustedWealth = Mathf.Lerp(1f, wealthAndStoryteller, wealthWeight);
-            return Mathf.Clamp(difficulty * questBase * adjustedWealth, .1f, 20f);
+            // The quest's extra danger tier must not override x0.5 either:
+            // precisely x0.5 * baseline count at the minimum setting.
+            float questTier = Mathf.Lerp(1f, questBase,
+                Mathf.InverseLerp(.5f, 2f, difficulty));
+            return Mathf.Clamp(difficulty * questTier * adjustedWealth, .1f, 20f);
         }
 
         public static int CountAliveQuestHostiles(Map map, Faction faction)
