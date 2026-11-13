@@ -78,7 +78,7 @@ namespace AragornArmy
         public bool IsSummonedKing(Pawn pawn) => IsSummoned(pawn) && (pawn.kindDef.defName == "AR_GhostSpiritKing" || pawn.kindDef.defName == "AR_GhostKing") && pawn.Spawned && !pawn.Dead && !pawn.Downed;
         public bool IsSummoned(Pawn pawn) => IsPlayerGhost(pawn) && (ghosts.Contains(pawn) || pawn.Spawned);
         public int SummonCooldownRemaining => Math.Max(0, lastSummonTick + 32500 - Ticks);
-        public int LightningCooldownRemaining => Math.Max(0, lastKingLightning + 7500 - Ticks);
+        public int LightningCooldownRemaining => Math.Max(0, lastKingLightning + 3750 - Ticks);
         public int SpinCooldownRemaining => Math.Max(0, lastSpinTick + 1500 - Ticks); // Prototype: 0.6 in-game hours.
 
         public override void GameComponentTick()
@@ -172,6 +172,7 @@ namespace AragornArmy
                 trialGuards.Clear();
 
                 Unlocked = 13;
+                Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock();
                 lastSummonTick = -1000000; // summon can be tested immediately
                 PrepareAragorn(aragorn, showMessage: false);
                 GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
@@ -196,6 +197,7 @@ namespace AragornArmy
             lastSummonTick = -1000000;
             lastKingLightning = -1000000;
             lastSpinTick = -1000000;
+            Current.Game?.GetComponent<AragornMechQuestGame>()?.DevResetCooldown();
             Messages.Message("Aragorn: Alle Abklingzeiten zurückgesetzt.",
                 pawn, MessageTypeDefOf.PositiveEvent);
         }
@@ -345,7 +347,7 @@ namespace AragornArmy
             if (forgeQuest == null || !forgeQuest.Completed)
             { reason = "Zuerst die Quest 'Andúril – Die Klinge neu schmieden' abschließen."; return false; }
             if (!GhostDefinitions.HasAnduril(aragorn)) { reason = "Aragorn benötigt Andúril."; return false; }
-            if (Unlocked >= 13) { reason = "Alle 13 Geister sind freigeschaltet."; return false; }
+            if (Unlocked >= 13) { reason = "Alle 13 Geister sind freigeschaltet. Die Mechanoidenquest erscheint im Auftragsmenü."; return false; }
             if (trialIndex >= 0)
             { reason = "Eine Prüfung läuft bereits. Reise zum Geistergrab auf der Weltkarte."; return false; }
             return true;
@@ -379,7 +381,7 @@ namespace AragornArmy
             {
                 Site site = SiteMaker.MakeSite(part, tile, hostile,
                     ifHostileThenMustRemainHostile: false,
-                    threatPoints: StorytellerUtility.DefaultSiteThreatPointsNow());
+                    threatPoints: AragornThreat.Points(1.25f));
                 site.customLabel = AragornText.F("AR_Trial_Site", Unlocked + 1, GhostDefinitions.Names[Unlocked]);
                 Find.WorldObjects.Add(site);
 
