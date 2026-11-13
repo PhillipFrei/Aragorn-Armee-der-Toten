@@ -28,6 +28,9 @@ namespace AragornArmy
         private Pawn trialAragorn; // Save the original, sword-bearing quest participant.
         private Map trialMap;
         private int trialIndex = -1;
+        private int trialAbandonedSinceTick = -1;
+        private int nextTrialReofferTick = -1;
+        private Pawn pendingTrialRetryAragorn;
         private bool cleanUpInProgress;
 
         public override void ExposeData()
@@ -38,6 +41,9 @@ namespace AragornArmy
             Scribe_Values.Look(ref lastKingLightning, "lastKingLightning", -1000000);
             Scribe_Values.Look(ref lastSpinTick, "lastSpinTick", -1000000);
             Scribe_Values.Look(ref trialIndex, "trialIndex", -1);
+            Scribe_Values.Look(ref trialAbandonedSinceTick, "trialAbandonedSinceTick", -1);
+            Scribe_Values.Look(ref nextTrialReofferTick, "nextTrialReofferTick", -1);
+            Scribe_References.Look(ref pendingTrialRetryAragorn, "pendingTrialRetryAragorn");
             Scribe_Collections.Look(ref ghosts, "ghosts", LookMode.Reference);
             Scribe_Collections.Look(ref initializedAragornIds, "initializedAragornIds", LookMode.Value);
             Scribe_References.Look(ref trialBoss, "trialBoss");
@@ -139,6 +145,8 @@ namespace AragornArmy
             }
             RefreshKinglyCommand();
             CheckTrialOutcome();
+            CheckTrialAbandoned();
+            TryReofferTrial();
             AutoCastBossKing();
         }
 
@@ -454,6 +462,65 @@ namespace AragornArmy
             }
         }
 
+        private void CheckTrialAbandoned()
+        {
+            if (trialIndex < 0) return;
+            if (trialQuest != null && trialQuest.Historical)
+            {
+                QueueTrialRetry();
+                return;
+            }
+            // Only check departure after the player has actually visited.
+            if (trialMap == null && trialBoss == null) return;
+            bool absent = trialSite == null || !trialSite.HasMap ||
+                !AragornThreat.HasPlayerPawns(trialSite.Map);
+            if (!absent) trialAbandonedSinceTick = -1;
+            else if (trialAbandonedSinceTick < 0) trialAbandonedSinceTick = Ticks;
+            else if (Ticks - trialAbandonedSinceTick >= 1200)
+                QueueTrialRetry();
+        }
+
+        private void QueueTrialRetry()
+        {
+            Pawn hero = trialAragorn;
+            if (trialQuest != null && !trialQuest.Historical)
+                trialQuest.End(QuestEndOutcome.Fail, sendLetter: false);
+            trialQuest = null;
+            trialBoss = null;
+            trialSite = null;
+            trialMap = null;
+            trialIndex = -1;
+            trialGuards.Clear();
+            trialAragorn = null;
+            trialAbandonedSinceTick = -1;
+            if (hero != null && !hero.Dead && !hero.Destroyed)
+            {
+                pendingTrialRetryAragorn = hero;
+                nextTrialReofferTick = Ticks + 600;
+                Messages.Message("Geisterprüfung abgebrochen: Eine neue Prüfung wird angeboten.",
+                    MessageTypeDefOf.NeutralEvent);
+            }
+        }
+
+        private void TryReofferTrial()
+        {
+            if (pendingTrialRetryAragorn == null || trialIndex >= 0 ||
+                Ticks < nextTrialReofferTick) return;
+            Pawn hero = pendingTrialRetryAragorn;
+            if (hero.Dead || hero.Destroyed || Unlocked >= 13)
+            {
+                pendingTrialRetryAragorn = null;
+                return;
+            }
+            nextTrialReofferTick = Ticks + 600;
+            if (CanStartTrial(hero, out string reason))
+            {
+                StartTrial(hero);
+                if (trialIndex >= 0)
+                    pendingTrialRetryAragorn = null;
+            }
+        }
+
         private void CheckTrialOutcome()
         {
             if (trialBoss == null || trialIndex < 0) return;
@@ -476,7 +543,13 @@ namespace AragornArmy
                 if (trialQuest != null && !trialQuest.Historical)
                     trialQuest.End(QuestEndOutcome.Fail, sendLetter: true);
                 Messages.Message(AragornText.T("AR_Trial_Failed"), MessageTypeDefOf.RejectInput);
+                if (trialAragorn != null && !trialAragorn.Dead && !trialAragorn.Destroyed)
+                {
+                    pendingTrialRetryAragorn = trialAragorn;
+                    nextTrialReofferTick = Ticks + 600;
+                }
             }
+            trialAbandonedSinceTick = -1;
             trialBoss = null;
             trialMap = null;
             trialAragorn = null;
