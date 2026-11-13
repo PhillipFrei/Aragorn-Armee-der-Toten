@@ -127,7 +127,7 @@ namespace AragornArmy
             try
             {
                 // Ruined fortified compound with one central stronghold.
-                IntVec3 center = AragornCryptBuilder.Build(map, map.Center);
+                IntVec3 center = AragornMechFortBuilder.Build(map, map.Center, faction);
                 var parms = new PawnGroupMakerParms {
                     faction = faction,
                     groupKind = PawnGroupKindDefOf.Combat,
@@ -226,6 +226,54 @@ namespace AragornArmy
             }, target => target.IsValid && aragorn.Spawned &&
                 target.Cell.InBounds(aragorn.Map) &&
                 target.Cell.DistanceTo(aragorn.Position) <= 30f, aragorn);
+        }
+    }
+
+
+    // Build an actual steel-and-concrete fortress, not a recycled Profaned crypt.
+    public static class AragornMechFortBuilder
+    {
+        public static IntVec3 Build(Map map, IntVec3 near, Faction owner)
+        {
+            ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
+            ThingDef door = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
+            ThingDef steel = ThingDefOf.Steel;
+            TerrainDef floor = DefDatabase<TerrainDef>.GetNamedSilentFail("Concrete");
+            IntVec3 center = CellFinder.RandomClosewalkCellNear(near, map, 18);
+            if (wall == null || door == null || steel == null) return center;
+            // Large reinforced rectangular keep, four entrances, hard cover.
+            const int rx = 13, rz = 11;
+            for (int x = -rx; x <= rx; x++)
+            for (int z = -rz; z <= rz; z++)
+            {
+                IntVec3 c = center + new IntVec3(x, 0, z);
+                if (!c.InBounds(map)) continue;
+                try
+                {
+                    foreach (Thing t in c.GetThingList(map).ToList())
+                        if (t.def.category == ThingCategory.Plant)
+                            t.Destroy(DestroyMode.Vanish);
+                    if (floor != null && c.Walkable(map))
+                        map.terrainGrid.SetTerrain(c, floor);
+                    bool perimeter = Math.Abs(x) == rx || Math.Abs(z) == rz;
+                    bool interiorBarricade = (Math.Abs(x) == 6 && (Math.Abs(z) == 4 || Math.Abs(z) == 5))
+                        || (Math.Abs(z) == 6 && (Math.Abs(x) == 4 || Math.Abs(x) == 5));
+                    if (!perimeter && !interiorBarricade) continue;
+                    bool gate = perimeter && ((x == 0 && Math.Abs(z) == rz)
+                        || (z == 0 && Math.Abs(x) == rx));
+                    if (c.GetThingList(map).Any(t => t is Building)) continue;
+                    Thing structure = ThingMaker.MakeThing(gate ? door : wall, steel);
+                    GenSpawn.Spawn(structure, c, map, WipeMode.Vanish);
+                    if (owner != null && structure.def.CanHaveFaction)
+                        structure.SetFaction(owner);
+                }
+                catch (Exception ex)
+                {
+                    Log.WarningOnce("[Aragorn] Mech fortress block: " + ex.Message, 317786);
+                }
+            }
+            Log.Message("[Aragorn] Steel mechanoid stronghold generated at " + center);
+            return center;
         }
     }
 
