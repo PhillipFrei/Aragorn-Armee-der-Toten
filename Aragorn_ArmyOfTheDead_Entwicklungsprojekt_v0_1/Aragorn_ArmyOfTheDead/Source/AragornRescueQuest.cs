@@ -24,6 +24,7 @@ namespace AragornArmy
         private bool completed;
         private int nextRetryTick;
         private bool rescueOfferLetterSent;
+        private int abandonedSinceTick = -1;
 
         public AragornRescueGame(Game game) { }
 
@@ -119,6 +120,7 @@ namespace AragornArmy
             Scribe_Values.Look(ref completed, "arRescueCompleted");
             Scribe_Values.Look(ref nextRetryTick, "arRescueRetryTick");
             Scribe_Values.Look(ref rescueOfferLetterSent, "arRescueOfferLetterSent", false);
+            Scribe_Values.Look(ref abandonedSinceTick, "arRescueAbandonedSince", -1);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && guards == null)
                 guards = new List<Pawn>();
         }
@@ -161,10 +163,46 @@ namespace AragornArmy
 
             if (!completed && rescueQuest == null) OfferQuest();
             if (rescueQuest == null || completed) return;
+            if (rescueQuest.Historical || rescueQuest.State == QuestState.Ended)
+            {
+                ResetAbandonedRescue();
+                return;
+            }
+            if (encounterCreated && rescueQuest.State == QuestState.Ongoing)
+            {
+                bool absent = rescueSite == null || !rescueSite.HasMap ||
+                    !AragornThreat.HasPlayerPawns(rescueSite.Map);
+                if (!absent) abandonedSinceTick = -1;
+                else if (abandonedSinceTick < 0) abandonedSinceTick = now;
+                else if (now - abandonedSinceTick >= 1200)
+                {
+                    ResetAbandonedRescue();
+                    return;
+                }
+            }
             if (rescueQuest.State == QuestState.Ongoing && !siteCreated && now >= nextRetryTick)
                 TryCreateRescueSite();
             if (rescueQuest.State == QuestState.Ongoing && encounterCreated)
                 CheckRescueOutcome();
+        }
+
+        private void ResetAbandonedRescue()
+        {
+            if (completed) return;
+            Log.Message("[Aragorn] Rescue map left/quest aborted; fresh rescue offer queued.");
+            if (rescueQuest != null && !rescueQuest.Historical)
+                rescueQuest.End(QuestEndOutcome.Fail, sendLetter: false);
+            rescueQuest = null;
+            rescueSite = null;
+            captive = null;
+            guards.Clear();
+            siteCreated = false;
+            encounterCreated = false;
+            rescueOfferLetterSent = false;
+            abandonedSinceTick = -1;
+            nextRetryTick = Find.TickManager.TicksGame + 600;
+            Messages.Message("Aragorn-Rettung abgebrochen: Ein neuer Rettungsauftrag wird angeboten.",
+                MessageTypeDefOf.NeutralEvent);
         }
 
         private void OfferQuest()
@@ -343,6 +381,7 @@ namespace AragornArmy
                 guards.Clear();
                 siteCreated = false;
                 encounterCreated = false;
+                abandonedSinceTick = -1;
             }
         }
     }
