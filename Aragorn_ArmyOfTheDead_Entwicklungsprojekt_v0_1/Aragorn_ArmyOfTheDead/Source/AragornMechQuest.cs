@@ -133,8 +133,10 @@ namespace AragornArmy
                     groupKind = PawnGroupKindDefOf.Combat,
                     points = frozenThreatPoints > 0 ? frozenThreatPoints : AragornThreat.Points(2.5f)
                 };
+                int existingHostiles = AragornThreat.CountAliveQuestHostiles(map, faction);
+                int available = Math.Max(0, AragornThreat.MaxEnemies - existingHostiles);
                 var group = PawnGroupMakerUtility.GeneratePawns(parms, warnOnZeroResults: false)
-                    .Take(AragornThreat.MaxEnemies).ToList();
+                    .Take(available).ToList();
                 foreach (Pawn mech in group)
                 {
                     try
@@ -166,9 +168,24 @@ namespace AragornArmy
         public void DevUnlock(Pawn hero)
         {
             if (!Prefs.DevMode) return;
+            // Ensure the last story quest appears as truly completed in the
+            // quest history, even when Dev completes everything before the
+            // post-13 quest has ever been offered.
+            if (quest == null)
+            {
+                quest = Find.QuestManager?.QuestsListForReading.FirstOrDefault(q =>
+                    q != null && !q.Historical && q.root != null &&
+                    q.root.defName == "AR_MechSilenceQuest");
+                if (quest == null && Find.QuestManager != null) Offer();
+            }
+            if (quest == null)
+            {
+                Log.Error("[Aragorn] Dev unlock: mech quest could not be created.");
+                return;
+            }
             completed = true;
             lastPulseTick = -1000000;
-            if (quest != null && !quest.Historical)
+            if (!quest.Historical)
             {
                 if (quest.State == QuestState.NotYetAccepted) quest.Accept(hero);
                 quest.End(QuestEndOutcome.Success, sendLetter: false);
