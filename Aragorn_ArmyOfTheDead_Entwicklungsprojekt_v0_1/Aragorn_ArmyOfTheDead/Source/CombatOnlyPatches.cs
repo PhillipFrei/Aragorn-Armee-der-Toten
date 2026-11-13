@@ -218,10 +218,8 @@ namespace AragornArmy
             if (mechQuest != null && mechQuest.Completed && pawn.Faction == Faction.OfPlayer)
             {
                 var pulse = new AragornCooldownCommand {
-                    defaultLabel = "Maschinenstillstand",
-                    defaultDesc = "Betäubt feindliche Mechanoiden 10 Sekunden lang. "
-                        + "30 Felder Reichweite, 6 Felder Wirkungsradius, "
-                        + "60 Sekunden Abklingzeit bei Normalgeschwindigkeit.",
+                    defaultLabel = AragornText.T("AR_Mech_StunTitle"),
+                    defaultDesc = AragornText.T("AR_Mech_StunDesc"),
                     icon = Icon("KingsLightning"),
                     action = () => mechQuest.TargetPulse(pawn),
                     RemainingTicks = () => mechQuest.CooldownRemaining
