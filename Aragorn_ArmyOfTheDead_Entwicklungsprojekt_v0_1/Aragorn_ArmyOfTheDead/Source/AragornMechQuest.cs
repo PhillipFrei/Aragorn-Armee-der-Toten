@@ -69,8 +69,8 @@ namespace AragornArmy
             if (quest != null && !quest.Historical)
                 quest.End(QuestEndOutcome.Success, sendLetter: true);
             Find.LetterStack.ReceiveLetter(
-                "Der Bann des Königs",
-                "Die Maschinen schweigen. Aragorn beherrscht nun den Maschinenstillstand: 30 Felder Reichweite, 6 Felder Wirkungsradius, 10 Sekunden Betäubung, 60 Sekunden Abklingzeit.",
+                AragornText.T("AR_Mech_WinTitle"),
+                AragornText.T("AR_Mech_WinBody"),
                 LetterDefOf.PositiveEvent, site);
             Log.Message("[Aragorn] Mechanoid quest completed; Machine Silence unlocked.");
         }
@@ -81,10 +81,8 @@ namespace AragornArmy
             if (root == null) { Log.ErrorOnce("[Aragorn] Missing mech quest def.", 988208); return; }
             quest = Quest.MakeRaw();
             quest.root = root;
-            quest.name = "Das Schweigen des Eisens";
-            quest.description = "Ein Heer uralter Maschinen bewacht eine vergessene Festung. "
-                + "Aragorn und seine 13 Eidverpflichteten muessen die Mechanoiden besiegen. "
-                + "Belohnung: Maschinenstillstand, ein Flaechenstun gegen feindliche Mechanoiden.";
+            quest.name = AragornText.T("AR_Mech_QuestTitle");
+            quest.description = AragornText.T("AR_Mech_QuestDesc");
             quest.acceptanceExpireTick = -1;
             quest.SetNotYetAccepted();
             quest.AddPart(new QuestPart_AragornRescueTarget());
@@ -106,14 +104,13 @@ namespace AragornArmy
                     ifHostileThenMustRemainHostile: false,
                     threatPoints: frozenThreatPoints);
                 if (site == null) return;
-                site.customLabel = "Mechanoidenfestung: Das Schweigen des Eisens";
+                site.customLabel = AragornText.T("AR_Mech_Site");
                 Find.WorldObjects.Add(site);
                 QuestPart_AragornRescueTarget link =
                     quest.GetFirstPartOfType<QuestPart_AragornRescueTarget>();
                 if (link != null) link.site = site;
-                Find.LetterStack.ReceiveLetter("Die Maschinenfestung",
-                    "Die Festung wurde auf der Weltkarte entdeckt. "
-                    + "Besiege ihre Mechanoiden, um den Bann des Königs zu erhalten.",
+                Find.LetterStack.ReceiveLetter(AragornText.T("AR_Mech_ArrivalTitle"),
+                    AragornText.T("AR_Mech_ArrivalBody"),
                     LetterDefOf.NeutralEvent, site);
             }
             catch (Exception e) { Log.Error("[Aragorn] Mech fortress creation: " + e); }
@@ -159,8 +156,8 @@ namespace AragornArmy
                     new LordJob_DefendPoint(center, wanderRadius: 12f,
                         defendRadius: 35f, isCaravanSendable: false, addFleeToil: false),
                     map, defenders);
-                Messages.Message("Mechanoidenfestung: " + defenders.Count
-                    + " Verteidiger. Besiege sie alle!", defenders[0], MessageTypeDefOf.ThreatBig);
+                Messages.Message(AragornText.F("AR_Mech_Encounter", defenders.Count),
+                    defenders[0], MessageTypeDefOf.ThreatBig);
             }
             catch (Exception ex) { Log.Error("[Aragorn] Mech fortress map failed: " + ex); }
         }
@@ -232,8 +229,8 @@ namespace AragornArmy
                     stunned++;
                 }
                 FleckMaker.ThrowLightningGlow(target.Cell.ToVector3Shifted(), aragorn.Map, 2.5f);
-                Messages.Message("Maschinenstillstand: " + stunned + " feindliche Mechanoiden "
-                    + "fuer 10 Sekunden betaeubt.", aragorn, MessageTypeDefOf.PositiveEvent);
+                Messages.Message(AragornText.F("AR_Mech_StunReport", stunned),
+                    aragorn, MessageTypeDefOf.PositiveEvent);
             }, target =>
             {
                 if (!aragorn.Spawned) return;
