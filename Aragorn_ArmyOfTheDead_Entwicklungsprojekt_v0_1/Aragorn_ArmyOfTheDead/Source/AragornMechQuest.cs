@@ -21,6 +21,7 @@ namespace AragornArmy
         private int lastPulseTick = -1000000;
         private int savedCount;
         private float frozenThreatPoints;
+        private int abandonedSinceTick = -1;
 
         public AragornMechQuestGame(Game game) { }
         public bool Completed => completed;
@@ -36,6 +37,7 @@ namespace AragornArmy
             Scribe_Values.Look(ref lastPulseTick, "arMechLastPulse", -1000000);
             Scribe_Values.Look(ref savedCount, "arMechEnemyCount", 0);
             Scribe_Values.Look(ref frozenThreatPoints, "arMechThreatPoints", 0f);
+            Scribe_Values.Look(ref abandonedSinceTick, "arMechAbandonedSince", -1);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && defenders == null)
                 defenders = new List<Pawn>();
         }
@@ -45,6 +47,11 @@ namespace AragornArmy
             if (Current.ProgramState != ProgramState.Playing || completed ||
                 Find.QuestManager == null || Find.TickManager == null) return;
             if (Current.Game?.GetComponent<AragornGame>()?.Unlocked < 13) return;
+            if (quest != null && quest.Historical)
+            {
+                ResetFailedQuest();
+                return;
+            }
             if (quest == null)
             {
                 quest = Find.QuestManager.QuestsListForReading.FirstOrDefault(q =>
@@ -58,8 +65,19 @@ namespace AragornArmy
 
         public override void GameComponentTick()
         {
-            if (completed || !mapPopulated || site?.Map == null ||
+            if (completed || !mapPopulated ||
                 Find.TickManager.TicksGame % 60 != 0) return;
+            int now = Find.TickManager.TicksGame;
+            bool absent = site == null || !site.HasMap ||
+                !AragornThreat.HasPlayerPawns(site.Map);
+            if (absent)
+            {
+                if (abandonedSinceTick < 0) abandonedSinceTick = now;
+                else if (now - abandonedSinceTick >= 1200)
+                    ResetFailedQuest();
+                return;
+            }
+            abandonedSinceTick = -1;
             if (defenders.Any(p => p != null && p.Spawned && !p.Dead && !p.Downed))
                 return;
             // The mission is a battle, not an exploit to auto-complete without
@@ -73,6 +91,23 @@ namespace AragornArmy
                 AragornText.T("AR_Mech_WinBody"),
                 LetterDefOf.PositiveEvent, site);
             Log.Message("[Aragorn] Mechanoid quest completed; Machine Silence unlocked.");
+        }
+
+        private void ResetFailedQuest()
+        {
+            if (completed) return;
+            if (quest != null && !quest.Historical)
+                quest.End(QuestEndOutcome.Fail, sendLetter: false);
+            quest = null;
+            site = null;
+            defenders.Clear();
+            mapPopulated = false;
+            savedCount = 0;
+            frozenThreatPoints = 0f;
+            abandonedSinceTick = -1;
+            Messages.Message("Mechanoidenfestung abgebrochen: Die Quest wird erneut angeboten.",
+                MessageTypeDefOf.NeutralEvent);
+            Log.Message("[Aragorn] Mech quest site abandoned or cancelled; reoffering.");
         }
 
         private void Offer()
