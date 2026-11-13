@@ -163,7 +163,7 @@ namespace AragornArmy
 
             if (!completed && rescueQuest == null) OfferQuest();
             if (rescueQuest == null || completed) return;
-            if (rescueQuest.Historical || rescueQuest.State == QuestState.Ended)
+            if (rescueQuest.Historical)
             {
                 ResetAbandonedRescue();
                 return;
