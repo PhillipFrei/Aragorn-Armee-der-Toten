@@ -208,10 +208,29 @@ namespace AragornArmy
                 yield return new Command_Action {
                     defaultLabel = "DEV: Abklingzeiten zurücksetzen",
                     defaultDesc = "Setzt Beschwörung, Andúril-Rundumschlag und "
-                        + "Geistersturm sofort zurück. Nur bei aktivem Entwicklermodus.",
+                        + "Geistersturm und Maschinenstillstand sofort zurück. Nur bei aktivem Entwicklermodus.",
                     icon = Icon("DevComplete"),
                     action = () => game.DevResetCooldowns(pawn)
                 };
+            }
+
+            var mechQuest = Current.Game?.GetComponent<AragornMechQuestGame>();
+            if (mechQuest != null && mechQuest.Completed && pawn.Faction == Faction.OfPlayer)
+            {
+                var pulse = new AragornCooldownCommand {
+                    defaultLabel = "Maschinenstillstand",
+                    defaultDesc = "Betäubt feindliche Mechanoiden 10 Sekunden lang. "
+                        + "30 Felder Reichweite, 6 Felder Wirkungsradius, "
+                        + "60 Sekunden Abklingzeit bei Normalgeschwindigkeit.",
+                    icon = Icon("KingsLightning"),
+                    action = () => mechQuest.TargetPulse(pawn),
+                    RemainingTicks = () => mechQuest.CooldownRemaining
+                };
+                if (mechQuest.CooldownRemaining > 0)
+                    pulse.Disable("Abklingzeit: "
+                        + Mathf.CeilToInt(mechQuest.CooldownRemaining / 60f)
+                        + " Sekunden.");
+                yield return pulse;
             }
 
             var forgeGame = Current.Game?.GetComponent<AragornForgeGame>();
