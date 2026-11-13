@@ -270,7 +270,7 @@ namespace AragornArmy
             {
                 Site found = SiteMaker.MakeSite(part, tile, divine,
                     ifHostileThenMustRemainHostile: false,
-                    threatPoints: StorytellerUtility.DefaultSiteThreatPointsNow());
+                    threatPoints: AragornThreat.Points(1.75f));
                 found.customLabel = AragornText.T("AR_Forge_Site");
                 Find.WorldObjects.Add(found);
                 site = found;
