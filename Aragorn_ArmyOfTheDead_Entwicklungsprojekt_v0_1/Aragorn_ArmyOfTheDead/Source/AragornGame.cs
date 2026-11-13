@@ -172,7 +172,7 @@ namespace AragornArmy
                 trialGuards.Clear();
 
                 Unlocked = 13;
-                Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock();
+                Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock(aragorn);
                 lastSummonTick = -1000000; // summon can be tested immediately
                 PrepareAragorn(aragorn, showMessage: false);
                 GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
