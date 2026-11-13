@@ -62,8 +62,13 @@ namespace AragornArmy
 
         public static float Points(float questBase)
         {
-            return Mathf.Clamp(SettlementPoints() * (AragornMod.Config?.questDangerMultiplier ?? 2f)
-                * questBase, 200f, 100000f);
+            // Use the same factor for site budgets as for pawn counts: 0.5x
+            // must never generate a wealth-inflated 100-enemy mech fortress.
+            return Mathf.Clamp(1000f * ThreatFactor(questBase), 200f, 100000f);
         }
+
+        public static bool HasPlayerPawns(Map map) =>
+            map != null && map.mapPawns.AllPawnsSpawned.Any(p =>
+                p != null && !p.Dead && p.Faction == Faction.OfPlayer);
     }
 }
