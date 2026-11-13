@@ -31,6 +31,7 @@ namespace AragornArmy
         private int nextWaveTick = -1;
         private int retryTick;
         private int lastPropertyPenaltyTick = -999999;
+        private int abandonedSinceTick = -1;
         private const int WaveIntervalTicks = 2143; // ~51.4 in-game minutes, 1/7 shorter than 2500
         private const int TotalWaves = 7;
 
@@ -96,6 +97,7 @@ namespace AragornArmy
             Scribe_Values.Look(ref nextWaveTick, "arForgeNextWaveTick", -1);
             Scribe_Values.Look(ref retryTick, "arForgeRetry");
             Scribe_Values.Look(ref lastPropertyPenaltyTick, "arForgePropertyPenaltyTick", -999999);
+            Scribe_Values.Look(ref abandonedSinceTick, "arForgeAbandonedSince", -1);
         }
 
         // Development-only convenience: rerun v0.13 without needing a save
@@ -140,6 +142,11 @@ namespace AragornArmy
         {
             if (Current.ProgramState != ProgramState.Playing || Find.QuestManager == null || completed) return;
             if (Find.TickManager.TicksGame < retryTick) return;
+            if (quest != null && quest.Historical && !completed)
+            {
+                FailForge("Die Quest wurde abgebrochen.");
+                return;
+            }
             if (quest == null)
             {
                 QuestScriptDef root = DefDatabase<QuestScriptDef>.GetNamedSilentFail("AR_ReforgeAndurilQuest");
@@ -183,6 +190,19 @@ namespace AragornArmy
         {
             if (Find.TickManager.TicksGame % 60 != 0 || quest == null || completed) return;
             if (quest.State != QuestState.Ongoing) return;
+            if (built)
+            {
+                bool absent = site == null || !site.HasMap ||
+                    !AragornThreat.HasPlayerPawns(site.Map);
+                int nowTick = Find.TickManager.TicksGame;
+                if (!absent) abandonedSinceTick = -1;
+                else if (abandonedSinceTick < 0) abandonedSinceTick = nowTick;
+                else if (nowTick - abandonedSinceTick >= 1200)
+                {
+                    FailForge("Die Schmiedekarte wurde verlassen. Der Auftrag wird erneut angeboten.");
+                    return;
+                }
+            }
             // Older test versions gave Anduril immediately. Once this quest is
             // accepted, replace that provisional reward with the reforged sword.
             if (!provisionalAndurilRemoved)
@@ -510,6 +530,7 @@ namespace AragornArmy
             siegeStartTick = -1;
             nextWaveTick = -1;
             retryTick = Find.TickManager.TicksGame + 2500;
+            abandonedSinceTick = -1;
         }
     }
 
