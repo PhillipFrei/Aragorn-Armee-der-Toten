@@ -73,6 +73,7 @@ namespace AragornArmy
 
         public static bool HasPlayerPawns(Map map) =>
             map != null && map.mapPawns.AllPawnsSpawned.Any(p =>
-                p != null && !p.Dead && p.Faction == Faction.OfPlayer);
+                p != null && !p.Dead && p.Faction == Faction.OfPlayer
+                && p.RaceProps.Humanlike && !GhostDefinitions.IsGhost(p));
     }
 }
