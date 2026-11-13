@@ -163,7 +163,7 @@ namespace AragornArmy
             catch (Exception ex) { Log.Error("[Aragorn] Mech fortress map failed: " + ex); }
         }
 
-        public void DevUnlock()
+        public void DevUnlock(Pawn hero)
         {
             if (!Prefs.DevMode) return;
             completed = true;
