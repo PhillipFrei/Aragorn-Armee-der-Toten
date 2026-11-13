@@ -83,4 +83,25 @@
     <driverClass>AragornArmy.JobDriver_DivineOrderForgeAnduril</driverClass>
     <reportString>schmiedet Andúril</reportString>
   </JobDef>
+
+  <!-- Unlocked after all thirteen spectral trials, offered once per save. -->
+  <QuestScriptDef>
+    <defName>AR_MechSilenceQuest</defName>
+    <root Class="AragornArmy.QuestNode_PermanentAragorn" />
+    <randomlySelectable>false</randomlySelectable>
+    <autoAccept>false</autoAccept>
+    <sendAvailableLetter>false</sendAvailableLetter>
+    <rootSelectionWeight>0</rootSelectionWeight>
+  </QuestScriptDef>
+  <SitePartDef>
+    <defName>AR_MechSilenceFortress</defName>
+    <label>Mechanoidenfestung</label>
+    <description>Ein altes Mechanoidengarnisonlager, das den Bann des Koenigs bewacht.</description>
+    <workerClass>AragornArmy.SitePartWorker_AragornMechSilence</workerClass>
+    <requiresFaction>false</requiresFaction>
+    <showFactionInInspectString>false</showFactionInInspectString>
+    <increasesPopulation>true</increasesPopulation>
+    <wantsThreatPoints>true</wantsThreatPoints>
+    <forceExitAndRemoveMapCountdownDurationDays>6</forceExitAndRemoveMapCountdownDurationDays>
+  </SitePartDef>
 </Defs>
