@@ -218,7 +218,7 @@ namespace AragornArmy
             {
                 Site created = SiteMaker.MakeSite(part, tile, hostile,
                     ifHostileThenMustRemainHostile: false,
-                    threatPoints: StorytellerUtility.DefaultSiteThreatPointsNow());
+                    threatPoints: AragornThreat.Points(1.0f));
                 if (created == null) return;
                 created.customLabel = AragornText.T("AR_Rescue_Site");
                 Find.WorldObjects.Add(created);
