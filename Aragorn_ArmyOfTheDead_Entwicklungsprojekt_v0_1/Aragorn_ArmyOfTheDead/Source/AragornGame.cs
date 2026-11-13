@@ -176,8 +176,8 @@ namespace AragornArmy
                 lastSummonTick = -1000000; // summon can be tested immediately
                 PrepareAragorn(aragorn, showMessage: false);
                 GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
-                Log.Message("[Aragorn] Dev only: rescued, forged Anduril, "
-                    + "and unlocked all 13 ghost trials in this save.");
+                Log.Message("[Aragorn] Dev only: rescue, Anduril forge, 13 ghost trials "
+                    + "and Mechanoid fortress quest completed in this save.");
                 Messages.Message("Aragorn: 13 Geisterquests, Rettung und Schmiede "
                     + "für Testzwecke abgeschlossen.", aragorn, MessageTypeDefOf.PositiveEvent);
             }
