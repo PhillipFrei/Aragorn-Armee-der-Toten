@@ -124,7 +124,7 @@ namespace AragornArmy
                 if (i < eliteCount)
                 {
                     // Stronger creatures become common in later waves.
-                    int eliteIndex = (waveIndex >= 7 && i % 5 == 0)
+                    int eliteIndex = (waveIndex >= 5 && i % 5 == 0)
                         ? Rand.Range(Math.Min(3, hard.Count), hard.Count)
                         : Rand.Range(0, hard.Count);
                     kind = hard[eliteIndex];
