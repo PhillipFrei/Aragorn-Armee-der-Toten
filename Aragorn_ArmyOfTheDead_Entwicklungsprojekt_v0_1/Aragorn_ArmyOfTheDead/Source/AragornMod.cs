@@ -40,6 +40,14 @@ namespace AragornArmy
             {
                 Messages.Message(forgeQuest.RestartForTesting(), MessageTypeDefOf.NeutralEvent);
             }
+            ls.GapLine();
+            ls.Label("Questgefahr (Siedlungsreichtum + Storyteller): x"
+                + Config.questDangerMultiplier.ToString("0.00")
+                + " (0,5 bis 5; Gegnerlimit: 100)");
+            Config.questDangerMultiplier = Mathf.Round(
+                ls.Slider(Config.questDangerMultiplier, .5f, 5f) * 4f) / 4f;
+            ls.Label("Gilt für Aragorn-Rettung, Geisterkrypten, Schmiedewellen "
+                + "und die Mechanoidenfestung; kein Einfluss auf normale Raids.");
             ls.Label("Beschwörungsdauer: " + Config.summonHours + " Ingame-Stunden (Cooldown: 13 h)");
             Config.summonHours = Mathf.RoundToInt(ls.Slider(Config.summonHours, 6, 13));
             ls.Label("Rüstungsstufe: " + Config.armorLevel + " / 20   (Stufe 1: 50 %, 10: 1000 %, 20: 2000 %)");
@@ -72,6 +80,7 @@ namespace AragornArmy
 
     public sealed class AragornSettings : ModSettings
     {
+        public float questDangerMultiplier = 2f;
         public int summonHours = 6;
         public int armorLevel = 10;
         public int profanedCount = 20;
@@ -86,6 +95,7 @@ namespace AragornArmy
 
         public override void ExposeData()
         {
+            Scribe_Values.Look(ref questDangerMultiplier, "questDangerMultiplier", 2f);
             Scribe_Values.Look(ref summonHours, "summonHours", 6);
             Scribe_Values.Look(ref armorLevel, "armorLevel", 10);
             Scribe_Values.Look(ref profanedCount, "profanedCount", 20);
