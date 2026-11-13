@@ -36,7 +36,14 @@ namespace AragornArmy
             // difficulty threat scale; normalize to a stable reference budget.
             float wealthAndStoryteller = Mathf.Clamp(
                 Mathf.Sqrt(Mathf.Max(100f, SettlementPoints()) / 1000f), .5f, 4f);
-            return Mathf.Clamp(wealthAndStoryteller * difficulty * questBase, .25f, 20f);
+            // The minimum slider setting must ALWAYS lower encounter numbers.
+            // At x0.5, high colony wealth cannot negate the low-danger choice.
+            // Wealth/storyteller influence increases smoothly with the slider:
+            // 0.5x = half the baseline, 2x = ~one-third of full wealth scaling,
+            // 5x = full storyteller-and-wealth scaling.
+            float wealthWeight = Mathf.InverseLerp(.5f, 5f, difficulty);
+            float adjustedWealth = Mathf.Lerp(1f, wealthAndStoryteller, wealthWeight);
+            return Mathf.Clamp(difficulty * questBase * adjustedWealth, .1f, 20f);
         }
 
         public static int CountAliveQuestHostiles(Map map, Faction faction)
