@@ -164,7 +164,7 @@ namespace AragornArmy
 
         public void DevUnlock(Pawn hero)
         {
-            if (!Prefs.DevMode) return;
+            if (!Prefs.DevMode || (completed && (quest == null || quest.Historical))) return;
             // Ensure the last story quest appears as truly completed in the
             // quest history, even when Dev completes everything before the
             // post-13 quest has ever been offered.
