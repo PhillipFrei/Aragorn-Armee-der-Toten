@@ -62,4 +62,15 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Smith_Died>the master smith or forge was destroyed</AR_Smith_Died>
   <AR_Rescue_QuestHint>A rescue quest awaits under Quests → Available.</AR_Rescue_QuestHint>
   <AR_KingLightning_DamageReport>Spectral lightning: {0}/5 damaging hits, {1} actual damage dealt.</AR_KingLightning_DamageReport>
+  <AR_Mech_QuestTitle>The Silence of Iron</AR_Mech_QuestTitle>
+  <AR_Mech_QuestDesc>An army of ancient machines guards a forgotten fortress. Aragorn and his thirteen oathbound spirits must defeat its mechanoid defenders. Reward: Machine Silence, an area stun against hostile mechanoids.</AR_Mech_QuestDesc>
+  <AR_Mech_Site>Mechanoid Fortress: The Silence of Iron</AR_Mech_Site>
+  <AR_Mech_ArrivalTitle>The Machine Fortress</AR_Mech_ArrivalTitle>
+  <AR_Mech_ArrivalBody>The fortress has been discovered on the world map. Defeat its mechanoids to claim the King's Bane.</AR_Mech_ArrivalBody>
+  <AR_Mech_WinTitle>The King's Bane</AR_Mech_WinTitle>
+  <AR_Mech_WinBody>The machines fall silent. Aragorn can now cast Machine Silence: 30-cell range, 6-cell effect radius, 10-second stun, 60-second cooldown.</AR_Mech_WinBody>
+  <AR_Mech_Encounter>Mechanoid fortress: {0} defenders. Defeat them all!</AR_Mech_Encounter>
+  <AR_Mech_StunTitle>Machine Silence</AR_Mech_StunTitle>
+  <AR_Mech_StunDesc>Stuns hostile mechanoids for 10 seconds. Range: 30 cells; effect radius: 6 cells; cooldown: 60 seconds.</AR_Mech_StunDesc>
+  <AR_Mech_StunReport>Machine Silence: {0} hostile mechanoids stunned for 10 seconds.</AR_Mech_StunReport>
 </LanguageData>
