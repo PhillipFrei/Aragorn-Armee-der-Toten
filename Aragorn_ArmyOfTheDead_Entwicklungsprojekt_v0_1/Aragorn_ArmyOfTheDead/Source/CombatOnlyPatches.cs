@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -93,8 +94,46 @@ namespace AragornArmy
     {
         private static void Postfix(Pawn pawn, ref bool __result)
         {
-            if (GhostDefinitions.IsGhost(pawn) && pawn.equipment?.Primary != null)
-                __result = true;
+            if (!GhostDefinitions.IsGhost(pawn) || pawn.equipment?.Primary == null) return;
+            // Painted-in swords, axes and staff must not be rendered a second time
+            // as floating idle weapons. Other weapons are rendered by vanilla.
+            __result = !GhostDefinitions.HasEmbeddedWeapon(pawn);
+        }
+    }
+
+    [HarmonyPatch(typeof(Pawn), nameof(Pawn.Kill))]
+    internal static class RemoveSpiritsWhenAragornDies
+    {
+        private static void Postfix(Pawn __instance)
+        {
+            Current.Game?.GetComponent<AragornGame>()?.NotifyAragornDied(__instance);
+        }
+    }
+
+    [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetInspectString))]
+    internal static class ExplainKinglyBuffOnSpirit
+    {
+        private static void Postfix(Pawn __instance, ref string __result)
+        {
+            if (!GhostDefinitions.IsGhost(__instance) ||
+                __instance.Faction != Faction.OfPlayer ||
+                GhostDefinitions.RoleName(__instance) == "König der Toten")
+                return;
+            HediffDef buff = DefDatabase<HediffDef>.GetNamedSilentFail("AR_KinglyCommand");
+            bool enabled = buff != null && __instance.health?.hediffSet?.HasHediff(buff) == true;
+            if (!string.IsNullOrEmpty(__result)) __result += "\n";
+            if (!enabled)
+            {
+                __result += "Königlicher Befehl: inaktiv";
+                return;
+            }
+            float multiplier = AragornMod.Config?.kingBuff ?? 2f;
+            float cooldown = (1f - 1f / multiplier) * 100f;
+            __result += "Königlicher Befehl: Bewegung x" + multiplier.ToString("0.00")
+                + " (+" + ((multiplier - 1f) * 100f).ToString("0") + " %), "
+                + "Angriffs-/Zielzeit -" + cooldown.ToString("0") + " %";
+            __result += "\nTatsächliche Bewegung: " +
+                __instance.GetStatValue(StatDefOf.MoveSpeed).ToString("0.00") + " Felder/s";
         }
     }
 
@@ -174,6 +213,25 @@ namespace AragornArmy
                 {
                     if (gizmo is Command_Action && !(gizmo is Command_Toggle)) continue;
                     yield return gizmo;
+                }
+                // Add a class-wide selection command to each summoned spirit.
+                if (pawn.Faction == Faction.OfPlayer && pawn.Spawned)
+                {
+                    string role = GhostDefinitions.RoleName(pawn);
+                    if (role != null)
+                        yield return new Command_Action {
+                            defaultLabel = "Alle " + role + " wählen",
+                            defaultDesc = "Alle beschworenen Geister dieser Klasse auf dieser Karte gemeinsam auswählen.",
+                            icon = Icon("SummonGhosts"),
+                            action = () => {
+                                var group = pawn.Map.mapPawns.AllPawnsSpawned
+                                    .Where(p => p.Faction == Faction.OfPlayer && !p.Dead &&
+                                        GhostDefinitions.RoleName(p) == role).ToList();
+                                Find.Selector.ClearSelection();
+                                foreach (Pawn member in group)
+                                    Find.Selector.Select(member, false);
+                            }
+                        };
                 }
                 // Only Aragorn can recall the army; ghosts never receive this gizmo.
                 if (game != null && game.IsSummonedKing(pawn))
