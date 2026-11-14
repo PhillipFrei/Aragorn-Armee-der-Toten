@@ -4,7 +4,7 @@
   <!-- Schwertgeist I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace01</defName>
-    <label>Schwertgeist I</label>
+    <label>Schwertgeist</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -38,7 +38,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritSword01</defName>
-    <label>Schwertgeist I</label>
+    <label>Schwertgeist</label>
     <race>AR_SpiritRace01</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -54,7 +54,7 @@
   <!-- Schwertgeist II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace02</defName>
-    <label>Schwertgeist II</label>
+    <label>Schwertgeist</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -88,7 +88,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritSword02</defName>
-    <label>Schwertgeist II</label>
+    <label>Schwertgeist</label>
     <race>AR_SpiritRace02</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -104,7 +104,7 @@
   <!-- Schwertgeist III: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace03</defName>
-    <label>Schwertgeist III</label>
+    <label>Schwertgeist</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -138,7 +138,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritSword03</defName>
-    <label>Schwertgeist III</label>
+    <label>Schwertgeist</label>
     <race>AR_SpiritRace03</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -154,7 +154,7 @@
   <!-- Bogenschütze I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace04</defName>
-    <label>Bogenschütze I</label>
+    <label>Bogenschütze</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -188,7 +188,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritArcher01</defName>
-    <label>Bogenschütze I</label>
+    <label>Bogenschütze</label>
     <race>AR_SpiritRace04</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -204,7 +204,7 @@
   <!-- Bogenschütze II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace05</defName>
-    <label>Bogenschütze II</label>
+    <label>Bogenschütze</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -238,7 +238,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritArcher02</defName>
-    <label>Bogenschütze II</label>
+    <label>Bogenschütze</label>
     <race>AR_SpiritRace05</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -254,7 +254,7 @@
   <!-- Bogenschütze III: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace06</defName>
-    <label>Bogenschütze III</label>
+    <label>Bogenschütze</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -288,7 +288,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritArcher03</defName>
-    <label>Bogenschütze III</label>
+    <label>Bogenschütze</label>
     <race>AR_SpiritRace06</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -304,7 +304,7 @@
   <!-- Granatwerfer I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace07</defName>
-    <label>Granatwerfer I</label>
+    <label>Granatwerfer</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -338,7 +338,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritGrenadier01</defName>
-    <label>Granatwerfer I</label>
+    <label>Granatwerfer</label>
     <race>AR_SpiritRace07</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -354,7 +354,7 @@
   <!-- Granatwerfer II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace08</defName>
-    <label>Granatwerfer II</label>
+    <label>Granatwerfer</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -388,7 +388,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritGrenadier02</defName>
-    <label>Granatwerfer II</label>
+    <label>Granatwerfer</label>
     <race>AR_SpiritRace08</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -404,7 +404,7 @@
   <!-- Axtgeist I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace09</defName>
-    <label>Axtgeist I</label>
+    <label>Axtgeist</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -438,7 +438,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritAxe01</defName>
-    <label>Axtgeist I</label>
+    <label>Axtgeist</label>
     <race>AR_SpiritRace09</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -454,7 +454,7 @@
   <!-- Axtgeist II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace10</defName>
-    <label>Axtgeist II</label>
+    <label>Axtgeist</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -488,7 +488,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritAxe02</defName>
-    <label>Axtgeist II</label>
+    <label>Axtgeist</label>
     <race>AR_SpiritRace10</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -504,7 +504,7 @@
   <!-- Verfluchter Hauptmann I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace11</defName>
-    <label>Verfluchter Hauptmann I</label>
+    <label>Verfluchter Hauptmann</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.0</MoveSpeed>
@@ -538,7 +538,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritCaptain01</defName>
-    <label>Verfluchter Hauptmann I</label>
+    <label>Verfluchter Hauptmann</label>
     <race>AR_SpiritRace11</race>
     <combatPower>350</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -554,7 +554,7 @@
   <!-- Verfluchter Hauptmann II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace12</defName>
-    <label>Verfluchter Hauptmann II</label>
+    <label>Verfluchter Hauptmann</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.0</MoveSpeed>
@@ -588,7 +588,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritCaptain02</defName>
-    <label>Verfluchter Hauptmann II</label>
+    <label>Verfluchter Hauptmann</label>
     <race>AR_SpiritRace12</race>
     <combatPower>350</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
