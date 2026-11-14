@@ -397,7 +397,9 @@ namespace AragornArmy
                 map, CellFinder.EdgeRoadChance_Hostile, out IntVec3 edge))
                 edge = CellFinder.RandomEdgeCell(map);
 
-            int baseCount = AragornMod.Config == null ? 26 : AragornMod.Config.forgeWaveBaseCount;
+            // One shared danger slider: fixed base per wave, scaled by
+            // AragornThreat.ScaleCount inside SpawnSiegeWave.
+            const int baseCount = 26;
             int count = Mathf.Clamp(baseCount + index * 2, 10, 80);
             // Progressively replace weak ordinary infantry with armored elites,
             // Colossi and Wraiths from the ORIGINAL Profaned PawnKindDefs.
