@@ -38,7 +38,14 @@ namespace AragornArmy
         {
             Pawn pawn = req.Thing as Pawn;
             if (!GhostDefinitions.IsGhost(pawn) || (pawn.kindDef.defName == "AR_GhostKing" || pawn.kindDef.defName == "AR_GhostSpiritKing")) return null;
-            return "Königlicher Befehl: Bewegung und Angriffszeit";
+            var def = DefDatabase<HediffDef>.GetNamedSilentFail("AR_KinglyCommand");
+            if (def == null || pawn.health == null || !pawn.health.hediffSet.HasHediff(def)) return null;
+            float b = AragornMod.Config == null ? 2f : AragornMod.Config.kingBuff;
+            if (parentStat == StatDefOf.MoveSpeed)
+                return "Königlicher Befehl: x" + b.ToString("0.00") +
+                    " (Bewegung +" + ((b - 1f) * 100f).ToString("0") + " %)";
+            return "Königlicher Befehl: x" + (1f / b).ToString("0.00") +
+                " (Angriffs-/Zielzeit -" + ((1f - 1f / b) * 100f).ToString("0") + " %)";
         }
     }
 }
