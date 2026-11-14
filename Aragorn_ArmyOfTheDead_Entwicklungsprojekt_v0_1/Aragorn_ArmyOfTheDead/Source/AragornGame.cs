@@ -192,10 +192,11 @@ namespace AragornArmy
                 Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock(aragorn);
                 lastSummonTick = -1000000; // summon can be tested immediately
                 PrepareAragorn(aragorn, showMessage: false);
-                // Always replace the instance after Dev completion: cached
-                // older Anduril gear and its graphic must not survive a skip.
-                GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
-                if (!GhostDefinitions.HasAnduril(aragorn))
+                // The forge game has already granted the sword via the
+                // SAME method used when the quest finishes naturally.
+                // Avoid equipping a second replacement sword afterwards.
+                if (!GhostDefinitions.HasAnduril(aragorn) &&
+                    !AragornForgeGame.EquipCompletedAnduril(aragorn, "DEV fallback"))
                     throw new InvalidOperationException("Andúril konnte beim Dev-Schnelltest nicht ausgerüstet werden.");
                 Log.Message("[Aragorn] Dev Anduril: " + aragorn.equipment.Primary.def.defName
                     + " (" + aragorn.equipment.Primary.def.graphicData?.texPath + ")");
