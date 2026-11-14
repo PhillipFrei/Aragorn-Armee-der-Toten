@@ -235,7 +235,7 @@ namespace AragornArmy
                 aragorn.Map == null || !aragorn.Spawned || aragorn.Downed) return;
             if (CooldownRemaining > 0)
             {
-                AragornGame.Reject("Maschinenstillstand: Abklingzeit "
+                AragornGame.Reject("EMP-Sturm: Abklingzeit "
                     + Mathf.CeilToInt(CooldownRemaining / 60f) + " Sekunden.");
                 return;
             }
@@ -259,8 +259,15 @@ namespace AragornArmy
                         || !p.HostileTo(aragorn) ||
                         p.Position.DistanceTo(target.Cell) > 6f) continue;
                     if (p.stances?.stunner == null) continue;
+                    // EMP stuns the machine and inflicts 100 real injury damage.
+                    // Burn is used for the electrical injury; vanilla EMP
+                    // itself primarily stuns and is not reliable HP damage.
                     p.stances.stunner.StunFor(600, aragorn);
-                    FleckMaker.ThrowLightningGlow(p.DrawPos, p.Map, 1.4f);
+                    DamageInfo electricHit = new DamageInfo(DamageDefOf.Burn, 100f, 0f, -1f, aragorn);
+                    electricHit.SetIgnoreArmor(true);
+                    p.TakeDamage(electricHit);
+                    if (p.Spawned && !p.Dead)
+                        FleckMaker.ThrowLightningGlow(p.DrawPos, p.Map, 2.5f);
                     stunned++;
                 }
                 FleckMaker.ThrowLightningGlow(target.Cell.ToVector3Shifted(), aragorn.Map, 2.5f);
