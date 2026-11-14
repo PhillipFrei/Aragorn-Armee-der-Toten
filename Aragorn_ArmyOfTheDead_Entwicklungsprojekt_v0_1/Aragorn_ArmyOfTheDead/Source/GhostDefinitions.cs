@@ -24,13 +24,52 @@ namespace AragornArmy
             "BotchJob_GraspingDeadGreatsword", "BotchJob_GraspingDeadGreatsword", "MeleeWeapon_PsyfocusStaff"
         };
 
+        // Shared class labels, internal PawnKind IDs stay unchanged for existing saves.
         public static readonly string[] Names = {
-            "Schwertgeist I", "Schwertgeist II", "Schwertgeist III",
-            "Bogenschütze I", "Bogenschütze II", "Bogenschütze III",
-            "Granatwerfer I", "Granatwerfer II",
-            "Axtgeist I", "Axtgeist II",
-            "Verfluchter Hauptmann I", "Verfluchter Hauptmann II", "König der Toten"
+            "Schwertgeist", "Schwertgeist", "Schwertgeist",
+            "Bogenschütze", "Bogenschütze", "Bogenschütze",
+            "Granatwerfer", "Granatwerfer",
+            "Axtgeist", "Axtgeist",
+            "Verfluchter Hauptmann", "Verfluchter Hauptmann", "König der Toten"
         };
+
+        public static string RoleName(Pawn pawn)
+        {
+            if (!IsGhost(pawn)) return null;
+            int index = Array.IndexOf(PawnKinds, pawn.kindDef.defName);
+            if (index >= 0) return Names[index];
+            string kind = pawn.kindDef.defName;
+            if (kind == "AR_GhostSword") return "Schwertgeist";
+            if (kind == "AR_GhostArcher") return "Bogenschütze";
+            if (kind == "AR_GhostGrenadier") return "Granatwerfer";
+            if (kind == "AR_GhostAxe") return "Axtgeist";
+            if (kind == "AR_GhostCaptain") return "Verfluchter Hauptmann";
+            if (kind == "AR_GhostKing") return "König der Toten";
+            return null;
+        }
+
+        // Body art for these spirits already has a weapon painted into the sprite.
+        public static bool HasEmbeddedWeapon(Pawn pawn)
+        {
+            if (!IsGhost(pawn)) return false;
+            string kind = pawn.kindDef.defName;
+            return kind == "AR_GhostSpiritSword01" ||
+                kind.StartsWith("AR_GhostSpiritAxe", StringComparison.Ordinal) ||
+                kind == "AR_GhostSpiritKing";
+        }
+
+        // Migrate old auto-generated numbered names, but preserve manual renames.
+        public static void NormalizeGeneratedName(Pawn pawn)
+        {
+            string role = RoleName(pawn);
+            if (role == null) return;
+            string current = pawn.Name?.ToStringShort ?? "";
+            if (string.IsNullOrEmpty(current) || current == role ||
+                current == role + " I" || current == role + " II" || current == role + " III")
+            {
+                if (current != role) pawn.Name = new NameSingle(role);
+            }
+        }
 
         public static bool IsGhost(Pawn pawn) => pawn != null && pawn.kindDef != null &&
             pawn.kindDef.defName.StartsWith("AR_Ghost", StringComparison.Ordinal);
@@ -123,6 +162,9 @@ namespace AragornArmy
             {
                 pawn.equipment.DestroyAllEquipment();
                 pawn.equipment.AddEquipment(thing);
+                // Immediately refresh visuals after the developer/quest sword swap.
+                if (pawn.Drawer?.renderer != null)
+                    pawn.Drawer.renderer.SetAllGraphicsDirty();
             }
             finally
             {

@@ -40,6 +40,10 @@ namespace AragornArmy
         public void DevCompleteForTesting(Pawn hero)
         {
             if (!Prefs.DevMode || hero == null) return;
+            // Give the precise same weapon as a real completed forge mission.
+            GhostDefinitions.SetFixedWeapon(hero, "AR_Anduril");
+            if (!GhostDefinitions.HasAnduril(hero))
+                throw new InvalidOperationException("Andúril konnte nicht ausgerüstet werden.");
             completed = true;
             progress = ForgeTicksRequired;
             waves = TotalWaves;

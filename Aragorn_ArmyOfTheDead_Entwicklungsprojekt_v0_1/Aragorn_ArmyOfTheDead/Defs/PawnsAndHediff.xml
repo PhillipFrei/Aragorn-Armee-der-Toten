@@ -32,7 +32,7 @@
   <HediffDef>
     <defName>AR_KinglyCommand</defName>
     <label>Königlicher Befehl</label>
-    <description>Solange der König der Toten auf der Karte aktiv ist, bewegen und kämpfen die anderen Geister schneller.</description>
+    <description>Solange der König der Toten beschworen und einsatzfähig ist, erhalten alle anderen Geister den im Modmenü eingestellten Bonus. Bewegungsgeschwindigkeit wird mit dem Königsbuff multipliziert; Nahkampf-Abklingzeit, Fernkampf-Abklingzeit und Zielzeit werden durch den Faktor geteilt. Die aktuellen Werte stehen in der Inspektionsanzeige und in den Statistikdetails. Die Gesundheitskapazität Laufen kann trotzdem 100 % anzeigen.</description>
     <hediffClass>HediffWithComps</hediffClass>
     <isBad>false</isBad>
     <stages><li /></stages>

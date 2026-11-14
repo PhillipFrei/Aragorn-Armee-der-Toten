@@ -20,6 +20,8 @@ namespace AragornArmy
         private int lastKingLightning = -1000000;
         private int lastSpinTick = -1000000;
         private List<Pawn> ghosts = new List<Pawn>();
+        // Saved summoner reference ensures the army cannot outlive Aragorn.
+        private Pawn summoner;
         private List<int> initializedAragornIds = new List<int>();
         private Pawn trialBoss;
         private Site trialSite;
@@ -45,6 +47,7 @@ namespace AragornArmy
             Scribe_Values.Look(ref nextTrialReofferTick, "nextTrialReofferTick", -1);
             Scribe_References.Look(ref pendingTrialRetryAragorn, "pendingTrialRetryAragorn");
             Scribe_Collections.Look(ref ghosts, "ghosts", LookMode.Reference);
+            Scribe_References.Look(ref summoner, "arGhostSummoner");
             Scribe_Collections.Look(ref initializedAragornIds, "initializedAragornIds", LookMode.Value);
             Scribe_References.Look(ref trialBoss, "trialBoss");
             Scribe_References.Look(ref trialSite, "trialSite");
@@ -91,6 +94,11 @@ namespace AragornArmy
         {
             if (Ticks % 60 != 0) return;
             if (AragornMod.Config == null) return;
+            if (summoner != null && (summoner.Dead || summoner.Destroyed))
+            {
+                RecallAll();
+                summoner = null;
+            }
 
             foreach (Map map in Find.Maps)
             {
@@ -132,6 +140,7 @@ namespace AragornArmy
                 // ToolUser spirits carry their fixed weapon, including survivors
                 // from v0.10 whose equipment tracker was still absent.
                 GhostDefinitions.EnsureGhostWeapon(ghost);
+                GhostDefinitions.NormalizeGeneratedName(ghost);
                 // Always drafted: combat commands only; no work schedule/hauling.
                 if (ghost.drafter != null && !ghost.drafter.Drafted) ghost.drafter.Drafted = true;
                 if (ghost.needs != null) ghost.needs.AddOrRemoveNeedsAsAppropriate();
@@ -183,7 +192,12 @@ namespace AragornArmy
                 Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock(aragorn);
                 lastSummonTick = -1000000; // summon can be tested immediately
                 PrepareAragorn(aragorn, showMessage: false);
-                GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
+                if (!GhostDefinitions.HasAnduril(aragorn))
+                    GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
+                if (!GhostDefinitions.HasAnduril(aragorn))
+                    throw new InvalidOperationException("Andúril konnte beim Dev-Schnelltest nicht ausgerüstet werden.");
+                Log.Message("[Aragorn] Dev Anduril: " + aragorn.equipment.Primary.def.defName
+                    + " (" + aragorn.equipment.Primary.def.graphicData?.texPath + ")");
                 Log.Message("[Aragorn] Dev only: rescue, Anduril forge, 13 ghost trials "
                     + "and Mechanoid fortress quest completed in this save.");
                 Messages.Message("Aragorn: 13 Geisterquests, Rettung und Schmiede "
@@ -251,6 +265,7 @@ namespace AragornArmy
                 if (ghost.drafter != null) ghost.drafter.Drafted = true;
                 ghosts.Add(ghost);
             }
+            summoner = aragorn;
             lastSummonTick = Ticks;
             summonedUntil = Ticks + AragornMod.Config.summonHours * 2500;
             RefreshKinglyCommand();
@@ -274,10 +289,23 @@ namespace AragornArmy
                 }
                 ghosts.Clear();
                 summonedUntil = -1;
+                summoner = null;
                 Log.Message("[Aragorn] Rückruf: " + targets.Count + " Spieler-Geister erfasst.");
             }
             finally { cleanUpInProgress = false; }
             Messages.Message("Die Armee der Toten ist zurückgerufen.", MessageTypeDefOf.NeutralEvent);
+        }
+
+        // Called from Pawn.Kill as well as the periodic safety check.
+        public void NotifyAragornDied(Pawn pawn)
+        {
+            if (!GhostDefinitions.IsAragorn(pawn) ||
+                pawn.Faction != Faction.OfPlayer || !HasSummonedGhosts) return;
+            if (summoner == null || summoner == pawn)
+            {
+                RecallAll();
+                Log.Message("[Aragorn] Aragorn died: all player spirits dismissed.");
+            }
         }
 
         private static void RemoveGhost(Pawn pawn)
