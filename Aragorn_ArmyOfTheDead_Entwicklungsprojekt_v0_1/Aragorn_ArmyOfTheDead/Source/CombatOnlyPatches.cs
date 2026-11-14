@@ -86,9 +86,8 @@ namespace AragornArmy
         }
     }
 
-    // v0.17 suppressed ALL ghost equipment drawing, hiding every real weapon.
-    // All ghosts now use weapon-free body sprites. Let RimWorld render and rotate
-    // their actually equipped bows, axes, swords and launchers in every direction.
+    // Draw the separate weapon only when the CURRENT facing's body art has
+    // none. The source sprites differ even within the same class.
     [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.CarryWeaponOpenly))]
     internal static class ShowSpectralEquipmentWhileIdle
     {
@@ -110,6 +109,20 @@ namespace AragornArmy
         }
     }
 
+    // Unlike the regular health summary, this is appended to the actual
+    // hediff tooltip when hovering "Königlicher Befehl" on the Health tab.
+    // Works for buffs already saved as the original HediffWithComps class.
+    [HarmonyPatch(typeof(Hediff), nameof(Hediff.GetTooltip))]
+    internal static class ExplainKinglyBuffOnHediff
+    {
+        private static void Postfix(Hediff __instance, ref string __result)
+        {
+            if (__instance?.def?.defName != "AR_KinglyCommand" || __instance.pawn == null)
+                return;
+            __result += "\n" + KingBuffDetails.Build(__instance.pawn);
+        }
+    }
+
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetInspectString))]
     internal static class ExplainKinglyBuffOnSpirit
     {
@@ -119,21 +132,29 @@ namespace AragornArmy
                 __instance.Faction != Faction.OfPlayer ||
                 GhostDefinitions.RoleName(__instance) == "König der Toten")
                 return;
-            HediffDef buff = DefDatabase<HediffDef>.GetNamedSilentFail("AR_KinglyCommand");
-            bool enabled = buff != null && __instance.health?.hediffSet?.HasHediff(buff) == true;
             if (!string.IsNullOrEmpty(__result)) __result += "\n";
-            if (!enabled)
+            __result += KingBuffDetails.Build(__instance);
+        }
+    }
+
+    // Pawn Editor and other generators can preview a freshly generated Aragorn
+    // before SpawnSetup. Apply the exact same look/armor as the rescue quest
+    // already during PawnGenerator.GeneratePawn, without granting Anduril.
+    [HarmonyPatch(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn),
+        new Type[] { typeof(PawnGenerationRequest) })]
+    internal static class PrepareAragornImmediately
+    {
+        private static void Postfix(Pawn __result)
+        {
+            if (!GhostDefinitions.IsAragorn(__result)) return;
+            try
             {
-                __result += "Königlicher Befehl: inaktiv";
-                return;
+                AragornGame.PrepareAragorn(__result, showMessage: false);
             }
-            float multiplier = AragornMod.Config?.kingBuff ?? 2f;
-            float cooldown = (1f - 1f / multiplier) * 100f;
-            __result += "Königlicher Befehl: Bewegung x" + multiplier.ToString("0.00")
-                + " (+" + ((multiplier - 1f) * 100f).ToString("0") + " %), "
-                + "Angriffs-/Zielzeit -" + cooldown.ToString("0") + " %";
-            __result += "\nTatsächliche Bewegung: " +
-                __instance.GetStatValue(StatDefOf.MoveSpeed).ToString("0.00") + " Felder/s";
+            catch (Exception ex)
+            {
+                Log.Error("[Aragorn] Initial pawn appearance failed: " + ex);
+            }
         }
     }
 
