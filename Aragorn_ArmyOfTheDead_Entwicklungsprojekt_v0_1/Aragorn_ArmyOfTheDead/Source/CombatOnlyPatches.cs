@@ -86,17 +86,43 @@ namespace AragornArmy
         }
     }
 
-    // Draw the separate weapon only when the CURRENT facing's body art has
-    // none. The source sprites differ even within the same class.
+    // In RimWorld 1.6 these spirits are ToolUsers but not humanlike. The
+    // vanilla weapon render node is therefore missing for several facings;
+    // CarryWeaponOpenly=true alone does not make their weapon appear.
+    // Painted body sprites handle east/west and some south facings themselves.
     [HarmonyPatch(typeof(PawnRenderUtility), nameof(PawnRenderUtility.CarryWeaponOpenly))]
     internal static class ShowSpectralEquipmentWhileIdle
     {
         private static void Postfix(Pawn pawn, ref bool __result)
         {
-            if (!GhostDefinitions.IsGhost(pawn) || pawn.equipment?.Primary == null) return;
-            // Painted-in swords, axes and staff must not be rendered a second time
-            // as floating idle weapons. Other weapons are rendered by vanilla.
-            __result = !GhostDefinitions.HasEmbeddedWeapon(pawn);
+            if (!GhostDefinitions.IsGhost(pawn)) return;
+            // Our renderer draws an equipped weapon in every unpainted facing.
+            // Do not let the vanilla system optionally render it again.
+            __result = false;
+        }
+    }
+
+    [HarmonyPatch(typeof(PawnRenderer), nameof(PawnRenderer.RenderPawnAt),
+        new Type[] { typeof(Vector3), typeof(Rot4?), typeof(bool) })]
+    internal static class RenderMissingGhostWeapons
+    {
+        private static void Postfix(PawnRenderer __instance, Vector3 drawLoc, Rot4? rotOverride)
+        {
+            Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
+            if (!GhostDefinitions.IsGhost(pawn) || !pawn.Spawned || pawn.Dead ||
+                pawn.equipment?.Primary == null) return;
+            Rot4 facing = rotOverride ?? pawn.Rotation;
+            if (GhostDefinitions.HasEmbeddedWeapon(pawn, facing)) return;
+
+            ThingWithComps weapon = pawn.equipment.Primary;
+            Graphic graphic = weapon.Graphic;
+            if (graphic == null) return;
+            // Anchor the weapon to the ghost body at the same map position,
+            // not to a fixed world cell. RenderPawnAt also follows movement.
+            Vector3 offset = facing == Rot4.North
+                ? new Vector3(.28f, .035f, .05f)
+                : new Vector3(.28f, .035f, -.09f);
+            graphic.Draw(drawLoc + offset, facing, weapon);
         }
     }
 
@@ -234,25 +260,6 @@ namespace AragornArmy
                 {
                     if (gizmo is Command_Action && !(gizmo is Command_Toggle)) continue;
                     yield return gizmo;
-                }
-                // Add a class-wide selection command to each summoned spirit.
-                if (pawn.Faction == Faction.OfPlayer && pawn.Spawned)
-                {
-                    string role = GhostDefinitions.RoleName(pawn);
-                    if (role != null)
-                        yield return new Command_Action {
-                            defaultLabel = "Alle " + role + " wählen",
-                            defaultDesc = "Alle beschworenen Geister dieser Klasse auf dieser Karte gemeinsam auswählen.",
-                            icon = Icon("SummonGhosts"),
-                            action = () => {
-                                var group = pawn.Map.mapPawns.AllPawnsSpawned
-                                    .Where(p => p.Faction == Faction.OfPlayer && !p.Dead &&
-                                        GhostDefinitions.RoleName(p) == role).ToList();
-                                Find.Selector.ClearSelection();
-                                foreach (Pawn member in group)
-                                    Find.Selector.Select(member, false);
-                            }
-                        };
                 }
                 // Only Aragorn can recall the army; ghosts never receive this gizmo.
                 if (game != null && game.IsSummonedKing(pawn))

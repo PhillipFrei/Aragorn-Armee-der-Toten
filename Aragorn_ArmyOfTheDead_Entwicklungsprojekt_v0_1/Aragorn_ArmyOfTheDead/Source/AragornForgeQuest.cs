@@ -37,13 +37,36 @@ namespace AragornArmy
 
         public AragornForgeGame(Game game) { }
 
+        // The real quest and the development shortcut use exactly one
+        // reward routine, so they cannot diverge in weapon type or texture.
+        public static bool EquipCompletedAnduril(Pawn hero, string source)
+        {
+            if (hero == null || !GhostDefinitions.IsAragorn(hero)) return false;
+            GhostDefinitions.SetFixedWeapon(hero, "AR_Anduril");
+            ThingWithComps equipped = hero.equipment?.Primary;
+            if (!GhostDefinitions.HasAnduril(hero) || equipped == null)
+            {
+                Log.Error("[Aragorn] " + source + ": forged Anduril could not be equipped.");
+                return false;
+            }
+            if (Prefs.DevMode)
+            {
+                string texture = equipped.def.graphicData?.texPath ?? "(none)";
+                Log.Message("[Aragorn] Forged Anduril [" + source + "] def=" +
+                    equipped.def.defName + " tex=" + texture +
+                    " label=" + equipped.LabelCap +
+                    " equipmentCount=" + hero.equipment.AllEquipmentListForReading.Count);
+            }
+            if (hero.Drawer?.renderer != null)
+                hero.Drawer.renderer.SetAllGraphicsDirty();
+            return true;
+        }
+
         public void DevCompleteForTesting(Pawn hero)
         {
             if (!Prefs.DevMode || hero == null) return;
-            // Give the precise same weapon as a real completed forge mission.
-            GhostDefinitions.SetFixedWeapon(hero, "AR_Anduril");
-            if (!GhostDefinitions.HasAnduril(hero))
-                throw new InvalidOperationException("Andúril konnte nicht ausgerüstet werden.");
+            if (!EquipCompletedAnduril(hero, "DEV All Quests"))
+                throw new InvalidOperationException("Das echte, geschmiedete Andúril konnte nicht ausgerüstet werden.");
             completed = true;
             progress = ForgeTicksRequired;
             waves = TotalWaves;
@@ -397,7 +420,9 @@ namespace AragornArmy
                 map, CellFinder.EdgeRoadChance_Hostile, out IntVec3 edge))
                 edge = CellFinder.RandomEdgeCell(map);
 
-            int baseCount = AragornMod.Config == null ? 26 : AragornMod.Config.forgeWaveBaseCount;
+            // One shared danger slider: fixed base per wave, scaled by
+            // AragornThreat.ScaleCount inside SpawnSiegeWave.
+            const int baseCount = 26;
             int count = Mathf.Clamp(baseCount + index * 2, 10, 80);
             // Progressively replace weak ordinary infantry with armored elites,
             // Colossi and Wraiths from the ORIGINAL Profaned PawnKindDefs.
@@ -499,12 +524,8 @@ namespace AragornArmy
         private void CompleteForge()
         {
             if (completed) return;
-            GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
-            if (!GhostDefinitions.HasAnduril(aragorn))
-            {
-                Log.Error("[Aragorn] Reforging finished but Anduril could not be equipped.");
+            if (!EquipCompletedAnduril(aragorn, "real forge quest"))
                 return;
-            }
             completed = true;
             if (quest != null && !quest.Historical)
                 quest.End(QuestEndOutcome.Success, sendLetter: true);

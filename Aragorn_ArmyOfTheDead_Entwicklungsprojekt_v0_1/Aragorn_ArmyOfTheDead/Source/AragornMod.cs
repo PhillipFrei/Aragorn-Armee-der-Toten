@@ -55,9 +55,7 @@ namespace AragornArmy
             ls.Label("Profaned-Verstärkung pro Geisterprüfung: " + Config.profanedCount);
             Config.profanedCount = Mathf.RoundToInt(ls.Slider(Config.profanedCount, 5, 50));
             ls.Label("Goldschmiede: 6 Stunden, 7 Wellen (alle ca. 51 Ingame-Minuten)");
-            ls.Label("Goldschmiede: Basiszahl pro Welle " + Config.forgeWaveBaseCount +
-                " (spätere Wellen: bis zu 22 weitere + viele Elitegegner)");
-            Config.forgeWaveBaseCount = Mathf.RoundToInt(ls.Slider(Config.forgeWaveBaseCount, 12, 50));
+            ls.Label("Schmiedewellen: Die Gegnerzahl richtet sich ausschließlich nach dem globalen Questgefahr-Regler.");
             ls.Label("Königsbuff: x" + Config.kingBuff.ToString("0.0") + " (Geister: Bewegung und Angriffstempo)");
             Config.kingBuff = 1.5f + Mathf.Round(ls.Slider((Config.kingBuff - 1.5f) * 2f, 0f, 3f)) * .5f;
             ls.GapLine();
@@ -84,7 +82,6 @@ namespace AragornArmy
         public int summonHours = 6;
         public int armorLevel = 10;
         public int profanedCount = 20;
-        public int forgeWaveBaseCount = 26;
         public float kingBuff = 2f;
         public float swordArmor = 1f;
         public float archerArmor = .75f;
@@ -99,7 +96,6 @@ namespace AragornArmy
             Scribe_Values.Look(ref summonHours, "summonHours", 6);
             Scribe_Values.Look(ref armorLevel, "armorLevel", 10);
             Scribe_Values.Look(ref profanedCount, "profanedCount", 20);
-            Scribe_Values.Look(ref forgeWaveBaseCount, "forgeWaveBaseCount", 26);
             Scribe_Values.Look(ref kingBuff, "kingBuff", 2f);
             Scribe_Values.Look(ref swordArmor, "swordArmor", 1f);
             Scribe_Values.Look(ref archerArmor, "archerArmor", .75f);
