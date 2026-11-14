@@ -63,14 +63,14 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Rescue_QuestHint>Unter Aufträge → Verfügbar wartet eine Rettungsquest.</AR_Rescue_QuestHint>
   <AR_KingLightning_DamageReport>Geistersturm: {0}/5 wirksame Treffer, {1} tatsächlich verursachter Schaden.</AR_KingLightning_DamageReport>
   <AR_Mech_QuestTitle>Das Schweigen des Eisens</AR_Mech_QuestTitle>
-  <AR_Mech_QuestDesc>Ein Heer uralter Maschinen bewacht eine vergessene Festung. Aragorn und seine 13 Eidverpflichteten müssen die Mechanoiden besiegen. Belohnung: Maschinenstillstand, eine Flächenbetäubung gegen feindliche Mechanoiden.</AR_Mech_QuestDesc>
+  <AR_Mech_QuestDesc>Ein Heer uralter Maschinen bewacht eine vergessene Festung. Aragorn und seine 13 Eidverpflichteten müssen die Mechanoiden besiegen. Belohnung: EMP-Sturm, 100 elektrischer Schaden und 10 Sekunden Betäubung gegen feindliche Mechanoiden.</AR_Mech_QuestDesc>
   <AR_Mech_Site>Mechanoidenfestung: Das Schweigen des Eisens</AR_Mech_Site>
   <AR_Mech_ArrivalTitle>Die Maschinenfestung</AR_Mech_ArrivalTitle>
   <AR_Mech_ArrivalBody>Die Festung wurde auf der Weltkarte entdeckt. Besiege ihre Mechanoiden, um den Bann des Königs zu erhalten.</AR_Mech_ArrivalBody>
   <AR_Mech_WinTitle>Der Bann des Königs</AR_Mech_WinTitle>
-  <AR_Mech_WinBody>Die Maschinen schweigen. Aragorn beherrscht nun den Maschinenstillstand: 30 Felder Reichweite, 6 Felder Wirkungsradius, 10 Sekunden Betäubung, 60 Sekunden Abklingzeit.</AR_Mech_WinBody>
+  <AR_Mech_WinBody>Die Maschinen schweigen. Aragorn beherrscht nun den EMP-Sturm: 30 Felder Reichweite, 6 Felder Wirkungsradius, 100 Schaden je Mechanoid, 10 Sekunden Betäubung, 60 Sekunden Abklingzeit.</AR_Mech_WinBody>
   <AR_Mech_Encounter>Mechanoidenfestung: {0} Verteidiger. Besiege sie alle!</AR_Mech_Encounter>
-  <AR_Mech_StunTitle>Maschinenstillstand</AR_Mech_StunTitle>
-  <AR_Mech_StunDesc>Betäubt feindliche Mechanoiden 10 Sekunden lang. 30 Felder Reichweite, 6 Felder Wirkungsradius, 60 Sekunden Abklingzeit.</AR_Mech_StunDesc>
-  <AR_Mech_StunReport>Maschinenstillstand: {0} feindliche Mechanoiden für 10 Sekunden betäubt.</AR_Mech_StunReport>
+  <AR_Mech_StunTitle>EMP-Sturm</AR_Mech_StunTitle>
+  <AR_Mech_StunDesc>Verursacht 100 elektrische Schadenspunkte und betäubt feindliche Mechanoiden 10 Sekunden lang. 30 Felder Reichweite, 6 Felder Wirkungsradius, 60 Sekunden Abklingzeit.</AR_Mech_StunDesc>
+  <AR_Mech_StunReport>EMP-Sturm: {0} feindliche Mechanoiden für 10 Sekunden betäubt.</AR_Mech_StunReport>
 </LanguageData>

@@ -40,9 +40,9 @@ namespace AragornArmy
             // At x0.5, high colony wealth cannot negate the low-danger choice.
             // Wealth/storyteller influence increases smoothly with the slider:
             // 0.5x = half the baseline, 2x = ~one-third of full wealth scaling,
-            // 5x = full storyteller-and-wealth scaling.
+            // 5x = only 20% of the former storyteller-and-wealth scaling.
             float wealthWeight = Mathf.InverseLerp(.5f, 5f, difficulty);
-            float adjustedWealth = Mathf.Lerp(1f, wealthAndStoryteller, wealthWeight);
+            float adjustedWealth = Mathf.Lerp(1f, wealthAndStoryteller, wealthWeight * .20f);
             // The quest's extra danger tier must not override x0.5 either:
             // precisely x0.5 * baseline count at the minimum setting.
             float questTier = Mathf.Lerp(1f, questBase,
