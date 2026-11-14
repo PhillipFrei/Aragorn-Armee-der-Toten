@@ -192,8 +192,9 @@ namespace AragornArmy
                 Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock(aragorn);
                 lastSummonTick = -1000000; // summon can be tested immediately
                 PrepareAragorn(aragorn, showMessage: false);
-                if (!GhostDefinitions.HasAnduril(aragorn))
-                    GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
+                // Always replace the instance after Dev completion: cached
+                // older Anduril gear and its graphic must not survive a skip.
+                GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
                 if (!GhostDefinitions.HasAnduril(aragorn))
                     throw new InvalidOperationException("Andúril konnte beim Dev-Schnelltest nicht ausgerüstet werden.");
                 Log.Message("[Aragorn] Dev Anduril: " + aragorn.equipment.Primary.def.defName
@@ -762,6 +763,12 @@ namespace AragornArmy
             if (pawn?.story == null) return;
             pawn.gender = Gender.Male;
             pawn.story.bodyType = BodyTypeDefOf.Male;
+            // A PawnEditor preview must display the same recognizable Aragorn
+            // every time, even before he has ever spawned on a map.
+            HeadTypeDef aragornHead = DefDatabase<HeadTypeDef>.GetNamedSilentFail("Male_AverageNormal");
+            if (aragornHead != null) pawn.story.headType = aragornHead;
+            pawn.story.skinColorOverride = new Color(.72f, .57f, .43f);
+            pawn.story.HairColor = new Color(.12f, .09f, .07f);
             // Vanilla hair: favor a definite Long-style def, but tolerate
             // heavily modded hair collections where names differ.
             HairDef longHair = DefDatabase<HairDef>.GetNamedSilentFail("Long")

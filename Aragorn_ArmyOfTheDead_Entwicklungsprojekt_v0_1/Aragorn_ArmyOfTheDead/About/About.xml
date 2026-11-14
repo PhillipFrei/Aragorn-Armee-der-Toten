@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Aragorn – Armee der Toten (v0.23)</name>
+  <name>Aragorn – Armee der Toten (v0.24)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>Version 0.23 (RimWorld 1.6): Einheiten der Geisterarmee erhalten einheitliche Klassennamen und einen Befehl zur gemeinsamen Auswahl. Königlicher Befehl zeigt Zahlen für Geschwindigkeit und Angriffs-/Zielzeit. Der Tod des Beschwörers ruft seine Geister zurück. Geistergrafiken mit fest eingebauter Waffe vermeiden doppelt gezeichnete Leerlaufwaffen. Der Dev-Questabschluss rüstet Andúril genauso aus wie die Schmiedequest. Enthält alle Änderungen aus v0.22: sichtbare Königsblitze, EMP-Sturm (100 Schaden plus 10 Sekunden Betäubung), reduzierter Reichtumseinfluss bei maximal 100 aktiven Questgegnern und Wiederholungslogik für abgebrochene Quests. Ingame-Tests empfohlen.</description>
+  <description>Version 0.24 (RimWorld 1.6): Geisterwaffen werden abhängig von der Blickrichtung korrekt angezeigt; die Ost-Ansichten wurden grafisch korrigiert. Der Königsbuff zeigt im Gesundheits-Tooltip pro Geist Laufgeschwindigkeit, Nahkampf- und Fernkampf-Abklingzeit sowie Zielzeit mit aktuellen Werten und Prozentangaben. Aragorn wird schon bei der Pawn-Erzeugung mit festem Aussehen und Rüstung vorbereitet, aber ohne Andúril; das Schwert wird erst in der Schmiedequest oder beim Dev-Questabschluss vergeben. Dev-All-Quests ersetzt das Schwert stets durch eine frische Andúril-Instanz. Enthält die bisherigen Quest-, Kampf- und EMP-Anpassungen (100 Schaden).</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
