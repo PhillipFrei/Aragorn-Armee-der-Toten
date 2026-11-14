@@ -657,6 +657,11 @@ namespace AragornArmy
                         if (test.InBounds(king.Map) && test.DistanceTo(center) <= 6f) { hitCell = test; break; }
                     }
                 }
+                // ThrowLightningGlow is only a short flash, not a visible bolt.
+                // The vanilla weather event draws the actual lightning beam.
+                // Keep our targeted burn hit separate from the visual event.
+                king.Map.weatherManager.eventHandler.AddEvent(
+                    new WeatherEvent_LightningStrike(king.Map, hitCell));
                 FleckMaker.ThrowLightningGlow(hitCell.ToVector3Shifted(), king.Map, 1.5f);
                 FleckMaker.ThrowDustPuffThick(hitCell.ToVector3Shifted(), king.Map, 1.3f, new Color(.12f, .95f, .86f));
                 if (victim != null)
