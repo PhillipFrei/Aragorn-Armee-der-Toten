@@ -52,10 +52,12 @@ namespace AragornArmy
         // north sprites contain none. South sprites contain a painted weapon
         // only for sword 01 and both axe warriors. Rendering decisions must
         // use the current facing, not just the pawn kind.
-        public static bool HasEmbeddedWeapon(Pawn pawn)
+        public static bool HasEmbeddedWeapon(Pawn pawn) =>
+            pawn != null && HasEmbeddedWeapon(pawn, pawn.Rotation);
+
+        public static bool HasEmbeddedWeapon(Pawn pawn, Rot4 facing)
         {
             if (!IsGhost(pawn)) return false;
-            Rot4 facing = pawn.Rotation;
             if (facing == Rot4.East || facing == Rot4.West) return true;
             if (facing == Rot4.North) return false;
             if (facing != Rot4.South) return false;
