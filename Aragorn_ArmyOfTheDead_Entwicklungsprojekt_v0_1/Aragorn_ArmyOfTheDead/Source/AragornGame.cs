@@ -763,6 +763,12 @@ namespace AragornArmy
             if (pawn?.story == null) return;
             pawn.gender = Gender.Male;
             pawn.story.bodyType = BodyTypeDefOf.Male;
+            // A PawnEditor preview must display the same recognizable Aragorn
+            // every time, even before he has ever spawned on a map.
+            HeadTypeDef aragornHead = DefDatabase<HeadTypeDef>.GetNamedSilentFail("Male_AverageNormal");
+            if (aragornHead != null) pawn.story.headType = aragornHead;
+            pawn.story.skinColorOverride = new Color(.72f, .57f, .43f);
+            pawn.story.HairColor = new Color(.12f, .09f, .07f);
             // Vanilla hair: favor a definite Long-style def, but tolerate
             // heavily modded hair collections where names differ.
             HairDef longHair = DefDatabase<HairDef>.GetNamedSilentFail("Long")
