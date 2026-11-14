@@ -32,7 +32,7 @@
   <HediffDef>
     <defName>AR_KinglyCommand</defName>
     <label>Königlicher Befehl</label>
-    <description>Solange der König der Toten beschworen und einsatzfähig ist, erhalten alle anderen Geister den im Modmenü eingestellten Bonus. Bewegungsgeschwindigkeit wird mit dem Königsbuff multipliziert; Nahkampf-Abklingzeit, Fernkampf-Abklingzeit und Zielzeit werden durch den Faktor geteilt. Die aktuellen Werte stehen in der Inspektionsanzeige und in den Statistikdetails. Die Gesundheitskapazität Laufen kann trotzdem 100 % anzeigen.</description>
+    <description>Der König der Toten stärkt alle anderen beschworenen Geister, solange er auf ihrer Karte einsatzfähig ist.&#10;&#10;Die Verstärkungen im Einzelnen:&#10;• Laufgeschwindigkeit: steigt um (Bufffaktor − 1) × 100 %.&#10;• Nahkampf-Abklingzeit: sinkt um (1 − 1 / Bufffaktor) × 100 %.&#10;• Fernkampf-Abklingzeit: sinkt um denselben Prozentsatz.&#10;• Ziel-/Visierzeit: sinkt um denselben Prozentsatz.&#10;&#10;Beispiel bei Königsbuff 2,0×: Bewegung +100 %, Nahkampf-Abklingzeit −50 %, Fernkampf-Abklingzeit −50 %, Zielzeit −50 %.&#10;Unterhalb dieser Beschreibung stehen im Gesundheits-Tooltip die aktuellen Einzelwerte des ausgewählten Geistes. Die Gesundheitskapazität „Laufen: 100 %“ ist kein Geschwindigkeitswert.</description>
     <hediffClass>HediffWithComps</hediffClass>
     <isBad>false</isBad>
     <stages><li /></stages>
