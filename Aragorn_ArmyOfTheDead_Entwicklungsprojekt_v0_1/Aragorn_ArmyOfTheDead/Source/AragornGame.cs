@@ -192,8 +192,9 @@ namespace AragornArmy
                 Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock(aragorn);
                 lastSummonTick = -1000000; // summon can be tested immediately
                 PrepareAragorn(aragorn, showMessage: false);
-                if (!GhostDefinitions.HasAnduril(aragorn))
-                    GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
+                // Always replace the instance after Dev completion: cached
+                // older Anduril gear and its graphic must not survive a skip.
+                GhostDefinitions.SetFixedWeapon(aragorn, "AR_Anduril");
                 if (!GhostDefinitions.HasAnduril(aragorn))
                     throw new InvalidOperationException("Andúril konnte beim Dev-Schnelltest nicht ausgerüstet werden.");
                 Log.Message("[Aragorn] Dev Anduril: " + aragorn.equipment.Primary.def.defName
