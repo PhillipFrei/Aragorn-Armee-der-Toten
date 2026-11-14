@@ -48,24 +48,11 @@ namespace AragornArmy
             return null;
         }
 
-        // All east/west spirit sprites contain painted weapons, while their
-        // north sprites contain none. South sprites contain a painted weapon
-        // only for sword 01 and both axe warriors. Rendering decisions must
-        // use the current facing, not just the pawn kind.
-        public static bool HasEmbeddedWeapon(Pawn pawn) =>
-            pawn != null && HasEmbeddedWeapon(pawn, pawn.Rotation);
-
-        public static bool HasEmbeddedWeapon(Pawn pawn, Rot4 facing)
-        {
-            if (!IsGhost(pawn)) return false;
-            if (facing == Rot4.East || facing == Rot4.West) return true;
-            if (facing == Rot4.North) return false;
-            if (facing != Rot4.South) return false;
-            string kind = pawn.kindDef.defName;
-            return kind == "AR_GhostSpiritSword01" ||
-                kind == "AR_GhostSpiritAxe01" ||
-                kind == "AR_GhostSpiritAxe02";
-        }
+        // Visual update v0.27: All 39 body textures have NO painted weapons.
+        // The only weapons rendered are the equipped ThingWithComps from
+        // GhostDefinitions.EnsureGhostWeapon; no second weapon is embedded.
+        public static bool HasEmbeddedWeapon(Pawn pawn) => false;
+        public static bool HasEmbeddedWeapon(Pawn pawn, Rot4 facing) => false;
 
         // Migrate old auto-generated numbered names, but preserve manual renames.
         public static void NormalizeGeneratedName(Pawn pawn)
