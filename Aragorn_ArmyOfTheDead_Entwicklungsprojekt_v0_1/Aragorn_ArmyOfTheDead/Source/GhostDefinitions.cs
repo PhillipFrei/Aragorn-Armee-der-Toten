@@ -28,7 +28,7 @@ namespace AragornArmy
         public static readonly string[] Names = {
             "Schwertgeist", "Schwertgeist", "Schwertgeist",
             "Bogenschütze", "Bogenschütze", "Bogenschütze",
-            "Granatwerfer", "Granatwerfer",
+            "Bombardier", "Bombardier",
             "Axtgeist", "Axtgeist",
             "Verfluchter Hauptmann", "Verfluchter Hauptmann", "König der Toten"
         };
@@ -41,14 +41,14 @@ namespace AragornArmy
             string kind = pawn.kindDef.defName;
             if (kind == "AR_GhostSword") return "Schwertgeist";
             if (kind == "AR_GhostArcher") return "Bogenschütze";
-            if (kind == "AR_GhostGrenadier") return "Granatwerfer";
+            if (kind == "AR_GhostGrenadier") return "Bombardier";
             if (kind == "AR_GhostAxe") return "Axtgeist";
             if (kind == "AR_GhostCaptain") return "Verfluchter Hauptmann";
             if (kind == "AR_GhostKing") return "König der Toten";
             return null;
         }
 
-        // Visual update v0.27: All 39 body textures have NO painted weapons.
+        // Visual update v0.28: All 39 new character textures have NO painted weapons.
         // The only weapons rendered are the equipped ThingWithComps from
         // GhostDefinitions.EnsureGhostWeapon; no second weapon is embedded.
         public static bool HasEmbeddedWeapon(Pawn pawn) => false;

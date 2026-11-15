@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Aragorn – Armee der Toten (v0.27)</name>
+  <name>Aragorn – Armee der Toten (v0.28)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>Version 0.27 (RimWorld 1.6): Der globale Questgefahr-Regler steuert nun auch die Schmiedewellen ohne separaten Basiszahl-Regler. Nicht-humanoide Geister erhalten eine gezielte Zeichnung ihrer echten ausgerüsteten Waffe, wenn ihre Blickrichtungs-Grafik keine Waffe zeigt; die integrierten Waffen bleiben erhalten. Dev All Aragorn Quests Complete nutzt dieselbe Andúril-Belohnungsroutine wie der tatsächliche Schmiedequestabschluss, einschließlich Prüfprotokoll der Waffendefinition und Textur. Geister-Klassenauswahlbuttons entfernt. Königsbuff, EMP-Sturm, sichtbare Blitze, wiederholbare Questabbrüche und Maximalzahl 100 bleiben unverändert. Geister sind um genau 10 % größer; neue reine Waffen-Sprites folgen separat mit Paket B. Paket B enthält zusätzlich 39 neue waffenlose Geister-Körpertexturen und die neu gezeichnete Andúril-Grafik nach dem dritten Designblatt. Waffen werden nur als echte Modausrüstung getrennt dargestellt.</description>
+  <description>v0.28 Komplettpaket für RimWorld 1.6. Überarbeitete waffenlose Körpersprites für alle 13 Geister (6 Klassen in Süd-, Ost- und Nordansicht; West gespiegelt), 10 % größere Darstellung, deutlich unterscheidbare Hauptleute und König mit hoher Krone. Die Waffen kommen ausschließlich aus der tatsächlich ausgerüsteten Mod-Waffe und werden separat gezeichnet. Neue Andúril-Grafik nach der ausgewählten Designvorlage. Feste Zuordnung der 13 Sprites (einschließlich Schwertgeist 01), einheitliche Bombardier-Klasse, Mod-Icon. Beinhaltet die bisherigen Verbesserungen: globaler Questgefahr-Regler ohne separaten Schmiedewellen-Regler, max. 100 Gegner, Questwiederholung nach Abbruch, 100 EMP-Schaden, sichtbare Königsblitze, Königsbuff-Anzeigen und Rückruf bei Aragorns Tod. GitHub-Compiler geprüft; Ingame-Waffendarstellung muss getestet werden.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>

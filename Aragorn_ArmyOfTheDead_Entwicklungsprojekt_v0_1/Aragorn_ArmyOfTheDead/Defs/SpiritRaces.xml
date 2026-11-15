@@ -45,8 +45,8 @@
     <ecoSystemWeight>0</ecoSystemWeight>
     <lifeStages>
       <li>
-        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.584</drawSize></bodyGraphicData>
-        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_02</texPath><drawSize>1.584</drawSize></dessicatedBodyGraphicData>
+        <bodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.584</drawSize></bodyGraphicData>
+        <dessicatedBodyGraphicData><texPath>Aragorn/Spirits/AR_Ghost_01</texPath><drawSize>1.584</drawSize></dessicatedBodyGraphicData>
       </li>
     </lifeStages>
   </PawnKindDef>
@@ -304,7 +304,7 @@
   <!-- Granatwerfer I: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace07</defName>
-    <label>Granatwerfer</label>
+    <label>Bombardier</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -338,7 +338,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritGrenadier01</defName>
-    <label>Granatwerfer</label>
+    <label>Bombardier</label>
     <race>AR_SpiritRace07</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>
@@ -354,7 +354,7 @@
   <!-- Granatwerfer II: own non-humanlike race; natural attacks are taken from the original weapon Def at runtime. -->
   <ThingDef ParentName="BotchJob_UndeadAnimalBase">
     <defName>AR_SpiritRace08</defName>
-    <label>Granatwerfer</label>
+    <label>Bombardier</label>
     <description>Ein beschworener, körperloser Geisterkrieger. Trägt eine fest gebundene Waffe, aber keine wechselbare Kleidung und verrichtet keine Arbeit.</description>
     <statBases>
       <MoveSpeed>4.6</MoveSpeed>
@@ -388,7 +388,7 @@
   </ThingDef>
   <PawnKindDef ParentName="AnimalKindBase">
     <defName>AR_GhostSpiritGrenadier02</defName>
-    <label>Granatwerfer</label>
+    <label>Bombardier</label>
     <race>AR_SpiritRace08</race>
     <combatPower>150</combatPower>
     <canArriveManhunter>false</canArriveManhunter>

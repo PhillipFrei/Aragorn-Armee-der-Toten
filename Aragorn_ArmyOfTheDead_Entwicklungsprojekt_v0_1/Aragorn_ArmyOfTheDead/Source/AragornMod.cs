@@ -62,7 +62,7 @@ namespace AragornArmy
             ls.Label("Rüstung pro Klasse: Multiplikator zur globalen Rüstungsstufe");
             RoleSlider(ls, "Schwertgeister", ref Config.swordArmor);
             RoleSlider(ls, "Bogenschützen", ref Config.archerArmor);
-            RoleSlider(ls, "Granatwerfer", ref Config.grenadeArmor);
+            RoleSlider(ls, "Bombardiere", ref Config.grenadeArmor);
             RoleSlider(ls, "Axtgeister", ref Config.axeArmor);
             RoleSlider(ls, "Hauptleute", ref Config.captainArmor);
             RoleSlider(ls, "König", ref Config.kingArmor);
