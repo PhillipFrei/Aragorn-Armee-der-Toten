@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- King of the Dead's own weapon: no Royalty or psyfocus required. -->
+  <ThingDef ParentName="BaseWeapon">
+    <defName>AR_KingSpectralStaff</defName>
+    <label>Geisterstab des Königs</label>
+    <description>Ein uralter, von grünlichem Geisterlicht erfüllter Königsstab. Seine Macht stammt vom König der Toten und benötigt keine königlichen Psikräfte.</description>
+    <graphicData>
+      <texPath>Things/Weapons/AR_KingSpectralStaff</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>1.15</drawSize>
+    </graphicData>
+    <thingCategories><li>WeaponsMelee</li></thingCategories>
+    <techLevel>Medieval</techLevel>
+    <statBases>
+      <MaxHitPoints>1500</MaxHitPoints>
+      <MarketValue>1200</MarketValue>
+      <Mass>2.5</Mass>
+    </statBases>
+    <weaponTags><li>AR_KingSpectralStaff</li></weaponTags>
+    <tools>
+      <li>
+        <label>Stabhieb</label>
+        <capacities><li>Blunt</li></capacities>
+        <power>14</power>
+        <cooldownTime>2.4</cooldownTime>
+        <armorPenetration>0.3</armorPenetration>
+      </li>
+    </tools>
+  </ThingDef>
+</Defs>
