@@ -66,7 +66,7 @@ namespace AragornArmy
         {
             if (!Prefs.DevMode || hero == null) return;
             if (!EquipCompletedAnduril(hero, "DEV All Quests"))
-                throw new InvalidOperationException("Das echte, geschmiedete Andúril konnte nicht ausgerüstet werden.");
+                throw new InvalidOperationException(AragornText.T("AR_Dev_AndurilFailed"));
             completed = true;
             progress = ForgeTicksRequired;
             waves = TotalWaves;
@@ -132,9 +132,9 @@ namespace AragornArmy
         public string RestartForTesting()
         {
             if (Current.ProgramState != ProgramState.Playing || Find.QuestManager == null)
-                return "Bitte zunächst einen Spielstand laden.";
+                return AragornText.T("AR_Dev_LoadSave");
             if (!completed)
-                return "Schmiedequest ist noch nicht abgeschlossen. Wiederholung ist nur nach Erfolg möglich.";
+                return AragornText.T("AR_Dev_ForgeNotComplete");
             completed = false;
             quest = null;
             site = null;
@@ -151,8 +151,7 @@ namespace AragornArmy
             lastPropertyPenaltyTick = -999999;
             retryTick = Find.TickManager.TicksGame;
             Log.Message("[Aragorn] Forge quest reset for development testing.");
-            return "Neue Andúril-Schmiedequest wird sofort wieder angeboten. "
-                + "Vorhandenes Andúril bleibt bis zur Annahme erhalten.";
+            return AragornText.T("AR_Dev_ForgeRetryOffered");
         }
 
         private static Pawn FindSavedAragorn()
@@ -226,7 +225,7 @@ namespace AragornArmy
                 else if (abandonedSinceTick < 0) abandonedSinceTick = nowTick;
                 else if (nowTick - abandonedSinceTick >= 1200)
                 {
-                    FailForge("Die Schmiedekarte wurde verlassen. Der Auftrag wird erneut angeboten.");
+                    FailForge(AragornText.T("AR_Forge_Abandoned"));
                     return;
                 }
             }
@@ -463,8 +462,7 @@ namespace AragornArmy
             divine.TryAffectGoodwillWith(Faction.OfPlayer, -20, canSendMessage: true,
                 canSendHostilityLetter: true, reason: HistoryEventDefOf.AttackedBuilding,
                 lookTarget: property);
-            Messages.Message("Das Zerstören der goldenen Divine-Order-Schmiede gilt als Sakrileg! "
-                + "Rufverlust bei der Divine Order (-20).", property,
+            Messages.Message(AragornText.T("AR_Msg_ForgeSacrilege"), property,
                 MessageTypeDefOf.NegativeEvent);
             Log.Warning("[Aragorn] Divine Order golden property attacked by player: " + property);
         }
@@ -473,14 +471,14 @@ namespace AragornArmy
         {
             reason = null;
             if (!GhostDefinitions.IsAragorn(pawn) || pawn.Faction != Faction.OfPlayer)
-            { reason = "Nur Aragorn kann an der Schmiede wachen."; return false; }
+            { reason = AragornText.T("AR_Error_OnlyAragornAtForge"); return false; }
             if (completed || quest?.State != QuestState.Ongoing)
-            { reason = "Die Schmiedequest ist nicht aktiv."; return false; }
+            { reason = AragornText.T("AR_Error_ForgeNotActive"); return false; }
             if (forge == null || !forge.Spawned || !IsForgeMap(pawn.Map))
-            { reason = "Aragorn muss sich auf der Schmiedekarte befinden."; return false; }
+            { reason = AragornText.T("AR_Error_ForgeMap"); return false; }
             if (!AragornStandCell.InBounds(pawn.Map) || !AragornStandCell.Standable(pawn.Map))
             { reason = AragornText.T("AR_Forge_GuardBlocked"); return false; }
-            if (pawn.Downed) { reason = "Aragorn ist kampfunfähig."; return false; }
+            if (pawn.Downed) { reason = AragornText.T("AR_Error_AragornDowned"); return false; }
             return true;
         }
 

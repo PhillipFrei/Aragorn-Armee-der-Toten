@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_KinglyCommand.label>Königlicher Befehl</AR_KinglyCommand.label>
+  <AR_KinglyCommand.description>Der König der Toten stärkt die übrigen beschworenen Geister, solange er auf der Karte einsatzfähig ist.
+
+• Laufgeschwindigkeit: +(Bufffaktor − 1) × 100 %.
+• Nahkampfabklingzeit: −(1 − 1/Bufffaktor) × 100 %.
+• Fernkampfabklingzeit: gleicher Abschlag.
+• Zielzeit: gleicher Abschlag.
+
+Beispiel bei x2: Bewegung +100 %, Abklingzeiten und Zielzeit −50 %. Die tatsächlichen Einzelwerte stehen im Gesundheitstooltip. „Laufen: 100 %“ ist eine Gesundheitskapazität, kein Geschwindigkeitstempo.</AR_KinglyCommand.description>
+</LanguageData>

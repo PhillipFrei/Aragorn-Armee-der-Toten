@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_RescueCamp.label>Aragorn's Prison</AR_RescueCamp.label>
+  <AR_RescueCamp.description>A hidden camp where Aragorn is held captive by the Profaned.</AR_RescueCamp.description>
+  <AR_GhostTrialCamp.label>Oathbound Crypt</AR_GhostTrialCamp.label>
+  <AR_GhostTrialCamp.description>A crypt occupied by Profaned guards and a cursed spirit warrior.</AR_GhostTrialCamp.description>
+  <AR_AndurilForgeSite.label>Golden Forge of the Divine Order</AR_AndurilForgeSite.label>
+  <AR_AndurilForgeSite.description>A golden forge temple where the broken blade can be reforged.</AR_AndurilForgeSite.description>
+  <AR_MechSilenceFortress.label>Mechanoid Fortress</AR_MechSilenceFortress.label>
+  <AR_MechSilenceFortress.description>An ancient mechanoid garrison guarding the king's forbidden power.</AR_MechSilenceFortress.description>
+</LanguageData>

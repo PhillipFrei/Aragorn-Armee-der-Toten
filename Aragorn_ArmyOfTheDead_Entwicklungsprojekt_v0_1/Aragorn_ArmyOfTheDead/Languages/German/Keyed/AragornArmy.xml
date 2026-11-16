@@ -73,4 +73,101 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Mech_StunTitle>EMP-Sturm</AR_Mech_StunTitle>
   <AR_Mech_StunDesc>Verursacht im Mod-Menü einstellbaren Schaden und betäubt feindliche Mechanoiden 10 Sekunden lang. 30 Felder Reichweite, 6 Felder Wirkungsradius, 60 Sekunden Abklingzeit.</AR_Mech_StunDesc>
   <AR_Mech_StunReport>EMP-Sturm: {0} feindliche Mechanoiden für 10 Sekunden betäubt.</AR_Mech_StunReport>
+
+  <!-- Shared user-interface, gameplay feedback and developer localization -->
+  <AR_Mod_Name>Aragorn – Armee der Toten</AR_Mod_Name>
+  <AR_Settings_SectionQuests>QUESTS</AR_Settings_SectionQuests>
+  <AR_Settings_QuestDanger>Globale Questgefahr: x{0} (alle Aragorn-Quests, höchstens 100 Feinde gleichzeitig)</AR_Settings_QuestDanger>
+  <AR_Settings_DangerHelp>Gilt für Rettung, Schmiedewellen, Geisterprüfungen und Mechanoidenfestung.</AR_Settings_DangerHelp>
+  <AR_Settings_SectionSpirits>GEISTER</AR_Settings_SectionSpirits>
+  <AR_Settings_SummonDuration>Beschwörungsdauer: {0} Ingame-Stunden (13 Stunden Abklingzeit)</AR_Settings_SummonDuration>
+  <AR_Settings_Armor>Geisterrüstung (alle Klassen): x{0}</AR_Settings_Armor>
+  <AR_Settings_ArmorHelp>Bei x1: +1000 % natürliche Rüstung auf Basiswerte. Ersetzt alte Klassen- und Stufenregler.</AR_Settings_ArmorHelp>
+  <AR_Settings_KingBuff>Königsbuff: x{0} (schnellere Bewegung, kürzere Angriffs-/Zielzeit)</AR_Settings_KingBuff>
+  <AR_Settings_SectionAbilities>FÄHIGKEITEN</AR_Settings_SectionAbilities>
+  <AR_Settings_Emp>Aragorns EMP-Sturm: {0} Schaden je Mechanoid (+10 s Betäubung)</AR_Settings_Emp>
+  <AR_Settings_Lightning>Blitze des Königs: {0} Brandschaden je Treffer (5 Blitze)</AR_Settings_Lightning>
+  <AR_Settings_SectionDev>ENTWICKLERMODUS</AR_Settings_SectionDev>
+  <AR_Settings_OfferRescue>Aragorn-Rettungsquest jetzt anbieten</AR_Settings_OfferRescue>
+  <AR_Settings_NoQuestComponent>Keine Quest-Komponente: Bitte Spielstand laden.</AR_Settings_NoQuestComponent>
+  <AR_Settings_RetryForge>Andúril-Schmiedequest erneut testen</AR_Settings_RetryForge>
+  <AR_Role_Sword>Schwertgeist</AR_Role_Sword>
+  <AR_Role_Archer>Bogenschütze</AR_Role_Archer>
+  <AR_Role_Bombardier>Bombardier</AR_Role_Bombardier>
+  <AR_Role_Axe>Axtgeist</AR_Role_Axe>
+  <AR_Role_Captain>Verfluchter Hauptmann</AR_Role_Captain>
+  <AR_Role_King>König der Toten</AR_Role_King>
+  <AR_Buff_Active>Königlicher Befehl (aktiv):</AR_Buff_Active>
+  <AR_Buff_Inactive>Königlicher Befehl: inaktiv</AR_Buff_Inactive>
+  <AR_Buff_Move>Laufgeschwindigkeit</AR_Buff_Move>
+  <AR_Buff_CellsPerSec>Felder/s</AR_Buff_CellsPerSec>
+  <AR_Buff_Melee>Nahkampf-Abklingzeit</AR_Buff_Melee>
+  <AR_Buff_Ranged>Fernkampf-Abklingzeit</AR_Buff_Ranged>
+  <AR_Buff_Aim>Ziel-/Visierzeit</AR_Buff_Aim>
+  <AR_Buff_Note>Werte vor dem Pfeil sind ohne Königsbuff, aber mit allen anderen aktiven Boni berechnet.</AR_Buff_Note>
+  <AR_Buff_StatMissing>Statistik in dieser Modliste nicht verfügbar</AR_Buff_StatMissing>
+  <AR_Buff_Factor>Faktor</AR_Buff_Factor>
+  <AR_Stat_Armor>Aragorn: einheitlicher Geisterrüstungsbonus +{0} % (Modmenü)</AR_Stat_Armor>
+  <AR_Stat_KingSpeed>Königlicher Befehl: x{0} (Bewegung +{1} %)</AR_Stat_KingSpeed>
+  <AR_Stat_KingAttack>Königlicher Befehl: x{0} (Angriffs-/Zielzeit −{1} %)</AR_Stat_KingAttack>
+  <AR_UI_Cooldown>Abklingzeit: {0} Sekunden.</AR_UI_Cooldown>
+  <AR_UI_CooldownNormal>Abklingzeit: {0} Sekunden (bei normaler Geschwindigkeit).</AR_UI_CooldownNormal>
+  <AR_Dev_CompleteTitle>DEV: Alle Aragorn-Quests abschließen</AR_Dev_CompleteTitle>
+  <AR_Dev_CompleteDesc>Nur Entwicklermodus: Rettung, Schmiede und 13 Geisterprüfungen abschließen, Andúril ausrüsten und die Beschwörung sofort ermöglichen. Andere Quests bleiben unberührt.</AR_Dev_CompleteDesc>
+  <AR_Dev_ResetTitle>DEV: Abklingzeiten zurücksetzen</AR_Dev_ResetTitle>
+  <AR_Dev_ResetDesc>Setzt Beschwörung, Andúrils Rundumschlag, Königsblitze und EMP-Sturm sofort zurück. Nur im Entwicklermodus.</AR_Dev_ResetDesc>
+  <AR_Dev_LoadSave>Bitte zuerst einen Spielstand vollständig laden.</AR_Dev_LoadSave>
+  <AR_Dev_ForgeNotComplete>Die Schmiedequest ist noch nicht abgeschlossen. Wiederholung erst nach einem Erfolg möglich.</AR_Dev_ForgeNotComplete>
+  <AR_Dev_ForgeRetryOffered>Eine neue Andúril-Schmiedequest wird sofort angeboten. Vorhandenes Andúril bleibt bis zur Annahme erhalten.</AR_Dev_ForgeRetryOffered>
+  <AR_Msg_DevComplete>Aragorn: Rettung, Schmiede und alle 13 Geisterprüfungen zu Testzwecken abgeschlossen.</AR_Msg_DevComplete>
+  <AR_Msg_DevFailed>Aragorn-Dev-Test fehlgeschlagen: {0}</AR_Msg_DevFailed>
+  <AR_Msg_CooldownsReset>Aragorn: Alle Abklingzeiten zurückgesetzt.</AR_Msg_CooldownsReset>
+  <AR_Error_MustHoldAnduril>Aragorn muss Andúril tragen.</AR_Error_MustHoldAnduril>
+  <AR_Error_ForgeFirst>Andúril muss zuerst bei der Divine Order neu geschmiedet werden.</AR_Error_ForgeFirst>
+  <AR_Error_TrialFirst>Schließe zuerst eine Geisterprüfung ab.</AR_Error_TrialFirst>
+  <AR_Error_AlreadySummoned>Die Armee der Toten ist bereits beschworen.</AR_Error_AlreadySummoned>
+  <AR_Error_SummonCooldown>Beschwörung in {0} Ingame-Stunden wieder möglich.</AR_Error_SummonCooldown>
+  <AR_Error_RecallFirst>Rufe zuerst die bereits beschworenen Geister zurück.</AR_Error_RecallFirst>
+  <AR_Msg_Summoned>Armee der Toten: {0} Geister beschworen.</AR_Msg_Summoned>
+  <AR_Msg_Recalled>Die Armee der Toten wurde zurückgerufen.</AR_Msg_Recalled>
+  <AR_Error_CompleteForge>Schließe zuerst die Quest zur Neuschmiedung Andúrils ab.</AR_Error_CompleteForge>
+  <AR_Error_NeedsAnduril>Aragorn benötigt Andúril.</AR_Error_NeedsAnduril>
+  <AR_Error_AllSpiritsUnlocked>Alle 13 Geister sind freigeschaltet. Die Mechanoidenquest erscheint im Auftragsmenü.</AR_Error_AllSpiritsUnlocked>
+  <AR_Error_TrialRunning>Eine Geisterprüfung läuft bereits. Reise zum Geistergrab auf der Weltkarte.</AR_Error_TrialRunning>
+  <AR_Error_ProfanedMissing>Die Profaned-Kampfdefinitionen konnten nicht geladen werden.</AR_Error_ProfanedMissing>
+  <AR_Error_TrialDefsMissing>Weltkarten- oder Questdefinition der Geisterprüfung fehlt. Siehe Player.log.</AR_Error_TrialDefsMissing>
+  <AR_Error_NoWorldTile>Kein freies Weltkartenfeld für die nächste Geisterkrypta gefunden.</AR_Error_NoWorldTile>
+  <AR_Error_TrialCreate>Geisterprüfung konnte nicht erstellt werden. Siehe Player.log.</AR_Error_TrialCreate>
+  <AR_Msg_TrialAborted>Geisterprüfung abgebrochen: Eine neue Prüfung wird angeboten.</AR_Msg_TrialAborted>
+  <AR_Error_KingLightningCooldown>Zorn der Toten ist noch auf Abklingzeit.</AR_Error_KingLightningCooldown>
+  <AR_Error_KingLightningRange>Zorn der Toten hat maximal 15 Felder Reichweite.</AR_Error_KingLightningRange>
+  <AR_Msg_AragornRescued>Aragorn ist gerettet! Nun muss Andúril bei der Divine Order neu geschmiedet werden.</AR_Msg_AragornRescued>
+  <AR_Msg_MechAborted>Mechanoidenfestung abgebrochen: Die Quest wird erneut angeboten.</AR_Msg_MechAborted>
+  <AR_Msg_EmpCooldown>EMP-Sturm: Noch {0} Sekunden Abklingzeit.</AR_Msg_EmpCooldown>
+  <AR_Forge_Abandoned>Die Schmiedekarte wurde verlassen. Der Auftrag wird erneut angeboten.</AR_Forge_Abandoned>
+  <AR_Msg_ForgeSacrilege>Die Zerstörung der goldenen Divine-Order-Schmiede gilt als Sakrileg! Ansehen bei der Divine Order −20.</AR_Msg_ForgeSacrilege>
+  <AR_Error_OnlyAragornAtForge>Nur Aragorn kann die Schmiede bewachen.</AR_Error_OnlyAragornAtForge>
+  <AR_Error_ForgeNotActive>Die Schmiedequest ist nicht aktiv.</AR_Error_ForgeNotActive>
+  <AR_Error_ForgeMap>Aragorn muss sich auf der Schmiedekarte befinden.</AR_Error_ForgeMap>
+  <AR_Error_AragornDowned>Aragorn ist kampfunfähig.</AR_Error_AragornDowned>
+  <AR_RescueStatus_NoManager>QuestManager ist noch nicht initialisiert.</AR_RescueStatus_NoManager>
+  <AR_RescueStatus_MissingDef>FEHLER: Questdefinition AR_RescueAragornQuest nicht geladen. Player.log prüfen.</AR_RescueStatus_MissingDef>
+  <AR_RescueStatus_Done>Aragorns Rettung ist in diesem Spielstand bereits abgeschlossen.</AR_RescueStatus_Done>
+  <AR_RescueStatus_NoQuest>Noch keine Rettungsquest erzeugt.</AR_RescueStatus_NoQuest>
+  <AR_RescueStatus_Orphan>Quest-Referenz vorhanden, aber nicht im QuestManager.</AR_RescueStatus_Orphan>
+  <AR_RescueStatus_QuestPresent>Quest vorhanden: {0}</AR_RescueStatus_QuestPresent>
+  <AR_RescueStatus_Dismissed> (ausgeblendet)</AR_RescueStatus_Dismissed>
+  <AR_RescueStatus_Hidden> (UI-versteckt)</AR_RescueStatus_Hidden>
+  <AR_RescueStatus_DoneNoSecond>Rettung bereits abgeschlossen; ein zweiter Auftrag ist nicht nötig.</AR_RescueStatus_DoneNoSecond>
+  <AR_RescueStatus_NoDefLog>Questdefinition fehlt. Bitte Player.log prüfen.</AR_RescueStatus_NoDefLog>
+  <AR_RescueStatus_CreateFailed>Quest konnte nicht erzeugt werden. Siehe Player.log.</AR_RescueStatus_CreateFailed>
+  <AR_RescueStatus_Offered>Questangebot unter Aufträge → Verfügbar. Benachrichtigung erstellt.</AR_RescueStatus_Offered>
+  <AR_RescueStatus_Accepted>Quest bereits angenommen.</AR_RescueStatus_Accepted>
+  <AR_RescueStatus_SiteCreated>Rettungsort ist auf der Weltkarte.</AR_RescueStatus_SiteCreated>
+  <AR_RescueStatus_SiteMissing>Rettungsort noch nicht erstellt – siehe Player.log.</AR_RescueStatus_SiteMissing>
+  <AR_RescueStatus_State>Queststatus: {0}</AR_RescueStatus_State>
+  <AR_RescueStatus_Exception>Fehler beim Erstellen ({0}). Bitte Player.log prüfen.</AR_RescueStatus_Exception>
+  <AR_Msg_RescueAvailable>Aragorn-Rettungsquest: Unter Aufträge → Verfügbar verfügbar.</AR_Msg_RescueAvailable>
+  <AR_Msg_RescueAborted>Aragorn-Rettung abgebrochen: Ein neuer Rettungsauftrag wird angeboten.</AR_Msg_RescueAborted>
+  <AR_Dev_AndurilFailed>Andúril konnte nach dem Questabschluss nicht ausgerüstet werden.</AR_Dev_AndurilFailed>
 </LanguageData>

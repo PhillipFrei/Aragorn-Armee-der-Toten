@@ -73,4 +73,101 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Mech_StunTitle>EMP Storm</AR_Mech_StunTitle>
   <AR_Mech_StunDesc>Deals configurable damage and stuns hostile mechanoids for 10 seconds. Range: 30 cells; effect radius: 6 cells; cooldown: 60 seconds.</AR_Mech_StunDesc>
   <AR_Mech_StunReport>EMP Storm: {0} hostile mechanoids stunned for 10 seconds.</AR_Mech_StunReport>
+
+  <!-- Shared user-interface, gameplay feedback and developer localization -->
+  <AR_Mod_Name>Aragorn – Army of the Dead</AR_Mod_Name>
+  <AR_Settings_SectionQuests>QUESTS</AR_Settings_SectionQuests>
+  <AR_Settings_QuestDanger>Global quest danger: x{0} (all Aragorn quests, at most 100 enemies at once)</AR_Settings_QuestDanger>
+  <AR_Settings_DangerHelp>Applies to rescue, forge waves, spirit trials and the mechanoid fortress.</AR_Settings_DangerHelp>
+  <AR_Settings_SectionSpirits>SPIRITS</AR_Settings_SectionSpirits>
+  <AR_Settings_SummonDuration>Summon duration: {0} in-game hours (13-hour cooldown)</AR_Settings_SummonDuration>
+  <AR_Settings_Armor>Spirit armor (all classes): x{0}</AR_Settings_Armor>
+  <AR_Settings_ArmorHelp>At x1: +1000% natural armor over base values. Replaces the old class and level sliders.</AR_Settings_ArmorHelp>
+  <AR_Settings_KingBuff>King's command: x{0} (faster movement, shorter attack and aiming time)</AR_Settings_KingBuff>
+  <AR_Settings_SectionAbilities>ABILITIES</AR_Settings_SectionAbilities>
+  <AR_Settings_Emp>Aragorn's EMP storm: {0} damage per mechanoid (+10 s stun)</AR_Settings_Emp>
+  <AR_Settings_Lightning>King's lightning: {0} burn damage per hit (5 bolts)</AR_Settings_Lightning>
+  <AR_Settings_SectionDev>DEVELOPER MODE</AR_Settings_SectionDev>
+  <AR_Settings_OfferRescue>Offer Aragorn's rescue quest now</AR_Settings_OfferRescue>
+  <AR_Settings_NoQuestComponent>No quest component: load a saved game.</AR_Settings_NoQuestComponent>
+  <AR_Settings_RetryForge>Replay the Andúril forge quest</AR_Settings_RetryForge>
+  <AR_Role_Sword>Spectral Swordsman</AR_Role_Sword>
+  <AR_Role_Archer>Spectral Archer</AR_Role_Archer>
+  <AR_Role_Bombardier>Bombardier</AR_Role_Bombardier>
+  <AR_Role_Axe>Spectral Axeman</AR_Role_Axe>
+  <AR_Role_Captain>Cursed Captain</AR_Role_Captain>
+  <AR_Role_King>King of the Dead</AR_Role_King>
+  <AR_Buff_Active>King's Command (active):</AR_Buff_Active>
+  <AR_Buff_Inactive>King's Command: inactive</AR_Buff_Inactive>
+  <AR_Buff_Move>Movement speed</AR_Buff_Move>
+  <AR_Buff_CellsPerSec>tiles/s</AR_Buff_CellsPerSec>
+  <AR_Buff_Melee>Melee cooldown</AR_Buff_Melee>
+  <AR_Buff_Ranged>Ranged cooldown</AR_Buff_Ranged>
+  <AR_Buff_Aim>Aiming time</AR_Buff_Aim>
+  <AR_Buff_Note>Values before the arrow exclude the king's buff but include all other active bonuses.</AR_Buff_Note>
+  <AR_Buff_StatMissing>Stat unavailable with this mod list</AR_Buff_StatMissing>
+  <AR_Buff_Factor>factor</AR_Buff_Factor>
+  <AR_Stat_Armor>Aragorn: shared spirit armor bonus +{0}% (mod settings)</AR_Stat_Armor>
+  <AR_Stat_KingSpeed>King's Command: x{0} (movement +{1}%)</AR_Stat_KingSpeed>
+  <AR_Stat_KingAttack>King's Command: x{0} (attack/aim time −{1}%)</AR_Stat_KingAttack>
+  <AR_UI_Cooldown>Cooldown: {0} seconds.</AR_UI_Cooldown>
+  <AR_UI_CooldownNormal>Cooldown: {0} seconds (at normal speed).</AR_UI_CooldownNormal>
+  <AR_Dev_CompleteTitle>DEV: Complete All Aragorn Quests</AR_Dev_CompleteTitle>
+  <AR_Dev_CompleteDesc>Developer mode only: finish this mod's rescue, reforging and 13 spirit trials, equip Andúril and enable immediate summoning. Unrelated quests are untouched.</AR_Dev_CompleteDesc>
+  <AR_Dev_ResetTitle>DEV: Reset Cooldowns</AR_Dev_ResetTitle>
+  <AR_Dev_ResetDesc>Immediately resets summoning, Andúril's sweeping strike, the king's lightning and EMP storm. Developer mode only.</AR_Dev_ResetDesc>
+  <AR_Dev_LoadSave>Please load a saved game first.</AR_Dev_LoadSave>
+  <AR_Dev_ForgeNotComplete>The forge quest is not yet complete. It can only be replayed after success.</AR_Dev_ForgeNotComplete>
+  <AR_Dev_ForgeRetryOffered>A new Andúril forge quest is offered immediately. Your existing Andúril remains until the quest is accepted.</AR_Dev_ForgeRetryOffered>
+  <AR_Msg_DevComplete>Aragorn: rescue, reforging and all 13 spirit trials completed for testing.</AR_Msg_DevComplete>
+  <AR_Msg_DevFailed>Aragorn developer test failed: {0}</AR_Msg_DevFailed>
+  <AR_Msg_CooldownsReset>Aragorn: All cooldowns reset.</AR_Msg_CooldownsReset>
+  <AR_Error_MustHoldAnduril>Aragorn must wield Andúril.</AR_Error_MustHoldAnduril>
+  <AR_Error_ForgeFirst>Andúril must first be reforged by the Divine Order.</AR_Error_ForgeFirst>
+  <AR_Error_TrialFirst>Complete a spirit trial first.</AR_Error_TrialFirst>
+  <AR_Error_AlreadySummoned>The Army of the Dead is already summoned.</AR_Error_AlreadySummoned>
+  <AR_Error_SummonCooldown>Summoning available again in {0} in-game hours.</AR_Error_SummonCooldown>
+  <AR_Error_RecallFirst>Recall the currently summoned spirits first.</AR_Error_RecallFirst>
+  <AR_Msg_Summoned>Army of the Dead: {0} spirits summoned.</AR_Msg_Summoned>
+  <AR_Msg_Recalled>The Army of the Dead has been recalled.</AR_Msg_Recalled>
+  <AR_Error_CompleteForge>Complete the quest to reforge Andúril first.</AR_Error_CompleteForge>
+  <AR_Error_NeedsAnduril>Aragorn needs Andúril.</AR_Error_NeedsAnduril>
+  <AR_Error_AllSpiritsUnlocked>All 13 spirits are unlocked. The mechanoid quest will appear in the Quests tab.</AR_Error_AllSpiritsUnlocked>
+  <AR_Error_TrialRunning>A spirit trial is already active. Travel to the spirit crypt on the world map.</AR_Error_TrialRunning>
+  <AR_Error_ProfanedMissing>Unable to load the Profaned combat definitions.</AR_Error_ProfanedMissing>
+  <AR_Error_TrialDefsMissing>Spirit trial world-site or quest definition missing. See Player.log.</AR_Error_TrialDefsMissing>
+  <AR_Error_NoWorldTile>No available world tile found for the next spirit crypt.</AR_Error_NoWorldTile>
+  <AR_Error_TrialCreate>Could not create the spirit trial. See Player.log.</AR_Error_TrialCreate>
+  <AR_Msg_TrialAborted>Spirit trial abandoned: A new trial will be offered.</AR_Msg_TrialAborted>
+  <AR_Error_KingLightningCooldown>Wrath of the Dead is still on cooldown.</AR_Error_KingLightningCooldown>
+  <AR_Error_KingLightningRange>Wrath of the Dead has a maximum range of 15 tiles.</AR_Error_KingLightningRange>
+  <AR_Msg_AragornRescued>Aragorn has been rescued! Andúril must now be reforged by the Divine Order.</AR_Msg_AragornRescued>
+  <AR_Msg_MechAborted>Mechanoid fortress abandoned: The quest will be offered again.</AR_Msg_MechAborted>
+  <AR_Msg_EmpCooldown>EMP Storm: {0} seconds of cooldown remaining.</AR_Msg_EmpCooldown>
+  <AR_Forge_Abandoned>The forge map was abandoned. The quest will be offered again.</AR_Forge_Abandoned>
+  <AR_Msg_ForgeSacrilege>Destroying the Divine Order's golden forge is sacrilege! Goodwill with the Divine Order −20.</AR_Msg_ForgeSacrilege>
+  <AR_Error_OnlyAragornAtForge>Only Aragorn can stand guard at the forge.</AR_Error_OnlyAragornAtForge>
+  <AR_Error_ForgeNotActive>The forge quest is not active.</AR_Error_ForgeNotActive>
+  <AR_Error_ForgeMap>Aragorn must be on the forge map.</AR_Error_ForgeMap>
+  <AR_Error_AragornDowned>Aragorn is incapacitated.</AR_Error_AragornDowned>
+  <AR_RescueStatus_NoManager>QuestManager has not been initialized.</AR_RescueStatus_NoManager>
+  <AR_RescueStatus_MissingDef>ERROR: Quest definition AR_RescueAragornQuest was not loaded. Check Player.log.</AR_RescueStatus_MissingDef>
+  <AR_RescueStatus_Done>Aragorn's rescue is already complete in this save.</AR_RescueStatus_Done>
+  <AR_RescueStatus_NoQuest>No rescue quest has been generated yet.</AR_RescueStatus_NoQuest>
+  <AR_RescueStatus_Orphan>Quest reference exists but is missing from the QuestManager.</AR_RescueStatus_Orphan>
+  <AR_RescueStatus_QuestPresent>Quest present: {0}</AR_RescueStatus_QuestPresent>
+  <AR_RescueStatus_Dismissed> (dismissed)</AR_RescueStatus_Dismissed>
+  <AR_RescueStatus_Hidden> (hidden in UI)</AR_RescueStatus_Hidden>
+  <AR_RescueStatus_DoneNoSecond>Rescue already complete; a second quest is not needed.</AR_RescueStatus_DoneNoSecond>
+  <AR_RescueStatus_NoDefLog>Quest definition missing. Please check Player.log.</AR_RescueStatus_NoDefLog>
+  <AR_RescueStatus_CreateFailed>Could not create quest. See Player.log.</AR_RescueStatus_CreateFailed>
+  <AR_RescueStatus_Offered>Quest offered under Quests → Available. Notification created.</AR_RescueStatus_Offered>
+  <AR_RescueStatus_Accepted>Quest already accepted.</AR_RescueStatus_Accepted>
+  <AR_RescueStatus_SiteCreated>Rescue site is on the world map.</AR_RescueStatus_SiteCreated>
+  <AR_RescueStatus_SiteMissing>Rescue site not created yet – see Player.log.</AR_RescueStatus_SiteMissing>
+  <AR_RescueStatus_State>Quest status: {0}</AR_RescueStatus_State>
+  <AR_RescueStatus_Exception>Error during creation ({0}). Please check Player.log.</AR_RescueStatus_Exception>
+  <AR_Msg_RescueAvailable>Aragorn rescue quest: Available in the Quests tab.</AR_Msg_RescueAvailable>
+  <AR_Msg_RescueAborted>Aragorn rescue abandoned: A new rescue quest will be offered.</AR_Msg_RescueAborted>
+  <AR_Dev_AndurilFailed>Could not equip Andúril after completing the quest.</AR_Dev_AndurilFailed>
 </LanguageData>

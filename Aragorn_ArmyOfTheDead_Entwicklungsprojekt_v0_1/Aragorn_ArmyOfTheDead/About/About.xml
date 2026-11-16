@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Aragorn – Armee der Toten (v0.31)</name>
+  <name>Aragorn – Armee der Toten (v0.32)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>Version 0.29: Sichtbare Korrekturen für Geist-Blickrichtungen und Waffen: Ost-Sprites laufen wieder nach Osten; ausgerüstete Waffen werden über die native RimWorld-1.6-Zeichenroutine mit korrekter Drehung, Zielwinkel und Handposition dargestellt. Andúril ist für das Halten im Spiel neu ausgerichtet und auf eine passende Grafikgröße abgestimmt. Vereinfachtes Modmenü mit Bild des Königs: globale Questgefahr, Beschwörungsdauer, ein Geisterrüstungs-Multiplikator, Königsbuff, EMP-Schaden und Königsblitz-Schaden. Geisterprüfungen skalieren jetzt ausschließlich mit der globalen Questgefahr. Der Rundumschlag erzeugt über 36 Ticks einen sichtbaren türkisfarbenen Schwingbogen. Bestehende Quest- und Fortschrittsdaten bleiben erhalten, ältere Rüstungsstufen werden in den neuen Regler übernommen. RimWorld 1.6. Ingame-Tests empfohlen. Das installierbare Komplettpaket v0.30 enthält die neue hochauflösende Andúril-Grafik mit silberner Klinge und Elfenornamenten, passender Ausrichtung und transparentem Rand. Der C#-Code bleibt gegenüber v0.29 unverändert. v0.31: Nur acht falsch ausgerichtete Ost-Sprites (Bogenschützen, Bombardiere, Hauptleute und König) gespiegelt; Schwertgeister und Axtgeister waren bereits korrekt und bleiben unverändert. Waffenrendering und Andúril unverändert. Neues About/ModIcon.png (64×64), damit der Geistkönig im Mod-Options-Auswahlmenü statt des Puzzlestücks erscheint; das bisherige Porträt neben den Reglern entfernt.</description>
+  <description>DEUTSCH — Aragorn – Armee der Toten
+
+Rette Aragorn, schmiede Andúril neu und befreie 13 Geisterkrieger in einer zusammenhängenden Questreihe. Beschwöre eine Geisterarmee mit sechs Klassen, nutze den Königlichen Befehl, mächtige Blitze, Andúrils Rundumschlag und Aragorns EMP-Sturm. Gegnerstärke, Geisterrüstung und Fähigkeiten sind einstellbar.
+
+ENGLISH — Aragorn – Army of the Dead
+
+Rescue Aragorn, reforge Andúril, and release 13 spectral warriors in a connected quest campaign. Summon an army across six classes and wield the King's Command, devastating lightning strikes, Andúril's sweeping attack, and Aragorn's EMP Storm. Adjust quest difficulty, spirit armor, and abilities in the mod settings.
+
+v0.32 | RimWorld 1.6 | Full German and English localization. Language follows RimWorld's active language. Gameplay and graphics unchanged.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>

@@ -209,18 +209,17 @@ namespace AragornArmy
                 // Avoid equipping a second replacement sword afterwards.
                 if (!GhostDefinitions.HasAnduril(aragorn) &&
                     !AragornForgeGame.EquipCompletedAnduril(aragorn, "DEV fallback"))
-                    throw new InvalidOperationException("Andúril konnte beim Dev-Schnelltest nicht ausgerüstet werden.");
+                    throw new InvalidOperationException(AragornText.T("AR_Dev_AndurilFailed"));
                 Log.Message("[Aragorn] Dev Anduril: " + aragorn.equipment.Primary.def.defName
                     + " (" + aragorn.equipment.Primary.def.graphicData?.texPath + ")");
                 Log.Message("[Aragorn] Dev only: rescue, Anduril forge, 13 ghost trials "
                     + "and Mechanoid fortress quest completed in this save.");
-                Messages.Message("Aragorn: 13 Geisterquests, Rettung und Schmiede "
-                    + "für Testzwecke abgeschlossen.", aragorn, MessageTypeDefOf.PositiveEvent);
+                Messages.Message(AragornText.T("AR_Msg_DevComplete"), aragorn, MessageTypeDefOf.PositiveEvent);
             }
             catch (Exception ex)
             {
                 Log.Error("[Aragorn] Dev quest completion failed: " + ex);
-                Messages.Message("Aragorn-Dev-Test fehlgeschlagen: " + ex.Message,
+                Messages.Message(AragornText.F("AR_Msg_DevFailed", ex.Message),
                     MessageTypeDefOf.RejectInput);
             }
         }
@@ -234,7 +233,7 @@ namespace AragornArmy
             lastKingLightning = -1000000;
             lastSpinTick = -1000000;
             Current.Game?.GetComponent<AragornMechQuestGame>()?.DevResetCooldown();
-            Messages.Message("Aragorn: Alle Abklingzeiten zurückgesetzt.",
+            Messages.Message(AragornText.T("AR_Msg_CooldownsReset"),
                 pawn, MessageTypeDefOf.PositiveEvent);
         }
 
@@ -243,17 +242,17 @@ namespace AragornArmy
             reason = null;
             if (!GhostDefinitions.HasAnduril(pawn) || pawn == null || !pawn.Spawned)
             {
-                reason = "Aragorn muss Andúril tragen.";
+                reason = AragornText.T("AR_Error_MustHoldAnduril");
                 return false;
             }
             var forgeQuest = Current.Game?.GetComponent<AragornForgeGame>();
             if (forgeQuest == null || !forgeQuest.Completed)
-            { reason = "Andúril muss zuerst bei der Divine Order neu geschmiedet werden."; return false; }
-            if (Unlocked == 0) { reason = "Erst eine Geisterprüfung bestehen."; return false; }
-            if (AnySummoned) { reason = "Die Armee ist bereits beschworen."; return false; }
+            { reason = AragornText.T("AR_Error_ForgeFirst"); return false; }
+            if (Unlocked == 0) { reason = AragornText.T("AR_Error_TrialFirst"); return false; }
+            if (AnySummoned) { reason = AragornText.T("AR_Error_AlreadySummoned"); return false; }
             if (SummonCooldownRemaining > 0)
             {
-                reason = "Beschwörung wieder in " + (SummonCooldownRemaining / 2500f).ToString("0.0") + " Ingame-Stunden möglich.";
+                reason = AragornText.F("AR_Error_SummonCooldown", (SummonCooldownRemaining / 2500f).ToString("0.0"));
                 return false;
             }
             return true;
@@ -266,7 +265,7 @@ namespace AragornArmy
             // unrecallable and subsequent waves keep accumulating on the map.
             if (CollectPlayerGhosts().Any(p => p.Spawned && !p.Dead))
             {
-                Reject("Erst die bereits beschworenen Geister zurückrufen.");
+                Reject(AragornText.T("AR_Error_RecallFirst"));
                 return;
             }
             ghosts.RemoveAll(p => p == null || p.Destroyed || p.Dead || !p.Spawned);
@@ -283,7 +282,7 @@ namespace AragornArmy
             lastSummonTick = Ticks;
             summonedUntil = Ticks + AragornMod.Config.summonHours * 2500;
             RefreshKinglyCommand();
-            Messages.Message("Armee der Toten: " + ghosts.Count + " Geister beschworen.", MessageTypeDefOf.PositiveEvent);
+            Messages.Message(AragornText.F("AR_Msg_Summoned", ghosts.Count), MessageTypeDefOf.PositiveEvent);
         }
 
         public void RecallAll()
@@ -307,7 +306,7 @@ namespace AragornArmy
                 Log.Message("[Aragorn] Rückruf: " + targets.Count + " Spieler-Geister erfasst.");
             }
             finally { cleanUpInProgress = false; }
-            Messages.Message("Die Armee der Toten ist zurückgerufen.", MessageTypeDefOf.NeutralEvent);
+            Messages.Message(AragornText.T("AR_Msg_Recalled"), MessageTypeDefOf.NeutralEvent);
         }
 
         // Called from Pawn.Kill as well as the periodic safety check.
@@ -395,11 +394,11 @@ namespace AragornArmy
             reason = null;
             var forgeQuest = Current.Game?.GetComponent<AragornForgeGame>();
             if (forgeQuest == null || !forgeQuest.Completed)
-            { reason = "Zuerst die Quest 'Andúril – Die Klinge neu schmieden' abschließen."; return false; }
-            if (!GhostDefinitions.HasAnduril(aragorn)) { reason = "Aragorn benötigt Andúril."; return false; }
-            if (Unlocked >= 13) { reason = "Alle 13 Geister sind freigeschaltet. Die Mechanoidenquest erscheint im Auftragsmenü."; return false; }
+            { reason = AragornText.T("AR_Error_CompleteForge"); return false; }
+            if (!GhostDefinitions.HasAnduril(aragorn)) { reason = AragornText.T("AR_Error_NeedsAnduril"); return false; }
+            if (Unlocked >= 13) { reason = AragornText.T("AR_Error_AllSpiritsUnlocked"); return false; }
             if (trialIndex >= 0)
-            { reason = "Eine Prüfung läuft bereits. Reise zum Geistergrab auf der Weltkarte."; return false; }
+            { reason = AragornText.T("AR_Error_TrialRunning"); return false; }
             return true;
         }
 
@@ -410,21 +409,21 @@ namespace AragornArmy
             Faction hostile = ProfanedEncounterUtility.GetOrCreateFaction();
             if (hostile == null)
             {
-                Reject("Die Profaned-Kampfdefinitionen konnten nicht geladen werden.");
+                Reject(AragornText.T("AR_Error_ProfanedMissing"));
                 return;
             }
             SitePartDef part = DefDatabase<SitePartDef>.GetNamedSilentFail("AR_GhostTrialCamp");
             QuestScriptDef root = DefDatabase<QuestScriptDef>.GetNamedSilentFail("AR_GhostTrialQuest");
             if (part == null || root == null)
             {
-                Reject("Geisterprüfung: Weltkarten- oder Questdefinition fehlt. Siehe Player.log.");
+                Reject(AragornText.T("AR_Error_TrialDefsMissing"));
                 Log.Error("[Aragorn] Missing AR_GhostTrialCamp or AR_GhostTrialQuest.");
                 return;
             }
             if (!TileFinder.TryFindNewSiteTile(out PlanetTile tile, minDist: 5, maxDist: 20)
                 && !TileFinder.TryFindNewSiteTile(out tile, minDist: 2, maxDist: 35))
             {
-                Reject("Kein freies Weltkartenfeld für die nächste Geisterkrypta gefunden.");
+                Reject(AragornText.T("AR_Error_NoWorldTile"));
                 return;
             }
             try
@@ -461,7 +460,7 @@ namespace AragornArmy
             catch (Exception ex)
             {
                 Log.Error("[Aragorn] Geisterkrypta konnte nicht erstellt werden: " + ex);
-                Reject("Geisterprüfung konnte nicht erstellt werden. Siehe Player.log.");
+                Reject(AragornText.T("AR_Error_TrialCreate"));
             }
         }
 
@@ -540,7 +539,7 @@ namespace AragornArmy
             {
                 pendingTrialRetryAragorn = hero;
                 nextTrialReofferTick = Ticks + 600;
-                Messages.Message("Geisterprüfung abgebrochen: Eine neue Prüfung wird angeboten.",
+                Messages.Message(AragornText.T("AR_Msg_TrialAborted"),
                     MessageTypeDefOf.NeutralEvent);
             }
         }
@@ -661,7 +660,7 @@ namespace AragornArmy
             if (!IsSummonedKing(king)) return;
             if (LightningCooldownRemaining > 0)
             {
-                Reject("Geistersturm noch auf Abklingzeit.");
+                Reject(AragornText.T("AR_Error_KingLightningCooldown"));
                 return;
             }
             var targetParams = new TargetingParameters
@@ -678,7 +677,7 @@ namespace AragornArmy
                 if (KingLightningTargetValid(king, target))
                     CastKingLightning(king, target.Cell);
                 else
-                    Reject("Der Geistersturm hat höchstens 15 Felder Reichweite.");
+                    Reject(AragornText.T("AR_Error_KingLightningRange"));
             }, target =>
             {
                 if (king == null || !king.Spawned) return;
@@ -792,7 +791,7 @@ namespace AragornArmy
             // After rescue, Aragorn must visit the Divine Order smith.
             // Never give the sword here: the reforging quest is now the real unlock.
             if (showMessage)
-                Messages.Message("Aragorn ist gerettet! Nun muss Andúril bei der Divine Order neu geschmiedet werden.",
+                Messages.Message(AragornText.T("AR_Msg_AragornRescued"),
                     MessageTypeDefOf.PositiveEvent);
         }
 

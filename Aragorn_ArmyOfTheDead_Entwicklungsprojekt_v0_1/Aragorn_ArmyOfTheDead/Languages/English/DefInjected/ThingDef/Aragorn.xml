@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_SpiritRace01.label>Spectral Swordsman</AR_SpiritRace01.label>
+  <AR_SpiritRace01.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace01.description>
+  <AR_SpiritRace01.tools.0.label>spectral strike</AR_SpiritRace01.tools.0.label>
+  <AR_SpiritRace02.label>Spectral Swordsman</AR_SpiritRace02.label>
+  <AR_SpiritRace02.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace02.description>
+  <AR_SpiritRace02.tools.0.label>spectral strike</AR_SpiritRace02.tools.0.label>
+  <AR_SpiritRace03.label>Spectral Swordsman</AR_SpiritRace03.label>
+  <AR_SpiritRace03.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace03.description>
+  <AR_SpiritRace03.tools.0.label>spectral strike</AR_SpiritRace03.tools.0.label>
+  <AR_SpiritRace04.label>Spectral Archer</AR_SpiritRace04.label>
+  <AR_SpiritRace04.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace04.description>
+  <AR_SpiritRace04.tools.0.label>spectral strike</AR_SpiritRace04.tools.0.label>
+  <AR_SpiritRace05.label>Spectral Archer</AR_SpiritRace05.label>
+  <AR_SpiritRace05.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace05.description>
+  <AR_SpiritRace05.tools.0.label>spectral strike</AR_SpiritRace05.tools.0.label>
+  <AR_SpiritRace06.label>Spectral Archer</AR_SpiritRace06.label>
+  <AR_SpiritRace06.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace06.description>
+  <AR_SpiritRace06.tools.0.label>spectral strike</AR_SpiritRace06.tools.0.label>
+  <AR_SpiritRace07.label>Bombardier</AR_SpiritRace07.label>
+  <AR_SpiritRace07.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace07.description>
+  <AR_SpiritRace07.tools.0.label>spectral strike</AR_SpiritRace07.tools.0.label>
+  <AR_SpiritRace08.label>Bombardier</AR_SpiritRace08.label>
+  <AR_SpiritRace08.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace08.description>
+  <AR_SpiritRace08.tools.0.label>spectral strike</AR_SpiritRace08.tools.0.label>
+  <AR_SpiritRace09.label>Spectral Axeman</AR_SpiritRace09.label>
+  <AR_SpiritRace09.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace09.description>
+  <AR_SpiritRace09.tools.0.label>spectral strike</AR_SpiritRace09.tools.0.label>
+  <AR_SpiritRace10.label>Spectral Axeman</AR_SpiritRace10.label>
+  <AR_SpiritRace10.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace10.description>
+  <AR_SpiritRace10.tools.0.label>spectral strike</AR_SpiritRace10.tools.0.label>
+  <AR_SpiritRace11.label>Cursed Captain</AR_SpiritRace11.label>
+  <AR_SpiritRace11.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace11.description>
+  <AR_SpiritRace11.tools.0.label>spectral strike</AR_SpiritRace11.tools.0.label>
+  <AR_SpiritRace12.label>Cursed Captain</AR_SpiritRace12.label>
+  <AR_SpiritRace12.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace12.description>
+  <AR_SpiritRace12.tools.0.label>spectral strike</AR_SpiritRace12.tools.0.label>
+  <AR_SpiritRace13.label>King of the Dead</AR_SpiritRace13.label>
+  <AR_SpiritRace13.description>A summoned, incorporeal spirit warrior. Wields its assigned weapon, cannot change apparel, and performs no work.</AR_SpiritRace13.description>
+  <AR_SpiritRace13.tools.0.label>spectral strike</AR_SpiritRace13.tools.0.label>
+  <AR_Anduril.label>Andúril</AR_Anduril.label>
+  <AR_Anduril.description>The Flame of the West. Aragorn's unique sword. Unlocks the spirit trials, summoning, and his sweeping strike.</AR_Anduril.description>
+  <AR_Anduril.tools.0.label>pommel strike</AR_Anduril.tools.0.label>
+  <AR_Anduril.tools.1.label>blade</AR_Anduril.tools.1.label>
+</LanguageData>

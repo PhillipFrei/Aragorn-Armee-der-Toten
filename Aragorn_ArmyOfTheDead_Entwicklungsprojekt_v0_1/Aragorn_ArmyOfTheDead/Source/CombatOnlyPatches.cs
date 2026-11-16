@@ -183,7 +183,7 @@ namespace AragornArmy
         {
             if (!GhostDefinitions.IsGhost(__instance) ||
                 __instance.Faction != Faction.OfPlayer ||
-                GhostDefinitions.RoleName(__instance) == "König der Toten")
+                (__instance.kindDef.defName == "AR_GhostSpiritKing" || __instance.kindDef.defName == "AR_GhostKing"))
                 return;
             if (!string.IsNullOrEmpty(__result)) __result += "\n";
             __result += KingBuffDetails.Build(__instance);
@@ -299,7 +299,7 @@ namespace AragornArmy
                         RemainingTicks = () => game.LightningCooldownRemaining
                     };
                     if (game.LightningCooldownRemaining > 0)
-                        lightning.Disable("Abklingzeit: " + Mathf.CeilToInt(game.LightningCooldownRemaining / 60f) + " Sekunden (bei normaler Geschwindigkeit).");
+                        lightning.Disable(AragornText.F("AR_UI_CooldownNormal", Mathf.CeilToInt(game.LightningCooldownRemaining / 60f)));
                     yield return lightning;
                 }
                 yield break;
@@ -311,17 +311,14 @@ namespace AragornArmy
             if (Prefs.DevMode && pawn.Faction == Faction.OfPlayer)
             {
                 yield return new Command_Action {
-                    defaultLabel = "DEV: All Aragorn Quests Complete",
-                    defaultDesc = "Development only: complete this mod's rescue, "
-                        + "reforging and 13 spirit trials, equip Andúril, "
-                        + "and allow immediate summoning. Does not complete unrelated quests.",
+                    defaultLabel = AragornText.T("AR_Dev_CompleteTitle"),
+                    defaultDesc = AragornText.T("AR_Dev_CompleteDesc"),
                     icon = Icon("DevComplete"),
                     action = () => game.DevCompleteAragornStory(pawn)
                 };
                 yield return new Command_Action {
-                    defaultLabel = "DEV: Abklingzeiten zurücksetzen",
-                    defaultDesc = "Setzt Beschwörung, Andúril-Rundumschlag und "
-                        + "Geistersturm und Maschinenstillstand sofort zurück. Nur bei aktivem Entwicklermodus.",
+                    defaultLabel = AragornText.T("AR_Dev_ResetTitle"),
+                    defaultDesc = AragornText.T("AR_Dev_ResetDesc"),
                     icon = Icon("DevComplete"),
                     action = () => game.DevResetCooldowns(pawn)
                 };
@@ -338,9 +335,7 @@ namespace AragornArmy
                     RemainingTicks = () => mechQuest.CooldownRemaining
                 };
                 if (mechQuest.CooldownRemaining > 0)
-                    pulse.Disable("Abklingzeit: "
-                        + Mathf.CeilToInt(mechQuest.CooldownRemaining / 60f)
-                        + " Sekunden.");
+                    pulse.Disable(AragornText.F("AR_UI_Cooldown", Mathf.CeilToInt(mechQuest.CooldownRemaining / 60f)));
                 yield return pulse;
             }
 
@@ -401,7 +396,7 @@ namespace AragornArmy
                 RemainingTicks = () => game.SpinCooldownRemaining
             };
             if (game.SpinCooldownRemaining > 0)
-                spin.Disable("Abklingzeit: " + Mathf.CeilToInt(game.SpinCooldownRemaining / 60f) + " Sekunden (bei normaler Geschwindigkeit).");
+                spin.Disable(AragornText.F("AR_UI_CooldownNormal", Mathf.CeilToInt(game.SpinCooldownRemaining / 60f)));
             yield return spin;
 
             Command_Action trial = new Command_Action {
