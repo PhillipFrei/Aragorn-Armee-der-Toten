@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_GhostSpiritSword01.label>Schwertgeist</AR_GhostSpiritSword01.label>
+  <AR_GhostSpiritSword02.label>Schwertgeist</AR_GhostSpiritSword02.label>
+  <AR_GhostSpiritSword03.label>Schwertgeist</AR_GhostSpiritSword03.label>
+  <AR_GhostSpiritArcher01.label>Bogenschütze</AR_GhostSpiritArcher01.label>
+  <AR_GhostSpiritArcher02.label>Bogenschütze</AR_GhostSpiritArcher02.label>
+  <AR_GhostSpiritArcher03.label>Bogenschütze</AR_GhostSpiritArcher03.label>
+  <AR_GhostSpiritGrenadier01.label>Bombardier</AR_GhostSpiritGrenadier01.label>
+  <AR_GhostSpiritGrenadier02.label>Bombardier</AR_GhostSpiritGrenadier02.label>
+  <AR_GhostSpiritAxe01.label>Axtgeist</AR_GhostSpiritAxe01.label>
+  <AR_GhostSpiritAxe02.label>Axtgeist</AR_GhostSpiritAxe02.label>
+  <AR_GhostSpiritCaptain01.label>Verfluchter Hauptmann</AR_GhostSpiritCaptain01.label>
+  <AR_GhostSpiritCaptain02.label>Verfluchter Hauptmann</AR_GhostSpiritCaptain02.label>
+  <AR_GhostSpiritKing.label>König der Toten</AR_GhostSpiritKing.label>
+  <AR_GhostSword.label>Schwertgeist</AR_GhostSword.label>
+  <AR_GhostArcher.label>Geisterbogenschütze</AR_GhostArcher.label>
+  <AR_GhostGrenadier.label>Geistergranatwerfer</AR_GhostGrenadier.label>
+  <AR_GhostAxe.label>Axtgeist</AR_GhostAxe.label>
+  <AR_GhostCaptain.label>Verfluchter Hauptmann</AR_GhostCaptain.label>
+  <AR_GhostKing.label>König der Toten</AR_GhostKing.label>
+  <AR_Aragorn.label>Aragorn</AR_Aragorn.label>
+  <AR_GhostBase.label>Geisterkrieger</AR_GhostBase.label>
+</LanguageData>
