@@ -8,7 +8,7 @@
     <graphicData>
       <texPath>Things/Weapons/Anduril</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawSize>1.45</drawSize>
+      <drawSize>1.18</drawSize>
     </graphicData>
     <thingCategories><li>WeaponsMelee</li></thingCategories>
     <techLevel>Ultra</techLevel>
