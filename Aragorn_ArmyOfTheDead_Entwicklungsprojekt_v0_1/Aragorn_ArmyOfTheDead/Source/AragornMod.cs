@@ -15,7 +15,7 @@ namespace AragornArmy
             new Harmony("aragorn.armyofthedead.patch").PatchAll();
         }
 
-        public override string SettingsCategory() => "Aragorn – Armee der Toten";
+        public override string SettingsCategory() => AragornText.T("AR_Mod_Name");
 
         public override void DoSettingsWindowContents(Rect rect)
         {
@@ -23,52 +23,46 @@ namespace AragornArmy
             // RimWorld in the mod-options list, not beside these sliders.
             var ls = new Listing_Standard();
             ls.Begin(rect);
-            ls.Label("QUESTS");
-            ls.Label("Globale Questgefahr: x" + Config.questDangerMultiplier.ToString("0.00") +
-                " (alle Aragorn-Quests, maximal 100 Gegner gleichzeitig)");
+            ls.Label(AragornText.T("AR_Settings_SectionQuests"));
+            ls.Label(AragornText.F("AR_Settings_QuestDanger", Config.questDangerMultiplier.ToString("0.00")));
             Config.questDangerMultiplier = Mathf.Round(
                 ls.Slider(Config.questDangerMultiplier, .5f, 5f) * 4f) / 4f;
-            ls.Label("Beeinflusst Rettung, Schmiedewellen, Geisterprüfungen und Mechanoidenfestung.");
+            ls.Label(AragornText.T("AR_Settings_DangerHelp"));
             ls.GapLine();
 
-            ls.Label("GEISTER");
-            ls.Label("Beschwörungsdauer: " + Config.summonHours +
-                " Ingame-Stunden (13 Stunden Abklingzeit)");
+            ls.Label(AragornText.T("AR_Settings_SectionSpirits"));
+            ls.Label(AragornText.F("AR_Settings_SummonDuration", Config.summonHours));
             Config.summonHours = Mathf.RoundToInt(ls.Slider(Config.summonHours, 6, 13));
 
-            ls.Label("Geisterrüstung (alle Klassen): x" + Config.ghostArmorMultiplier.ToString("0.00"));
+            ls.Label(AragornText.F("AR_Settings_Armor", Config.ghostArmorMultiplier.ToString("0.00")));
             Config.ghostArmorMultiplier = Mathf.Round(
                 ls.Slider(Config.ghostArmorMultiplier, .05f, 2f) * 20f) / 20f;
-            ls.Label("Bei x1: +1000 % natürliche Rüstung zu den Basiswerten. " +
-                "Ersetzt die früheren Klassenregler und die Rüstungsstufen.");
+            ls.Label(AragornText.T("AR_Settings_ArmorHelp"));
 
-            ls.Label("Königsbuff: x" + Config.kingBuff.ToString("0.0") +
-                " (Bewegung schneller, Angriff/Visierzeit kürzer)");
+            ls.Label(AragornText.F("AR_Settings_KingBuff", Config.kingBuff.ToString("0.0")));
             Config.kingBuff = 1.5f +
                 Mathf.Round(ls.Slider((Config.kingBuff - 1.5f) * 2f, 0f, 3f)) * .5f;
             ls.GapLine();
 
-            ls.Label("FÄHIGKEITEN");
-            ls.Label("Aragorns EMP-Sturm: " + Config.empDamage.ToString("0") +
-                " Schaden pro Mechanoid (+ 10 s Betäubung)");
+            ls.Label(AragornText.T("AR_Settings_SectionAbilities"));
+            ls.Label(AragornText.F("AR_Settings_Emp", Config.empDamage.ToString("0")));
             Config.empDamage = Mathf.Round(ls.Slider(Config.empDamage, 0f, 300f) / 10f) * 10f;
-            ls.Label("Blitz des Königs: " + Config.kingLightningDamage.ToString("0") +
-                " Brandschaden pro Treffer (5 Blitze)");
+            ls.Label(AragornText.F("AR_Settings_Lightning", Config.kingLightningDamage.ToString("0")));
             Config.kingLightningDamage =
                 Mathf.Round(ls.Slider(Config.kingLightningDamage, 5f, 100f) / 5f) * 5f;
             ls.GapLine();
 
             if (Prefs.DevMode)
             {
-                ls.Label("ENTWICKLERMODUS");
+                ls.Label(AragornText.T("AR_Settings_SectionDev"));
                 var rescue = Current.Game?.GetComponent<AragornRescueGame>();
-                if (ls.ButtonText("Aragorn-Rettungsquest jetzt anbieten"))
+                if (ls.ButtonText(AragornText.T("AR_Settings_OfferRescue")))
                     Messages.Message(rescue == null
-                        ? "Keine Quest-Komponente: Spielstand laden."
+                        ? AragornText.T("AR_Settings_NoQuestComponent")
                         : rescue.ForceOfferQuest(), MessageTypeDefOf.NeutralEvent);
                 var forge = Current.Game?.GetComponent<AragornForgeGame>();
                 if (forge != null && forge.Completed &&
-                    ls.ButtonText("Andúril-Schmiedequest erneut testen"))
+                    ls.ButtonText(AragornText.T("AR_Settings_RetryForge")))
                     Messages.Message(forge.RestartForTesting(), MessageTypeDefOf.NeutralEvent);
             }
             ls.End();
