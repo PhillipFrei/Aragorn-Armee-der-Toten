@@ -169,4 +169,5 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_RescueStatus_Exception>Fehler beim Erstellen ({0}). Bitte Player.log prüfen.</AR_RescueStatus_Exception>
   <AR_Msg_RescueAvailable>Aragorn-Rettungsquest: Unter Aufträge → Verfügbar verfügbar.</AR_Msg_RescueAvailable>
   <AR_Msg_RescueAborted>Aragorn-Rettung abgebrochen: Ein neuer Rettungsauftrag wird angeboten.</AR_Msg_RescueAborted>
+  <AR_Dev_AndurilFailed>Andúril konnte nach dem Questabschluss nicht ausgerüstet werden.</AR_Dev_AndurilFailed>
 </LanguageData>
