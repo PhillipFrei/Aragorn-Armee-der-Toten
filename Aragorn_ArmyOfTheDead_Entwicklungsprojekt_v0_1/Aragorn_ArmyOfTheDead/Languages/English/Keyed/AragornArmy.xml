@@ -169,4 +169,5 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_RescueStatus_Exception>Error during creation ({0}). Please check Player.log.</AR_RescueStatus_Exception>
   <AR_Msg_RescueAvailable>Aragorn rescue quest: Available in the Quests tab.</AR_Msg_RescueAvailable>
   <AR_Msg_RescueAborted>Aragorn rescue abandoned: A new rescue quest will be offered.</AR_Msg_RescueAborted>
+  <AR_Dev_AndurilFailed>Could not equip Andúril after completing the quest.</AR_Dev_AndurilFailed>
 </LanguageData>
