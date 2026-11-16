@@ -209,7 +209,7 @@ namespace AragornArmy
                 // Avoid equipping a second replacement sword afterwards.
                 if (!GhostDefinitions.HasAnduril(aragorn) &&
                     !AragornForgeGame.EquipCompletedAnduril(aragorn, "DEV fallback"))
-                    throw new InvalidOperationException("Andúril konnte beim Dev-Schnelltest nicht ausgerüstet werden.");
+                    throw new InvalidOperationException(AragornText.T("AR_Dev_AndurilFailed"));
                 Log.Message("[Aragorn] Dev Anduril: " + aragorn.equipment.Primary.def.defName
                     + " (" + aragorn.equipment.Primary.def.graphicData?.texPath + ")");
                 Log.Message("[Aragorn] Dev only: rescue, Anduril forge, 13 ghost trials "
