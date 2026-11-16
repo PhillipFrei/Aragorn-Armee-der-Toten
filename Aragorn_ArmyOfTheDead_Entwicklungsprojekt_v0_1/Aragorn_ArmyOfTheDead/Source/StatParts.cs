@@ -16,7 +16,10 @@ namespace AragornArmy
         public override string ExplanationPart(StatRequest req)
         {
             Pawn pawn = req.Thing as Pawn;
-            return GhostDefinitions.IsGhost(pawn) ? "Aragorn: körpereigene Geisterrüstung (Modmenü)" : null;
+            return GhostDefinitions.IsGhost(pawn)
+                ? "Aragorn: einheitlicher Geisterrüstungsbonus +" +
+                  AragornMod.Config?.BaseArmorPercent.ToString("0") + " % (Modmenü)"
+                : null;
         }
     }
 
