@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_GhostSpiritSword01.label>Spectral Swordsman</AR_GhostSpiritSword01.label>
+  <AR_GhostSpiritSword02.label>Spectral Swordsman</AR_GhostSpiritSword02.label>
+  <AR_GhostSpiritSword03.label>Spectral Swordsman</AR_GhostSpiritSword03.label>
+  <AR_GhostSpiritArcher01.label>Spectral Archer</AR_GhostSpiritArcher01.label>
+  <AR_GhostSpiritArcher02.label>Spectral Archer</AR_GhostSpiritArcher02.label>
+  <AR_GhostSpiritArcher03.label>Spectral Archer</AR_GhostSpiritArcher03.label>
+  <AR_GhostSpiritGrenadier01.label>Bombardier</AR_GhostSpiritGrenadier01.label>
+  <AR_GhostSpiritGrenadier02.label>Bombardier</AR_GhostSpiritGrenadier02.label>
+  <AR_GhostSpiritAxe01.label>Spectral Axeman</AR_GhostSpiritAxe01.label>
+  <AR_GhostSpiritAxe02.label>Spectral Axeman</AR_GhostSpiritAxe02.label>
+  <AR_GhostSpiritCaptain01.label>Cursed Captain</AR_GhostSpiritCaptain01.label>
+  <AR_GhostSpiritCaptain02.label>Cursed Captain</AR_GhostSpiritCaptain02.label>
+  <AR_GhostSpiritKing.label>King of the Dead</AR_GhostSpiritKing.label>
+  <AR_GhostSword.label>Spectral Swordsman</AR_GhostSword.label>
+  <AR_GhostArcher.label>Spectral Archer</AR_GhostArcher.label>
+  <AR_GhostGrenadier.label>Bombardier</AR_GhostGrenadier.label>
+  <AR_GhostAxe.label>Spectral Axeman</AR_GhostAxe.label>
+  <AR_GhostCaptain.label>Cursed Captain</AR_GhostCaptain.label>
+  <AR_GhostKing.label>King of the Dead</AR_GhostKing.label>
+  <AR_Aragorn.label>Aragorn</AR_Aragorn.label>
+  <AR_GhostBase.label>Spectral Warrior</AR_GhostBase.label>
+</LanguageData>
