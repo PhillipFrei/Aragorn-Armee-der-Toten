@@ -21,7 +21,7 @@ namespace AragornArmy
             "BotchJob_SpectralGreatbow", "BotchJob_SpectralGreatbow", "BotchJob_SpectralGreatbow",
             "BotchJob_DivineOrderCleansingConcoction", "BotchJob_DivineOrderCleansingConcoction",
             "BotchJob_ScourgeknightGreataxe", "BotchJob_ScourgeknightGreataxe",
-            "BotchJob_GraspingDeadGreatsword", "BotchJob_GraspingDeadGreatsword", "MeleeWeapon_PsyfocusStaff"
+            "BotchJob_GraspingDeadGreatsword", "BotchJob_GraspingDeadGreatsword", "AR_KingSpectralStaff"
         };
 
         // Shared class labels, internal PawnKind IDs stay unchanged for existing saves.
@@ -140,9 +140,6 @@ namespace AragornArmy
         private static ThingDef ResolveWeapon(string defName)
         {
             ThingDef def = DefDatabase<ThingDef>.GetNamedSilentFail(defName);
-            if (def == null && defName == "MeleeWeapon_PsyfocusStaff")
-                def = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(
-                    item => item.weaponTags != null && item.weaponTags.Contains("EltexStaff"));
             return def;
         }
 
