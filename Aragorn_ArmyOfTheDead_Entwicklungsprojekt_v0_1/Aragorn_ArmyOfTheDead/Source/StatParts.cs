@@ -17,8 +17,7 @@ namespace AragornArmy
         {
             Pawn pawn = req.Thing as Pawn;
             return GhostDefinitions.IsGhost(pawn)
-                ? "Aragorn: einheitlicher Geisterrüstungsbonus +" +
-                  AragornMod.Config?.BaseArmorPercent.ToString("0") + " % (Modmenü)"
+                ? AragornText.F("AR_Stat_Armor", (AragornMod.Config?.BaseArmorPercent ?? 1000f).ToString("0"))
                 : null;
         }
     }
@@ -45,10 +44,10 @@ namespace AragornArmy
             if (def == null || pawn.health == null || !pawn.health.hediffSet.HasHediff(def)) return null;
             float b = AragornMod.Config == null ? 2f : AragornMod.Config.kingBuff;
             if (parentStat == StatDefOf.MoveSpeed)
-                return "Königlicher Befehl: x" + b.ToString("0.00") +
-                    " (Bewegung +" + ((b - 1f) * 100f).ToString("0") + " %)";
-            return "Königlicher Befehl: x" + (1f / b).ToString("0.00") +
-                " (Angriffs-/Zielzeit -" + ((1f - 1f / b) * 100f).ToString("0") + " %)";
+                return AragornText.F("AR_Stat_KingSpeed", b.ToString("0.00"),
+                    ((b - 1f) * 100f).ToString("0"));
+            return AragornText.F("AR_Stat_KingAttack", (1f / b).ToString("0.00"),
+                ((1f - 1f / b) * 100f).ToString("0"));
         }
     }
 }
