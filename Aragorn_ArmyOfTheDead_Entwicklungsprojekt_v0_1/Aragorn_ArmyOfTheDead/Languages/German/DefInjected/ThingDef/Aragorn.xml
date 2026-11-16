@@ -43,4 +43,7 @@
   <AR_Anduril.description>Die Flamme des Westens. Aragorns einzigartige Klinge. Schaltet die Geisterprüfungen, Beschwörung und den Rundumschlag frei.</AR_Anduril.description>
   <AR_Anduril.tools.0.label>Knauf</AR_Anduril.tools.0.label>
   <AR_Anduril.tools.1.label>Schneide</AR_Anduril.tools.1.label>
+  <AR_KingSpectralStaff.label>Geisterstab des Königs</AR_KingSpectralStaff.label>
+  <AR_KingSpectralStaff.description>Ein uralter Königsstab, von türkisfarbenem Geisterlicht erfüllt. Benötigt kein Royalty-DLC.</AR_KingSpectralStaff.description>
+  <AR_KingSpectralStaff.tools.0.label>Stabhieb</AR_KingSpectralStaff.tools.0.label>
 </LanguageData>

@@ -43,4 +43,7 @@
   <AR_Anduril.description>The Flame of the West. Aragorn's unique sword. Unlocks the spirit trials, summoning, and his sweeping strike.</AR_Anduril.description>
   <AR_Anduril.tools.0.label>pommel strike</AR_Anduril.tools.0.label>
   <AR_Anduril.tools.1.label>blade</AR_Anduril.tools.1.label>
+  <AR_KingSpectralStaff.label>King's spectral staff</AR_KingSpectralStaff.label>
+  <AR_KingSpectralStaff.description>The ancient sceptre of the King of the Dead, radiating ghostly turquoise light. No Royalty DLC required.</AR_KingSpectralStaff.description>
+  <AR_KingSpectralStaff.tools.0.label>staff strike</AR_KingSpectralStaff.tools.0.label>
 </LanguageData>
