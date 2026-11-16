@@ -25,13 +25,15 @@ namespace AragornArmy
         };
 
         // Shared class labels, internal PawnKind IDs stay unchanged for existing saves.
-        public static readonly string[] Names = {
-            "Schwertgeist", "Schwertgeist", "Schwertgeist",
-            "Bogenschütze", "Bogenschütze", "Bogenschütze",
-            "Bombardier", "Bombardier",
-            "Axtgeist", "Axtgeist",
-            "Verfluchter Hauptmann", "Verfluchter Hauptmann", "König der Toten"
+        private static readonly string[] NameKeys = {
+            "AR_Role_Sword", "AR_Role_Sword", "AR_Role_Sword",
+            "AR_Role_Archer", "AR_Role_Archer", "AR_Role_Archer",
+            "AR_Role_Bombardier", "AR_Role_Bombardier",
+            "AR_Role_Axe", "AR_Role_Axe",
+            "AR_Role_Captain", "AR_Role_Captain", "AR_Role_King"
         };
+        // Resolve on access so a language change never leaves a stale static array.
+        public static string[] Names => NameKeys.Select(AragornText.T).ToArray();
 
         public static string RoleName(Pawn pawn)
         {
@@ -39,12 +41,12 @@ namespace AragornArmy
             int index = Array.IndexOf(PawnKinds, pawn.kindDef.defName);
             if (index >= 0) return Names[index];
             string kind = pawn.kindDef.defName;
-            if (kind == "AR_GhostSword") return "Schwertgeist";
-            if (kind == "AR_GhostArcher") return "Bogenschütze";
-            if (kind == "AR_GhostGrenadier") return "Bombardier";
-            if (kind == "AR_GhostAxe") return "Axtgeist";
-            if (kind == "AR_GhostCaptain") return "Verfluchter Hauptmann";
-            if (kind == "AR_GhostKing") return "König der Toten";
+            if (kind == "AR_GhostSword") return AragornText.T("AR_Role_Sword");
+            if (kind == "AR_GhostArcher") return AragornText.T("AR_Role_Archer");
+            if (kind == "AR_GhostGrenadier") return AragornText.T("AR_Role_Bombardier");
+            if (kind == "AR_GhostAxe") return AragornText.T("AR_Role_Axe");
+            if (kind == "AR_GhostCaptain") return AragornText.T("AR_Role_Captain");
+            if (kind == "AR_GhostKing") return AragornText.T("AR_Role_King");
             return null;
         }
 
@@ -60,8 +62,25 @@ namespace AragornArmy
             string role = RoleName(pawn);
             if (role == null) return;
             string current = pawn.Name?.ToStringShort ?? "";
-            if (string.IsNullOrEmpty(current) || current == role ||
-                current == role + " I" || current == role + " II" || current == role + " III")
+            int index = Array.IndexOf(PawnKinds, pawn.kindDef.defName);
+            string oldGerman = index < 0 ? role : new[] {
+                "Schwertgeist", "Schwertgeist", "Schwertgeist",
+                "Bogenschütze", "Bogenschütze", "Bogenschütze",
+                "Bombardier", "Bombardier", "Axtgeist", "Axtgeist",
+                "Verfluchter Hauptmann", "Verfluchter Hauptmann", "König der Toten"
+            }[index];
+            string oldEnglish = index < 0 ? role : new[] {
+                "Spectral Swordsman", "Spectral Swordsman", "Spectral Swordsman",
+                "Spectral Archer", "Spectral Archer", "Spectral Archer",
+                "Bombardier", "Bombardier", "Spectral Axeman", "Spectral Axeman",
+                "Cursed Captain", "Cursed Captain", "King of the Dead"
+            }[index];
+            bool generated = string.IsNullOrEmpty(current) || current == role ||
+                current == oldGerman || current == oldEnglish;
+            foreach (string known in new[] { role, oldGerman, oldEnglish })
+                foreach (string numeral in new[] { " I", " II", " III" })
+                    if (current == known + numeral) generated = true;
+            if (generated)
             {
                 if (current != role) pawn.Name = new NameSingle(role);
             }
