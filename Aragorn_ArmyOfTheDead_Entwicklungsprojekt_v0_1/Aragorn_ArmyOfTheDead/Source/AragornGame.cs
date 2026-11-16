@@ -359,7 +359,8 @@ namespace AragornArmy
                     app.Destroy(DestroyMode.Vanish);
             // No randomly generated bionic parts, wounds or implants.
             if (pawn.health != null) pawn.health.Reset();
-            if (pawn.genes != null)
+            // With Biotech disabled the gene tracker may be absent; don't touch it.
+            if (ModsConfig.BiotechActive && pawn.genes != null)
                 foreach (Gene gene in pawn.genes.GenesListForReading.ToList()) pawn.genes.RemoveGene(gene);
             if (pawn.story != null)
             {
@@ -776,7 +777,8 @@ namespace AragornArmy
             if (pawn == null) return;
             pawn.Name = new NameSingle("Aragorn");
             EnsureAragornAppearance(pawn);
-            if (pawn.genes != null)
+            // Biotech is optional: keep traits/armor/quests without assigning genes.
+            if (ModsConfig.BiotechActive && pawn.genes != null)
                 foreach (string name in AragornGenes)
                 {
                     GeneDef gene = DefDatabase<GeneDef>.GetNamedSilentFail(name);
