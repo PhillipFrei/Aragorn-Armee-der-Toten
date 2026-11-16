@@ -19,15 +19,10 @@ namespace AragornArmy
 
         public override void DoSettingsWindowContents(Rect rect)
         {
-            // Reuse the existing king's turquoise icon, no extra artwork needed.
-            Texture2D kingPortrait = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/KingsLightning", false);
-            if (kingPortrait != null)
-                Widgets.DrawTextureFitted(new Rect(rect.xMax - 112f, rect.y + 6f, 104f, 104f),
-                    kingPortrait, 1f);
-
-            Rect left = new Rect(rect.x, rect.y, Mathf.Max(260f, rect.width - 120f), rect.height);
+            // The ModIcon lives at About/ModIcon.png and is shown by
+            // RimWorld in the mod-options list, not beside these sliders.
             var ls = new Listing_Standard();
-            ls.Begin(left);
+            ls.Begin(rect);
             ls.Label("QUESTS");
             ls.Label("Globale Questgefahr: x" + Config.questDangerMultiplier.ToString("0.00") +
                 " (alle Aragorn-Quests, maximal 100 Gegner gleichzeitig)");
