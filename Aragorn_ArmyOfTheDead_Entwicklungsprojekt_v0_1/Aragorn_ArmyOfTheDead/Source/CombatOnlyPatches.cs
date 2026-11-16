@@ -102,6 +102,9 @@ namespace AragornArmy
         }
     }
 
+    // Draw the actual equipped item using RimWorld's held-weapon renderer.
+    // Graphic.Draw previously placed a flat sprite beside the body and did
+    // not follow the proper aiming, east/west, or grip angle conventions.
     [HarmonyPatch(typeof(PawnRenderer), nameof(PawnRenderer.RenderPawnAt),
         new Type[] { typeof(Vector3), typeof(Rot4?), typeof(bool) })]
     internal static class RenderMissingGhostWeapons
@@ -110,19 +113,43 @@ namespace AragornArmy
         {
             Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
             if (!GhostDefinitions.IsGhost(pawn) || !pawn.Spawned || pawn.Dead ||
-                pawn.equipment?.Primary == null) return;
-            Rot4 facing = rotOverride ?? pawn.Rotation;
-            if (GhostDefinitions.HasEmbeddedWeapon(pawn, facing)) return;
+                pawn.equipment?.Primary == null ||
+                pawn.CurJob?.def?.neverShowWeapon == true) return;
 
+            Rot4 facing = rotOverride ?? pawn.Rotation;
             ThingWithComps weapon = pawn.equipment.Primary;
-            Graphic graphic = weapon.Graphic;
-            if (graphic == null) return;
-            // Anchor the weapon to the ghost body at the same map position,
-            // not to a fixed world cell. RenderPawnAt also follows movement.
-            Vector3 offset = facing == Rot4.North
-                ? new Vector3(.28f, .035f, .05f)
-                : new Vector3(.28f, .035f, -.09f);
-            graphic.Draw(drawLoc + offset, facing, weapon);
+            Vector3 position = drawLoc;
+            float aimAngle;
+
+            Stance_Busy stance = pawn.stances?.curStance as Stance_Busy;
+            if (stance != null && !stance.neverAimWeapon && stance.focusTarg.IsValid)
+            {
+                Vector3 target = stance.focusTarg.HasThing
+                    ? stance.focusTarg.Thing.DrawPos
+                    : stance.focusTarg.Cell.ToVector3Shifted();
+                aimAngle = (target - pawn.DrawPos).MagnitudeHorizontalSquared() > .001f
+                    ? (target - pawn.DrawPos).AngleFlat() : 0f;
+                position += new Vector3(0f, 0f, .4f).RotatedBy(aimAngle);
+            }
+            else if (facing == Rot4.East)
+            {
+                aimAngle = 143f;
+                position += new Vector3(.2f, 0f, -.22f);
+            }
+            else if (facing == Rot4.West)
+            {
+                aimAngle = 217f;
+                position += new Vector3(-.2f, 0f, -.22f);
+            }
+            else
+            {
+                aimAngle = 143f;
+                position += facing == Rot4.North
+                    ? new Vector3(0f, 0f, -.11f)
+                    : new Vector3(0f, 0f, -.22f);
+            }
+            position.y += .0390625f;
+            PawnRenderUtility.DrawEquipmentAiming(weapon, position, aimAngle);
         }
     }
 
