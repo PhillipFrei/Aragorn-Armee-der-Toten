@@ -105,7 +105,7 @@ namespace AragornArmy
             savedCount = 0;
             frozenThreatPoints = 0f;
             abandonedSinceTick = -1;
-            Messages.Message("Mechanoidenfestung abgebrochen: Die Quest wird erneut angeboten.",
+            Messages.Message(AragornText.T("AR_Msg_MechAborted"),
                 MessageTypeDefOf.NeutralEvent);
             Log.Message("[Aragorn] Mech quest site abandoned or cancelled; reoffering.");
         }
@@ -235,8 +235,7 @@ namespace AragornArmy
                 aragorn.Map == null || !aragorn.Spawned || aragorn.Downed) return;
             if (CooldownRemaining > 0)
             {
-                AragornGame.Reject("EMP-Sturm: Abklingzeit "
-                    + Mathf.CeilToInt(CooldownRemaining / 60f) + " Sekunden.");
+                AragornGame.Reject(AragornText.F("AR_Msg_EmpCooldown", Mathf.CeilToInt(CooldownRemaining / 60f)));
                 return;
             }
             var parms = new TargetingParameters {
