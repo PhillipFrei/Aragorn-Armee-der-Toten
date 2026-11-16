@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_KinglyCommand.label>King's Command</AR_KinglyCommand.label>
+  <AR_KinglyCommand.description>The King of the Dead strengthens the other summoned spirits while he remains able to fight on their map.
+
+• Movement speed: +(buff multiplier − 1) × 100%.
+• Melee cooldown: −(1 − 1/buff multiplier) × 100%.
+• Ranged cooldown: same reduction.
+• Aiming time: same reduction.
+
+At x2: movement +100%, cooldowns and aiming time −50%. Actual numbers appear in each spirit's health tooltip. A health capacity of “Moving: 100%” is not its movement speed.</AR_KinglyCommand.description>
+</LanguageData>
