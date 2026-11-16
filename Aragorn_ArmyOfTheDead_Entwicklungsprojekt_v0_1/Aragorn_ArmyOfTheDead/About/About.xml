@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Aragorn – Armee der Toten (v0.32)</name>
+  <name>Aragorn – Armee der Toten (v0.32.1)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
   <description>DEUTSCH — Aragorn – Armee der Toten
@@ -17,8 +17,8 @@ v0.32 | RimWorld 1.6 | Full German and English localization. Language follows Ri
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
     <li><packageId>Ludeon.RimWorld.Biotech</packageId><displayName>Biotech</displayName></li>
     <li><packageId>Ludeon.RimWorld.Royalty</packageId><displayName>Royalty</displayName></li>
-    <li><packageId>botchjob.profaned</packageId><displayName>The Profaned</displayName></li>
-    <li><packageId>botchjob.divineorder</packageId><displayName>The Divine Order</displayName></li>
+    <li><packageId>botchjob.profaned</packageId><displayName>The Profaned</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/3202008037</steamWorkshopUrl></li>
+    <li><packageId>botchjob.divineorder</packageId><displayName>The Divine Order</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/3017163907</steamWorkshopUrl></li>
     <li><packageId>OskarPotocki.VanillaFactionsExpanded.Core</packageId><displayName>Vanilla Expanded Framework</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/2023507013</steamWorkshopUrl></li>
   </modDependencies>
   <loadAfter>
