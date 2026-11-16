@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AR_RescueCamp.label>Aragorns Gefängnis</AR_RescueCamp.label>
+  <AR_RescueCamp.description>Ein verborgenes Lager, in dem Aragorn von den Profaned gefangen gehalten wird.</AR_RescueCamp.description>
+  <AR_GhostTrialCamp.label>Geisterkrypta</AR_GhostTrialCamp.label>
+  <AR_GhostTrialCamp.description>Eine von Profaned-Wachen besetzte Krypta mit einem verfluchten Geisterkrieger.</AR_GhostTrialCamp.description>
+  <AR_AndurilForgeSite.label>goldene Schmiede der Divine Order</AR_AndurilForgeSite.label>
+  <AR_AndurilForgeSite.description>Ein goldener Schmiedetempel, in dem die zerbrochene Klinge neu geschmiedet werden kann.</AR_AndurilForgeSite.description>
+  <AR_MechSilenceFortress.label>Mechanoidenfestung</AR_MechSilenceFortress.label>
+  <AR_MechSilenceFortress.description>Eine alte Mechanoidengarnison, die den Bann des Königs bewacht.</AR_MechSilenceFortress.description>
+</LanguageData>
