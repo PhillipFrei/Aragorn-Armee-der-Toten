@@ -12,7 +12,7 @@ namespace AragornArmy
         public static bool Active(Pawn pawn)
         {
             if (!GhostDefinitions.IsGhost(pawn) || pawn.health == null ||
-                GhostDefinitions.RoleName(pawn) == "König der Toten") return false;
+                pawn.kindDef.defName == "AR_GhostSpiritKing" || pawn.kindDef.defName == "AR_GhostKing") return false;
             HediffDef status = DefDatabase<HediffDef>.GetNamedSilentFail("AR_KinglyCommand");
             return status != null && pawn.health.hediffSet.HasHediff(status);
         }
@@ -20,7 +20,7 @@ namespace AragornArmy
         public static string Build(Pawn pawn)
         {
             if (pawn == null) return "";
-            if (!Active(pawn)) return "Königlicher Befehl: inaktiv";
+            if (!Active(pawn)) return AragornText.T("AR_Buff_Inactive");
             float factor = Math.Max(1.01f, AragornMod.Config?.kingBuff ?? 2f);
             float speed = pawn.GetStatValue(StatDefOf.MoveSpeed);
             float speedWithoutKing = speed / factor;
@@ -28,19 +28,18 @@ namespace AragornArmy
             float timeReductionPercent = (1f - 1f / factor) * 100f;
 
             var result = new StringBuilder();
-            result.AppendLine("Königlicher Befehl (aktiv):");
-            result.Append("• Laufgeschwindigkeit: ")
+            result.AppendLine(AragornText.T("AR_Buff_Active"));
+            result.Append(AragornText.T("AR_Buff_Move") + ": ")
                 .Append(speedWithoutKing.ToString("0.00")).Append(" → ")
-                .Append(speed.ToString("0.00")).Append(" Felder/s (+")
+                .Append(speed.ToString("0.00")).Append(" " + AragornText.T("AR_Buff_CellsPerSec") + " (+")
                 .Append(speedBonusPercent.ToString("0")).AppendLine(" %)");
-            AppendTimeFactor(result, pawn, "Nahkampf-Abklingzeit",
+            AppendTimeFactor(result, pawn, AragornText.T("AR_Buff_Melee"),
                 "MeleeCooldownFactor", factor, timeReductionPercent);
-            AppendTimeFactor(result, pawn, "Fernkampf-Abklingzeit",
+            AppendTimeFactor(result, pawn, AragornText.T("AR_Buff_Ranged"),
                 "RangedCooldownFactor", factor, timeReductionPercent);
-            AppendTimeFactor(result, pawn, "Ziel-/Visierzeit",
+            AppendTimeFactor(result, pawn, AragornText.T("AR_Buff_Aim"),
                 "AimingDelayFactor", factor, timeReductionPercent);
-            result.Append("Werte vor dem Pfeil: berechnet ohne Königsbuff, ")
-                .Append("mit allen anderen aktuellen Boni.");
+            result.Append(AragornText.T("AR_Buff_Note"));
             return result.ToString();
         }
 
@@ -51,12 +50,12 @@ namespace AragornArmy
             if (stat == null)
             {
                 result.Append("• ").Append(label)
-                    .AppendLine(": Stat in dieser Modliste nicht verfügbar");
+                    .AppendLine(": " + AragornText.T("AR_Buff_StatMissing"));
                 return;
             }
             float current = pawn.GetStatValue(stat);
             float withoutKing = current * kingFactor;
-            result.Append("• ").Append(label).Append(": Faktor ")
+            result.Append("• ").Append(label).Append(": " + AragornText.T("AR_Buff_Factor") + " ")
                 .Append(withoutKing.ToString("0.00")).Append(" → ")
                 .Append(current.ToString("0.00")).Append(" (−")
                 .Append(reductionPercent.ToString("0")).AppendLine(" %)");
