@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Aragorn – Armee der Toten (v0.28)</name>
+  <name>Aragorn – Armee der Toten (v0.29)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
-  <description>v0.28 Komplettpaket für RimWorld 1.6. Überarbeitete waffenlose Körpersprites für alle 13 Geister (6 Klassen in Süd-, Ost- und Nordansicht; West gespiegelt), 10 % größere Darstellung, deutlich unterscheidbare Hauptleute und König mit hoher Krone. Die Waffen kommen ausschließlich aus der tatsächlich ausgerüsteten Mod-Waffe und werden separat gezeichnet. Neue Andúril-Grafik nach der ausgewählten Designvorlage. Feste Zuordnung der 13 Sprites (einschließlich Schwertgeist 01), einheitliche Bombardier-Klasse, Mod-Icon. Beinhaltet die bisherigen Verbesserungen: globaler Questgefahr-Regler ohne separaten Schmiedewellen-Regler, max. 100 Gegner, Questwiederholung nach Abbruch, 100 EMP-Schaden, sichtbare Königsblitze, Königsbuff-Anzeigen und Rückruf bei Aragorns Tod. GitHub-Compiler geprüft; Ingame-Waffendarstellung muss getestet werden.</description>
+  <description>Version 0.29: Sichtbare Korrekturen für Geist-Blickrichtungen und Waffen: Ost-Sprites laufen wieder nach Osten; ausgerüstete Waffen werden über die native RimWorld-1.6-Zeichenroutine mit korrekter Drehung, Zielwinkel und Handposition dargestellt. Andúril ist für das Halten im Spiel neu ausgerichtet und auf eine passende Grafikgröße abgestimmt. Vereinfachtes Modmenü mit Bild des Königs: globale Questgefahr, Beschwörungsdauer, ein Geisterrüstungs-Multiplikator, Königsbuff, EMP-Schaden und Königsblitz-Schaden. Geisterprüfungen skalieren jetzt ausschließlich mit der globalen Questgefahr. Der Rundumschlag erzeugt über 36 Ticks einen sichtbaren türkisfarbenen Schwingbogen. Bestehende Quest- und Fortschrittsdaten bleiben erhalten, ältere Rüstungsstufen werden in den neuen Regler übernommen. RimWorld 1.6. Ingame-Tests empfohlen.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li>
