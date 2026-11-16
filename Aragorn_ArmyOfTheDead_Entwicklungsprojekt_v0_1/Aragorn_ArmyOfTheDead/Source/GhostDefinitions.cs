@@ -76,19 +76,9 @@ namespace AragornArmy
         public static bool HasAnduril(Pawn pawn) => IsAragorn(pawn) && pawn.equipment != null &&
             pawn.equipment.Primary != null && pawn.equipment.Primary.def.defName == "AR_Anduril";
 
-        public static float ArmorMultiplier(Pawn pawn)
-        {
-            if (!IsGhost(pawn)) return 0f;
-            var s = AragornMod.Config;
-            string kind = pawn.kindDef.defName;
-            if (kind.StartsWith("AR_GhostSpiritSword") || kind == "AR_GhostSword") return s.swordArmor;
-            if (kind.StartsWith("AR_GhostSpiritArcher") || kind == "AR_GhostArcher") return s.archerArmor;
-            if (kind.StartsWith("AR_GhostSpiritGrenadier") || kind == "AR_GhostGrenadier") return s.grenadeArmor;
-            if (kind.StartsWith("AR_GhostSpiritAxe") || kind == "AR_GhostAxe") return s.axeArmor;
-            if (kind.StartsWith("AR_GhostSpiritCaptain") || kind == "AR_GhostCaptain") return s.captainArmor;
-            if (kind == "AR_GhostSpiritKing" || kind == "AR_GhostKing") return s.kingArmor;
-            return 0f;
-        }
+        // All 13 spirits use the same global armor slider (v0.29).
+        // Older per-class settings are read for compatibility but no longer applied.
+        public static float ArmorMultiplier(Pawn pawn) => IsGhost(pawn) ? 1f : 0f;
 
         // Gives a spectral ToolUser its immutable original weapon.
         // Also repairs already-summoned ghosts saved while the race was Animal.
