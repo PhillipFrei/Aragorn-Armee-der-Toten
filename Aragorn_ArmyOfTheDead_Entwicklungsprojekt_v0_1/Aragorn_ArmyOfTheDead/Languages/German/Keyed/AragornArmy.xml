@@ -54,23 +54,23 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Gizmo_RecallDesc>Rufe alle beschworenen Geister zurück, auch jene auf anderen geladenen Karten.</AR_Gizmo_RecallDesc>
   <AR_Gizmo_RecallNone>Es sind keine Geister beschworen.</AR_Gizmo_RecallNone>
   <AR_Gizmo_WhirlTitle>Andúril — Rundumschlag</AR_Gizmo_WhirlTitle>
-  <AR_Gizmo_WhirlDesc>Führe einen weiten, mächtigen Rundumschlag mit Andúril gegen nahe Feinde aus.</AR_Gizmo_WhirlDesc>
+  <AR_Gizmo_WhirlDesc>Führe einen weiten Rundumschlag mit Andúril gegen nahe Feinde aus. Ein türkisfarbener Schwingbogen macht den Angriff sichtbar.</AR_Gizmo_WhirlDesc>
   <AR_Gizmo_StormTitle>Zorn der Toten</AR_Gizmo_StormTitle>
-  <AR_Gizmo_StormDesc>Rufe fünf Blitze geisterhaften Feuers herab. Jeder verursacht 20 Brandschaden und ignoriert Rüstung. Reichweite: 15 Felder; Wirkungsradius: 6 Felder. Nur feindliche Pawns erleiden Schaden.</AR_Gizmo_StormDesc>
+  <AR_Gizmo_StormDesc>Rufe fünf Blitze geisterhaften Feuers herab. Der Schaden jedes Blitzes ist im Mod-Menü einstellbar; die Treffer ignorieren Rüstung. Reichweite: 15 Felder; Wirkungsradius: 6 Felder. Nur feindliche Pawns erleiden Schaden.</AR_Gizmo_StormDesc>
   <AR_Gizmo_RestoreTitle>Andúril wiederherstellen (Test)</AR_Gizmo_RestoreTitle>
   <AR_Gizmo_RestoreDesc>Entwicklungswerkzeug für ältere Spielstände ohne Andúril.</AR_Gizmo_RestoreDesc>
   <AR_Smith_Died>der Meisterschmied oder die Schmiede wurde zerstört</AR_Smith_Died>
   <AR_Rescue_QuestHint>Unter Aufträge → Verfügbar wartet eine Rettungsquest.</AR_Rescue_QuestHint>
   <AR_KingLightning_DamageReport>Geistersturm: {0}/5 wirksame Treffer, {1} tatsächlich verursachter Schaden.</AR_KingLightning_DamageReport>
   <AR_Mech_QuestTitle>Das Schweigen des Eisens</AR_Mech_QuestTitle>
-  <AR_Mech_QuestDesc>Ein Heer uralter Maschinen bewacht eine vergessene Festung. Aragorn und seine 13 Eidverpflichteten müssen die Mechanoiden besiegen. Belohnung: EMP-Sturm, 100 elektrischer Schaden und 10 Sekunden Betäubung gegen feindliche Mechanoiden.</AR_Mech_QuestDesc>
+  <AR_Mech_QuestDesc>Ein Heer uralter Maschinen bewacht eine vergessene Festung. Aragorn und seine 13 Eidverpflichteten müssen die Mechanoiden besiegen. Belohnung: EMP-Sturm, einstellbarer Schaden und 10 Sekunden Betäubung gegen feindliche Mechanoiden.</AR_Mech_QuestDesc>
   <AR_Mech_Site>Mechanoidenfestung: Das Schweigen des Eisens</AR_Mech_Site>
   <AR_Mech_ArrivalTitle>Die Maschinenfestung</AR_Mech_ArrivalTitle>
   <AR_Mech_ArrivalBody>Die Festung wurde auf der Weltkarte entdeckt. Besiege ihre Mechanoiden, um den Bann des Königs zu erhalten.</AR_Mech_ArrivalBody>
   <AR_Mech_WinTitle>Der Bann des Königs</AR_Mech_WinTitle>
-  <AR_Mech_WinBody>Die Maschinen schweigen. Aragorn beherrscht nun den EMP-Sturm: 30 Felder Reichweite, 6 Felder Wirkungsradius, 100 Schaden je Mechanoid, 10 Sekunden Betäubung, 60 Sekunden Abklingzeit.</AR_Mech_WinBody>
+  <AR_Mech_WinBody>Die Maschinen schweigen. Aragorn beherrscht nun den EMP-Sturm: 30 Felder Reichweite, 6 Felder Wirkungsradius, einstellbarer Schaden je Mechanoid, 10 Sekunden Betäubung, 60 Sekunden Abklingzeit.</AR_Mech_WinBody>
   <AR_Mech_Encounter>Mechanoidenfestung: {0} Verteidiger. Besiege sie alle!</AR_Mech_Encounter>
   <AR_Mech_StunTitle>EMP-Sturm</AR_Mech_StunTitle>
-  <AR_Mech_StunDesc>Verursacht 100 elektrische Schadenspunkte und betäubt feindliche Mechanoiden 10 Sekunden lang. 30 Felder Reichweite, 6 Felder Wirkungsradius, 60 Sekunden Abklingzeit.</AR_Mech_StunDesc>
+  <AR_Mech_StunDesc>Verursacht im Mod-Menü einstellbaren Schaden und betäubt feindliche Mechanoiden 10 Sekunden lang. 30 Felder Reichweite, 6 Felder Wirkungsradius, 60 Sekunden Abklingzeit.</AR_Mech_StunDesc>
   <AR_Mech_StunReport>EMP-Sturm: {0} feindliche Mechanoiden für 10 Sekunden betäubt.</AR_Mech_StunReport>
 </LanguageData>

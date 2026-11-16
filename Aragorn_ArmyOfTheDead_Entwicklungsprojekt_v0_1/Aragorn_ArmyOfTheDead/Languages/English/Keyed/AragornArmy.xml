@@ -54,23 +54,23 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Gizmo_RecallDesc>Dismiss all summoned spirits, even those left behind on another loaded map.</AR_Gizmo_RecallDesc>
   <AR_Gizmo_RecallNone>No spirits are summoned.</AR_Gizmo_RecallNone>
   <AR_Gizmo_WhirlTitle>Andúril — Sweeping Strike</AR_Gizmo_WhirlTitle>
-  <AR_Gizmo_WhirlDesc>Unleash a wide, powerful sweep of Andúril, striking nearby foes.</AR_Gizmo_WhirlDesc>
+  <AR_Gizmo_WhirlDesc>Unleash a wide sweep of Andúril, striking nearby foes with a visible turquoise swinging arc.</AR_Gizmo_WhirlDesc>
   <AR_Gizmo_StormTitle>Wrath of the Dead</AR_Gizmo_StormTitle>
-  <AR_Gizmo_StormDesc>Call down five bolts of spectral fire. Each deals 20 Burn damage and ignores armor. Range: 15 cells; impact area: 6 cells. Only hostile pawns take damage.</AR_Gizmo_StormDesc>
+  <AR_Gizmo_StormDesc>Call down five bolts of spectral fire. Each ignores armor; set its Burn damage in the mod settings. Range: 15 cells; impact area: 6 cells. Only hostile pawns take damage.</AR_Gizmo_StormDesc>
   <AR_Gizmo_RestoreTitle>Restore Andúril (Test)</AR_Gizmo_RestoreTitle>
   <AR_Gizmo_RestoreDesc>Development tool for older saves missing the sword.</AR_Gizmo_RestoreDesc>
   <AR_Smith_Died>the master smith or forge was destroyed</AR_Smith_Died>
   <AR_Rescue_QuestHint>A rescue quest awaits under Quests → Available.</AR_Rescue_QuestHint>
   <AR_KingLightning_DamageReport>Spectral lightning: {0}/5 damaging hits, {1} actual damage dealt.</AR_KingLightning_DamageReport>
   <AR_Mech_QuestTitle>The Silence of Iron</AR_Mech_QuestTitle>
-  <AR_Mech_QuestDesc>An army of ancient machines guards a forgotten fortress. Aragorn and his thirteen oathbound spirits must defeat its mechanoid defenders. Reward: EMP Storm, 100 electrical damage and a 10-second area stun against hostile mechanoids.</AR_Mech_QuestDesc>
+  <AR_Mech_QuestDesc>An army of ancient machines guards a forgotten fortress. Aragorn and his thirteen oathbound spirits must defeat its mechanoid defenders. Reward: EMP Storm, adjustable damage and a 10-second area stun against hostile mechanoids.</AR_Mech_QuestDesc>
   <AR_Mech_Site>Mechanoid Fortress: The Silence of Iron</AR_Mech_Site>
   <AR_Mech_ArrivalTitle>The Machine Fortress</AR_Mech_ArrivalTitle>
   <AR_Mech_ArrivalBody>The fortress has been discovered on the world map. Defeat its mechanoids to claim the King's Bane.</AR_Mech_ArrivalBody>
   <AR_Mech_WinTitle>The King's Bane</AR_Mech_WinTitle>
-  <AR_Mech_WinBody>The machines fall silent. Aragorn can now cast EMP Storm: 30-cell range, 6-cell effect radius, 100 damage per mechanoid, 10-second stun, 60-second cooldown.</AR_Mech_WinBody>
+  <AR_Mech_WinBody>The machines fall silent. Aragorn can now cast EMP Storm: 30-cell range, 6-cell effect radius, adjustable damage per mechanoid, 10-second stun, 60-second cooldown.</AR_Mech_WinBody>
   <AR_Mech_Encounter>Mechanoid fortress: {0} defenders. Defeat them all!</AR_Mech_Encounter>
   <AR_Mech_StunTitle>EMP Storm</AR_Mech_StunTitle>
-  <AR_Mech_StunDesc>Deals 100 electrical damage and stuns hostile mechanoids for 10 seconds. Range: 30 cells; effect radius: 6 cells; cooldown: 60 seconds.</AR_Mech_StunDesc>
+  <AR_Mech_StunDesc>Deals configurable damage and stuns hostile mechanoids for 10 seconds. Range: 30 cells; effect radius: 6 cells; cooldown: 60 seconds.</AR_Mech_StunDesc>
   <AR_Mech_StunReport>EMP Storm: {0} hostile mechanoids stunned for 10 seconds.</AR_Mech_StunReport>
 </LanguageData>

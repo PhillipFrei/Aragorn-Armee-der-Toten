@@ -19,6 +19,8 @@ namespace AragornArmy
         private int summonedUntil = -1;
         private int lastKingLightning = -1000000;
         private int lastSpinTick = -1000000;
+        private Pawn spinEffectPawn;
+        private int spinEffectStartTick = -1;
         private List<Pawn> ghosts = new List<Pawn>();
         // Saved summoner reference ensures the army cannot outlive Aragorn.
         private Pawn summoner;
@@ -92,6 +94,16 @@ namespace AragornArmy
 
         public override void GameComponentTick()
         {
+            // Animated circular slash: emit a moving turquoise arc for 0.6 s.
+            // Unlike the old single dust puff this stays visible over time.
+            if (spinEffectPawn != null)
+            {
+                if (Ticks > spinEffectStartTick + 36 ||
+                    !spinEffectPawn.Spawned || spinEffectPawn.Dead)
+                    spinEffectPawn = null;
+                else if (Ticks % 2 == 0)
+                    DrawSpinSlash(spinEffectPawn, Ticks - spinEffectStartTick);
+            }
             if (Ticks % 60 != 0) return;
             if (AragornMod.Config == null) return;
             if (summoner != null && (summoner.Dead || summoner.Destroyed))
@@ -466,8 +478,9 @@ namespace AragornArmy
                 if (boss == null) { Log.Error("[Aragorn] Trial boss could not be generated."); return; }
                 IntVec3 location = CellFinder.RandomClosewalkCellNear(crypt, map, 4);
                 GenSpawn.Spawn(boss, location, map);
-                int count = AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount;
-                var guards = ProfanedEncounterUtility.SpawnGuards(map, crypt, hostile, count);
+                // A single global danger slider scales ALL mod encounters.
+                // SpawnGuards applies AragornThreat.ScaleCount to this baseline.
+                var guards = ProfanedEncounterUtility.SpawnGuards(map, crypt, hostile, 20);
                 if (guards.Count == 0)
                 {
                     Log.Error("[Aragorn] Trial site guard generation failed.");
@@ -594,6 +607,9 @@ namespace AragornArmy
             if (!GhostDefinitions.HasAnduril(aragorn) || aragorn.Map == null) return;
             if (SpinCooldownRemaining > 0) { Reject("Rundumschlag noch auf Abklingzeit."); return; }
             lastSpinTick = Ticks;
+            spinEffectPawn = aragorn;
+            spinEffectStartTick = Ticks;
+            DrawSpinSlash(aragorn, 0);
             var origin = aragorn.Position;
             foreach (Pawn victim in aragorn.Map.mapPawns.AllPawnsSpawned.ToList())
             {
@@ -609,7 +625,27 @@ namespace AragornArmy
                         victim.Position = push;
                 }
             }
-            FleckMaker.ThrowDustPuffThick(aragorn.DrawPos, aragorn.Map, 3f, new Color(.30f, .86f, .80f));
+            FleckMaker.ThrowDustPuffThick(aragorn.DrawPos, aragorn.Map, 2f, new Color(.30f, .86f, .80f));
+        }
+
+        // Four persistent mint particles form an arc rotating around Andúril's
+        // wielder; rendered during 36 ticks, with a bright moving slash tip.
+        private static void DrawSpinSlash(Pawn wielder, int elapsedTicks)
+        {
+            if (wielder?.Map == null || !wielder.Spawned) return;
+            Vector3 center = wielder.DrawPos;
+            float baseAngle = (elapsedTicks / 36f) * Mathf.PI * 2f * 1.75f;
+            for (int i = 0; i < 5; i++)
+            {
+                float a = baseAngle - i * .22f;
+                float radius = 2.15f - i * .06f;
+                Vector3 point = center + new Vector3(Mathf.Cos(a) * radius,
+                    .06f, Mathf.Sin(a) * radius);
+                FleckMaker.ThrowDustPuffThick(point, wielder.Map, .9f,
+                    new Color(.15f, 1f, .83f, .95f));
+                if (i == 0)
+                    FleckMaker.ThrowLightningGlow(point, wielder.Map, 1.3f);
+            }
         }
 
         private static bool KingLightningTargetValid(Pawn king, LocalTargetInfo target)
@@ -701,7 +737,8 @@ namespace AragornArmy
                     // RimWorld applies a Burn injury and logs real damage.
                     // This deliberately does not bypass genes, immunity, or
                     // other modded damage resistance.
-                    DamageInfo burn = new DamageInfo(DamageDefOf.Burn, 20f, 0f, -1f, king);
+                    DamageInfo burn = new DamageInfo(DamageDefOf.Burn,
+                        AragornMod.Config?.kingLightningDamage ?? 20f, 0f, -1f, king);
                     burn.SetIgnoreArmor(true);
                     DamageWorker.DamageResult result = victim.TakeDamage(burn);
                     if (result != null && result.totalDamageDealt > 0f)

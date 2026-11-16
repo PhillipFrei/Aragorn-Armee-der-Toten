@@ -259,11 +259,12 @@ namespace AragornArmy
                         || !p.HostileTo(aragorn) ||
                         p.Position.DistanceTo(target.Cell) > 6f) continue;
                     if (p.stances?.stunner == null) continue;
-                    // EMP stuns the machine and inflicts 100 real injury damage.
+                    // EMP stuns the machine and inflicts the player's configured injury damage.
                     // Burn is used for the electrical injury; vanilla EMP
                     // itself primarily stuns and is not reliable HP damage.
                     p.stances.stunner.StunFor(600, aragorn);
-                    DamageInfo electricHit = new DamageInfo(DamageDefOf.Burn, 100f, 0f, -1f, aragorn);
+                    DamageInfo electricHit = new DamageInfo(DamageDefOf.Burn,
+                        AragornMod.Config?.empDamage ?? 100f, 0f, -1f, aragorn);
                     electricHit.SetIgnoreArmor(true);
                     p.TakeDamage(electricHit);
                     if (p.Spawned && !p.Dead)
