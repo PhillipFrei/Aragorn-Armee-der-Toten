@@ -66,7 +66,7 @@ namespace AragornArmy
         {
             if (!Prefs.DevMode || hero == null) return;
             if (!EquipCompletedAnduril(hero, "DEV All Quests"))
-                throw new InvalidOperationException("Das echte, geschmiedete Andúril konnte nicht ausgerüstet werden.");
+                throw new InvalidOperationException(AragornText.T("AR_Dev_AndurilFailed"));
             completed = true;
             progress = ForgeTicksRequired;
             waves = TotalWaves;
