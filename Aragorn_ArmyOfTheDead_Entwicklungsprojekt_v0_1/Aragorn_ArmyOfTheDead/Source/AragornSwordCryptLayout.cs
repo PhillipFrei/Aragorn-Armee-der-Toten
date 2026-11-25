@@ -4,6 +4,7 @@ using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.AI.Group;
 
 namespace AragornArmy
 {
@@ -53,15 +54,35 @@ namespace AragornArmy
             // SpawnThemedGuards uses AragornThreat.ScaleCount, which reads the
             // existing global quest-danger multiplier and storyteller wealth.
             foreach (IntVec2 post in SkeletonAnchors)
-                result.AddRange(ProfanedEncounterUtility.SpawnThemedGuards(
-                    map, Cell(map, post.x, post.z), faction, 2, "skeletons"));
+            {
+                IntVec3 position = Cell(map, post.x, post.z);
+                List<Pawn> patrol = ProfanedEncounterUtility.SpawnThemedGuards(
+                    map, position, faction, 2, "skeletons");
+                result.AddRange(patrol);
+                MakePatrol(map, position, faction, patrol);
+            }
 
             // Preserve the four strong Profaned posts drawn in the blueprint.
             foreach (IntVec2 post in EliteAnchors)
-                result.AddRange(ProfanedEncounterUtility.SpawnThemedGuards(
-                    map, Cell(map, post.x, post.z), faction, 1, "elite"));
+            {
+                IntVec3 position = Cell(map, post.x, post.z);
+                List<Pawn> patrol = ProfanedEncounterUtility.SpawnThemedGuards(
+                    map, position, faction, 1, "elite");
+                result.AddRange(patrol);
+                MakePatrol(map, position, faction, patrol);
+            }
 
             return result;
+        }
+
+        private static void MakePatrol(Map map, IntVec3 position,
+            Faction faction, List<Pawn> patrol)
+        {
+            if (patrol.Count == 0) return;
+            LordMaker.MakeNewLord(faction,
+                new LordJob_DefendPoint(position, wanderRadius: 3f,
+                    defendRadius: 12f, isCaravanSendable: false, addFleeToil: false),
+                map, patrol);
         }
 
         private static char[,] CreateBlueprint()
@@ -163,7 +184,7 @@ namespace AragornArmy
                 if (dx * dx + dy * dy > 25) continue;
                 int xx = x + dx, yy = y + dy;
                 if (xx < 0 || xx >= Width || yy < 0 || yy >= Height) continue;
-                if (grid[xx, yy] == 'W' || grid[xx, yy] == 'R') return true;
+                if (grid[xx, yy] == 'W') return true;
             }
             return false;
         }
