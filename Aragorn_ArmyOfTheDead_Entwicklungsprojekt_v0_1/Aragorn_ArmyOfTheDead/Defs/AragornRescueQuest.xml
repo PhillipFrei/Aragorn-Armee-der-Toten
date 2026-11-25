@@ -26,7 +26,7 @@
     <forceExitAndRemoveMapCountdownDurationDays>4</forceExitAndRemoveMapCountdownDurationDays>
   </SitePartDef>
 
-  <!-- One sequential quest per liberated spirit; created by AragornGame.StartTrial. -->
+  <!-- Six sequential class quests, unlocking 3+3+2+2+2+1 spirits. -->
   <QuestScriptDef>
     <defName>AR_GhostTrialQuest</defName>
     <root Class="AragornArmy.QuestNode_PermanentAragorn" />
@@ -38,7 +38,7 @@
   <SitePartDef>
     <defName>AR_GhostTrialCamp</defName>
     <label>Geisterkrypta</label>
-    <description>Eine von Profaned-Wachen besetzte Krypta mit einem verfluchten Geisterkrieger.</description>
+    <description>Eine wechselnde Klassenprüfung: Profaned-Bergkrypta, Schützentürme, Ritual, Duelltempel, Festung oder Königsthron.</description>
     <workerClass>AragornArmy.SitePartWorker_AragornTrial</workerClass>
     <siteTexture>World/WorldObjects/ProfanedFactionIcon</siteTexture>
     <expandingIconTexture>World/WorldObjects/ProfanedFactionIcon</expandingIconTexture>
