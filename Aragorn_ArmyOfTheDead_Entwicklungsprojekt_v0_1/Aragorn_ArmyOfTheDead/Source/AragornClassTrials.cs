@@ -123,26 +123,41 @@ namespace AragornArmy
             return ghost;
         }
 
-        private Thing AddTrialMarker(IntVec3 at, bool fixedPosition = false)
+        // Gravestones remain the sword quest's objects. The third trial uses
+        // Profaned's glowing darklight braziers as genuine ritual seals,
+        // with safe fallbacks for older Profaned versions.
+        private Thing AddTrialMarker(IntVec3 at, bool fixedPosition = false,
+            string preferredDef = null)
         {
-            ThingDef sarcophagus = DefDatabase<ThingDef>.GetNamedSilentFail("Sarcophagus");
-            if (sarcophagus == null) return null;
             ThingDef stone = DefDatabase<ThingDef>.GetNamedSilentFail("BlocksSlate");
-            try
+            IntVec3 cell = fixedPosition && at.InBounds(trialMap) && at.Standable(trialMap)
+                ? at : CellFinder.RandomClosewalkCellNear(at, trialMap, 2);
+            string[] candidates = preferredDef == null
+                ? new [] { "Sarcophagus" }
+                : new [] { preferredDef, "BotchJob_ProfanedBrazier", "Sarcophagus" };
+            foreach (string name in candidates.Distinct())
             {
-                Thing marker = ThingMaker.MakeThing(sarcophagus,
-                    sarcophagus.MadeFromStuff ? stone : null);
-                IntVec3 cell = fixedPosition && at.InBounds(trialMap) && at.Standable(trialMap)
-                    ? at : CellFinder.RandomClosewalkCellNear(at, trialMap, 2);
-                GenSpawn.Spawn(marker, cell, trialMap, WipeMode.Vanish);
-                trialMarkers.Add(marker);
-                return marker;
+                ThingDef def = DefDatabase<ThingDef>.GetNamedSilentFail(name);
+                if (def == null) continue;
+                try
+                {
+                    Thing marker = ThingMaker.MakeThing(def,
+                        def.MadeFromStuff ? stone : null);
+                    GenSpawn.Spawn(marker, cell, trialMap, WipeMode.Vanish);
+                    if (marker.Spawned)
+                    {
+                        trialMarkers.Add(marker);
+                        return marker;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("[Aragorn] Trial marker " + name +
+                        " could not be spawned: " + ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Error("[Aragorn] Could not create mission objective: " + ex);
-                return null;
-            }
+            Log.Error("[Aragorn] No usable marker for the ritual or trial.");
+            return null;
         }
 
         private void AddDefenders(IntVec3 point, Faction hostile, int baseAmount, string role)
@@ -209,13 +224,19 @@ namespace AragornArmy
                         }
                         AddTrialMarker(trialFortCenter);
                         break;
-                    case 2: // Two bombardiers and a defended curse ritual.
-                        SpawnQuestGhost(6, trialFortCenter + new IntVec3(-8, 0, 8), hostile);
-                        SpawnQuestGhost(7, trialFortCenter + new IntVec3(8, 0, 8), hostile);
-                        AddDefenders(trialFortCenter + new IntVec3(-9, 0, 0), hostile, 10, "mages");
-                        AddDefenders(trialFortCenter + new IntVec3(9, 0, 0), hostile, 10, "mages");
-                        AddTrialMarker(trialFortCenter + new IntVec3(-5, 0, 2));
-                        AddTrialMarker(trialFortCenter + new IntVec3(5, 0, 2));
+                    case 2: // True ritual crypt: two guarded side chapels
+                            // and a northern sanctum with both bombardiers.
+                        Pawn westGhost = SpawnQuestGhost(6,
+                            AragornBombardierCryptLayout.FirstGhost(map), hostile);
+                        Pawn eastGhost = SpawnQuestGhost(7,
+                            AragornBombardierCryptLayout.SecondGhost(map), hostile);
+                        trialGuards.AddRange(AragornBombardierCryptLayout.SpawnMages(map, hostile));
+                        AddTrialMarker(AragornBombardierCryptLayout.WestShrine(map),
+                            fixedPosition: true, preferredDef: "BotchJob_ProfanedBrazierDarklight");
+                        AddTrialMarker(AragornBombardierCryptLayout.EastShrine(map),
+                            fixedPosition: true, preferredDef: "BotchJob_ProfanedBrazierDarklight");
+                        AragornBombardierCryptLayout.AssignBombardierGuard(
+                            map, hostile, westGhost, eastGhost);
                         break;
                     case 3: // Temple first; two sequential one-on-one axe duels later.
                         AddDefenders(trialFortCenter + new IntVec3(-8, 0, -9), hostile, 8, "ghouls");
@@ -247,8 +268,9 @@ namespace AragornArmy
                         ", ghosts=" + trialGhosts.Count + "/" + expectedGhosts +
                         ", markers=" + trialMarkers.Count + "/" + expectedMarkers +
                         ", defenders=" + trialGuards.Count);
-                if (cls != 0 && cls != 1) GuardMission(hostile);
-                // Sword crypt and archer posts already have independent defending lords.
+                if (cls != 0 && cls != 1 && cls != 2) GuardMission(hostile);
+                // Sword crypt, archer towers and ritual-crypt chambers have
+                // separate defenders, so they must keep their own Lords.
                 if (cls == 0 && !trialGraveGuidanceShown)
                 {
                     Thing target = trialMarkers.FirstOrDefault(t => t != null && t.Spawned);
@@ -256,6 +278,14 @@ namespace AragornArmy
                         AragornText.T("AR_Class_GraveGuideBody"),
                         LetterDefOf.NeutralEvent, target);
                     trialGraveGuidanceShown = true;
+                }
+                if (cls == 2)
+                {
+                    Thing firstSeal = trialMarkers.FirstOrDefault(t => t != null && t.Spawned);
+                    Find.LetterStack.ReceiveLetter(
+                        AragornText.T("AR_Bombardier_GuideTitle"),
+                        AragornText.T("AR_Bombardier_GuideBody"),
+                        LetterDefOf.NeutralEvent, firstSeal);
                 }
                 Messages.Message(AragornText.F("AR_Class_Encounter", cls + 1),
                     MessageTypeDefOf.ThreatBig);
@@ -290,6 +320,7 @@ namespace AragornArmy
                 var cmd = new Command_Action {
                     defaultLabel = AragornText.F("AR_Class_OpenGraveProgress", trialGravesOpened),
                     defaultDesc = AragornText.T("AR_Class_OpenGraveDesc"),
+                    icon = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false),
                     action = () => OpenTrialGrave(pawn)
                 };
                 if (!Cleared(trialGuards))
@@ -305,7 +336,10 @@ namespace AragornArmy
                     .OrderBy(t => t.Position.DistanceTo(pawn.Position)).FirstOrDefault();
                 var cmd = new Command_Action {
                     defaultLabel = AragornText.T("AR_Class_BreakSeal"),
-                    defaultDesc = AragornText.T("AR_Class_BreakSealDesc"),
+                    defaultDesc = cls == 2
+                        ? AragornText.T("AR_Bombardier_SealGizmoDesc")
+                        : AragornText.T("AR_Class_BreakSealDesc"),
+                    icon = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false),
                     action = () => BreakTrialSeal(pawn)
                 };
                 if (nearest == null || pawn.Position.DistanceTo(nearest.Position) > 3f)
@@ -317,6 +351,7 @@ namespace AragornArmy
                 var cmd = new Command_Action {
                     defaultLabel = AragornText.T("AR_Class_StartDuel"),
                     defaultDesc = AragornText.T("AR_Class_StartDuelDesc"),
+                    icon = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false),
                     action = () => BeginAxeDuel(pawn)
                 };
                 if (!Cleared(trialGuards))
@@ -385,7 +420,29 @@ namespace AragornArmy
             nearest.Destroy(DestroyMode.Vanish);
             FleckMaker.ThrowDustPuffThick(dustAt, trialMap, 2f,
                 new Color(.15f, .86f, .7f));
-            if (ClassNumber(trialIndex) == 5 && RemainingMarkers == 0)
+            int cls = ClassNumber(trialIndex);
+            if (cls == 2)
+            {
+                if (RemainingMarkers == 0)
+                {
+                    trialNextMagicTick = int.MaxValue;
+                    Pawn spirit = trialGhosts.FirstOrDefault(p => p != null && p.Spawned);
+                    Find.LetterStack.ReceiveLetter(
+                        AragornText.T("AR_Bombardier_SealsBrokenTitle"),
+                        AragornText.T("AR_Bombardier_SealsBrokenBody"),
+                        LetterDefOf.PositiveEvent, spirit);
+                }
+                else
+                {
+                    trialNextMagicTick = Ticks + 780; // one seal: slower storm
+                    Thing remaining = trialMarkers.FirstOrDefault(t => t != null && t.Spawned);
+                    Find.LetterStack.ReceiveLetter(
+                        AragornText.T("AR_Bombardier_OneSealTitle"),
+                        AragornText.T("AR_Bombardier_OneSealBody"),
+                        LetterDefOf.NeutralEvent, remaining);
+                }
+            }
+            else if (cls == 5 && RemainingMarkers == 0)
                 Messages.Message(AragornText.T("AR_Class_KingShieldBroken"),
                     pawn, MessageTypeDefOf.PositiveEvent);
             else
@@ -435,6 +492,10 @@ namespace AragornArmy
                 target.Map != trialMap) return true;
             if (ClassNumber(trialIndex) == 5 && trialGhosts.Count > 0 &&
                 target == trialGhosts[0] && RemainingMarkers > 0) return false;
+            // Both bombardiers are shielded by the cursed fires. Clearing
+            // the chapel braziers makes them vulnerable and stops lightning.
+            if (ClassNumber(trialIndex) == 2 && RemainingMarkers > 0 &&
+                trialGhosts.Contains(target as Pawn)) return false;
             if (ClassNumber(trialIndex) != 3 || trialDuelEnemy == null ||
                 !trialDuelEnemy.Spawned || trialDuelEnemy.Dead ||
                 trialDuelEnemy.Downed) return true;
@@ -536,7 +597,8 @@ namespace AragornArmy
             if ((cls == 2 || cls == 5) && Ticks >= trialNextMagicTick &&
                 (cls == 5 || RemainingMarkers > 0))
             {
-                trialNextMagicTick = Ticks + (cls == 5 ? 330 : 540);
+                trialNextMagicTick = Ticks +
+                    (cls == 5 ? 330 : RemainingMarkers >= 2 ? 480 : 780);
                 var candidates = trialMap.mapPawns.AllPawnsSpawned.Where(p =>
                     p != null && p.Spawned && !p.Dead && p.Faction == Faction.OfPlayer &&
                     p.RaceProps.Humanlike).ToList();
@@ -691,6 +753,7 @@ namespace AragornArmy
             // The sword quest uses the explicitly approved 52x32 blueprint;
             // all other class maps retain their existing layouts.
             if (cls == 0) return AragornSwordCryptLayout.Build(map);
+            if (cls == 2) return AragornBombardierCryptLayout.Build(map);
             IntVec3 c = CellFinder.RandomClosewalkCellNear(map.Center, map, 18);
             OuterFort(map, c, 24, 19, false);
             if (cls == 1)
