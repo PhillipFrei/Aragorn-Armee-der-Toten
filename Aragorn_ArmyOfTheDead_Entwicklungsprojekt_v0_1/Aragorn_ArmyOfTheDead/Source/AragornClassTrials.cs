@@ -155,12 +155,20 @@ namespace AragornArmy
                         for (int i = 0; i < 3; i++)
                             AddTrialMarker(trialFortCenter + new IntVec3((i - 1) * 7, 0, 15));
                         break;
-                    case 1: // Three high-cover bow platforms.
+                    case 1: // Three separate archer commands hold their own positions.
                         for (int i = 0; i < 3; i++)
                         {
                             IntVec3 tower = trialFortCenter + new IntVec3((i - 1) * 13, 0, 9);
-                            SpawnQuestGhost(3 + i, tower, hostile);
-                            AddDefenders(tower + new IntVec3(0, 0, -5), hostile, 9, "archers");
+                            Pawn archer = SpawnQuestGhost(3 + i, tower, hostile);
+                            List<Pawn> bowmen = ProfanedEncounterUtility.SpawnThemedGuards(
+                                trialMap, tower + new IntVec3(0, 0, -4), hostile, 9, "archers");
+                            trialGuards.AddRange(bowmen);
+                            if (archer != null) bowmen.Add(archer);
+                            if (bowmen.Count > 0)
+                                LordMaker.MakeNewLord(hostile,
+                                    new LordJob_DefendPoint(tower, wanderRadius: 3f,
+                                        defendRadius: 32f, isCaravanSendable: false, addFleeToil: false),
+                                    trialMap, bowmen);
                         }
                         AddTrialMarker(trialFortCenter);
                         break;
@@ -190,7 +198,19 @@ namespace AragornArmy
                             AddTrialMarker(trialFortCenter + new IntVec3((i - 1) * 9, 0, -1));
                         break;
                 }
-                GuardMission(hostile);
+                // Every quest must have its intended targets; a partial map
+                // must never grant free spirits or trap a save in an unwinnable site.
+                int expectedGhosts = cls == 0 || cls == 3 ? 0 :
+                    cls == 1 ? 3 : cls == 5 ? 1 : 2;
+                int expectedMarkers = cls == 0 || cls == 5 ? 3 :
+                    cls == 1 ? 1 : cls == 2 ? 2 : 0;
+                if (trialGhosts.Count != expectedGhosts ||
+                    trialMarkers.Count != expectedMarkers || trialGuards.Count == 0)
+                    throw new InvalidOperationException("Incomplete class trial map: class=" + cls +
+                        ", ghosts=" + trialGhosts.Count + "/" + expectedGhosts +
+                        ", markers=" + trialMarkers.Count + "/" + expectedMarkers +
+                        ", defenders=" + trialGuards.Count);
+                if (cls != 1) GuardMission(hostile); // do not move archers off their towers
                 Messages.Message(AragornText.F("AR_Class_Encounter", cls + 1),
                     MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Class trial " + (cls + 1) +
@@ -200,8 +220,9 @@ namespace AragornArmy
             catch (Exception ex)
             {
                 Log.Error("[Aragorn] Failed to populate six-class trial: " + ex);
-                // Leave the mission available for failure/retry rather than
-                // awarding progress for an incomplete generated level.
+                // Reset persistent references immediately. A partially generated
+                // encounter cannot count as a victory or remain stuck forever.
+                QueueTrialRetry();
             }
         }
 
@@ -219,7 +240,9 @@ namespace AragornArmy
                     defaultDesc = AragornText.T("AR_Class_OpenGraveDesc"),
                     action = () => OpenTrialGrave(pawn)
                 };
-                if (grave == null || !grave.Spawned ||
+                if (!Cleared(trialGuards))
+                    cmd.Disable(AragornText.T("AR_Class_ClearCrypt"));
+                else if (grave == null || !grave.Spawned ||
                     pawn.Position.DistanceTo(grave.Position) > 3f)
                     cmd.Disable(AragornText.T("AR_Class_GetCloser"));
                 yield return cmd;
@@ -253,6 +276,9 @@ namespace AragornArmy
                     trialDuelChampion != null && trialDuelChampion.Spawned &&
                     !trialDuelChampion.Dead && !trialDuelChampion.Downed)
                     cmd.Disable(AragornText.T("AR_Class_DuelInProgress"));
+                else if (trialDuelEnemy != null &&
+                    (trialDuelEnemy.Dead || trialDuelEnemy.Downed))
+                    cmd.Disable(AragornText.T("AR_Class_DuelFinishing"));
                 else if (trialMap.mapPawns.AllPawnsSpawned.Any(other =>
                     other != pawn && other.Faction == Faction.OfPlayer &&
                     other.Position.DistanceTo(trialRingCenter) < 7f))
@@ -263,8 +289,8 @@ namespace AragornArmy
 
         private void OpenTrialGrave(Pawn pawn)
         {
-            if (trialMap == null || trialGravesOpened >= 3 ||
-                trialMarkers.Count <= trialGravesOpened) return;
+            if (trialMap == null || !Cleared(trialGuards) ||
+                trialGravesOpened >= 3 || trialMarkers.Count <= trialGravesOpened) return;
             Thing grave = trialMarkers[trialGravesOpened];
             if (grave == null || !grave.Spawned ||
                 pawn.Position.DistanceTo(grave.Position) > 3f) return;
@@ -312,9 +338,11 @@ namespace AragornArmy
                 !trialDuelEnemy.Dead && !trialDuelEnemy.Downed &&
                 trialDuelChampion != null && trialDuelChampion.Spawned &&
                 !trialDuelChampion.Dead && !trialDuelChampion.Downed) return;
+            // Wait for TickClassTrial to register the previous victory.
+            if (trialDuelEnemy != null && (trialDuelEnemy.Dead || trialDuelEnemy.Downed))
+                return;
             trialDuelChampion = pawn;
-            if (trialDuelEnemy == null || trialDuelEnemy.Dead || trialDuelEnemy.Downed ||
-                !trialDuelEnemy.Spawned)
+            if (trialDuelEnemy == null || !trialDuelEnemy.Spawned)
             {
                 Pawn ghost = SpawnQuestGhost(8 + trialDuelVictories,
                     trialRingCenter + new IntVec3(0, 0, 3),
@@ -340,17 +368,30 @@ namespace AragornArmy
             if (ClassNumber(trialIndex) == 5 && trialGhosts.Count > 0 &&
                 target == trialGhosts[0] && RemainingMarkers > 0) return false;
             if (ClassNumber(trialIndex) != 3 || trialDuelEnemy == null ||
-                trialDuelChampion == null || !trialDuelEnemy.Spawned ||
-                trialDuelEnemy.Dead || trialDuelEnemy.Downed) return true;
-            if (target == trialDuelEnemy) return attacker == trialDuelChampion;
-            if (target == trialDuelChampion) return attacker == trialDuelEnemy;
-            if (attacker == trialDuelEnemy) return target == trialDuelChampion;
+                !trialDuelEnemy.Spawned || trialDuelEnemy.Dead ||
+                trialDuelEnemy.Downed) return true;
+            // If the champion falls, nobody may steal the victory while
+            // the duel waits for the next legitimate challenger.
+            bool championReady = trialDuelChampion != null &&
+                trialDuelChampion.Spawned && !trialDuelChampion.Dead &&
+                !trialDuelChampion.Downed;
+            if (target == trialDuelEnemy)
+                return championReady && attacker == trialDuelChampion;
+            if (target == trialDuelChampion && championReady)
+                return attacker == trialDuelEnemy;
+            if (attacker == trialDuelEnemy)
+                return championReady && target == trialDuelChampion;
             return true;
         }
 
         private void TickClassTrial()
         {
             if (!trialCampaignActive || trialIndex < 0 || trialMap == null) return;
+            if (trialSite == null || !trialSite.HasMap || trialSite.Map != trialMap)
+            {
+                QueueTrialRetry(); // site disappeared while the trial was in progress
+                return;
+            }
             int cls = ClassNumber(trialIndex);
             // A crypt grave can be destroyed by combat before a pawn
             // interacts with it. It must not permanently soft-lock the quest:
@@ -374,7 +415,7 @@ namespace AragornArmy
             }
             if (cls == 3 && trialDuelEnemy != null)
             {
-                if (trialDuelEnemy.Dead || trialDuelEnemy.Downed || !trialDuelEnemy.Spawned)
+                if (trialDuelEnemy.Dead || trialDuelEnemy.Downed)
                 {
                     trialDuelVictories++;
                     trialDuelEnemy = null;
@@ -382,12 +423,20 @@ namespace AragornArmy
                     Messages.Message(AragornText.F("AR_Class_DuelWon", trialDuelVictories),
                         MessageTypeDefOf.PositiveEvent);
                 }
+                else if (!trialDuelEnemy.Spawned)
+                {
+                    // A despawned but living opponent is not a victory.
+                    trialGhosts.Remove(trialDuelEnemy);
+                    trialDuelEnemy = null;
+                    trialDuelChampion = null;
+                }
                 else if (trialDuelChampion == null || trialDuelChampion.Dead ||
                     trialDuelChampion.Downed || !trialDuelChampion.Spawned)
                 {
-                    trialDuelChampion = null; // another pawn may challenge the survivor
-                    Messages.Message(AragornText.T("AR_Class_DuelNeedChampion"),
-                        MessageTypeDefOf.RejectInput);
+                    if (trialDuelChampion != null)
+                        Messages.Message(AragornText.T("AR_Class_DuelNeedChampion"),
+                            MessageTypeDefOf.RejectInput);
+                    trialDuelChampion = null; // one warning only; new challenger can enter
                 }
             }
             if (cls == 4 && Cleared(trialGuards) && trialWavesSpawned < 3)
@@ -504,8 +553,10 @@ namespace AragornArmy
                 ?? DefDatabase<TerrainDef>.GetNamedSilentFail("FlagstoneSlate");
             if (floor != null && p.Standable(map))
                 try { map.terrainGrid.SetTerrain(p, floor); } catch { }
+            // Thick rock roof cannot be safely created over an open plain.
+            // Use supported constructed roofing for the mountain-themed crypt.
             if (stoneRoof && p.Walkable(map))
-                try { map.roofGrid.SetRoof(p, RoofDefOf.RoofRockThick); } catch { }
+                try { map.roofGrid.SetRoof(p, RoofDefOf.RoofConstructed); } catch { }
         }
 
         private static void Place(Map map, IntVec3 p, string defName)
@@ -539,6 +590,22 @@ namespace AragornArmy
                 bool entrance = z == -halfHeight && Math.Abs(x) <= 2;
                 if (!entrance) Place(map, cell, "Wall");
                 else if (x == 0) Place(map, cell, "Door");
+            }
+            if (roof)
+            {
+                // Pillars every ~8 cells support the large covered crypt,
+                // while keeping the central x=0 corridor clear.
+                for (int x = -16; x <= 16; x += 8)
+                for (int z = -16; z <= 16; z += 8)
+                {
+                    if (x == 0)
+                    {
+                        Place(map, center + new IntVec3(-2, 0, z), "Wall");
+                        Place(map, center + new IntVec3(2, 0, z), "Wall");
+                    }
+                    else
+                        Place(map, center + new IntVec3(x, 0, z), "Wall");
+                }
             }
         }
 
