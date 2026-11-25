@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using HarmonyLib;
 using UnityEngine;
 using Verse;
 using Verse.AI.Group;
@@ -191,7 +192,7 @@ namespace AragornArmy
                 }
                 GuardMission(hostile);
                 Messages.Message(AragornText.F("AR_Class_Encounter", cls + 1),
-                    trialFortCenter, map, MessageTypeDefOf.ThreatBig);
+                    MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Class trial " + (cls + 1) +
                     "/6: " + trialGhosts.Count + " ghosts, " + trialGuards.Count +
                     " Profaned defenders, " + trialMarkers.Count + " objectives.");
@@ -286,8 +287,9 @@ namespace AragornArmy
             Thing nearest = trialMarkers.Where(t => t != null && t.Spawned)
                 .OrderBy(t => t.Position.DistanceTo(pawn.Position)).FirstOrDefault();
             if (nearest == null || pawn.Position.DistanceTo(nearest.Position) > 3f) return;
+            Vector3 dustAt = nearest.DrawPos;
             nearest.Destroy(DestroyMode.Vanish);
-            FleckMaker.ThrowDustPuffThick(nearest.DrawPos, trialMap, 2f,
+            FleckMaker.ThrowDustPuffThick(dustAt, trialMap, 2f,
                 new Color(.15f, .86f, .7f));
             if (ClassNumber(trialIndex) == 5 && RemainingMarkers == 0)
                 Messages.Message(AragornText.T("AR_Class_KingShieldBroken"),
@@ -453,6 +455,22 @@ namespace AragornArmy
         }
     }
 
+    // Spectators cannot intervene in the two sacred axe duels.
+    // The King's oath-seals block damage until the ritual is completed.
+    [HarmonyPatch(typeof(Thing), nameof(Thing.TakeDamage))]
+    internal static class AragornTrialProtectedDamage
+    {
+        private static bool Prefix(Thing __instance, DamageInfo dinfo,
+            ref DamageWorker.DamageResult __result)
+        {
+            var game = Current.Game?.GetComponent<AragornGame>();
+            if (game == null || game.AllowTrialDamage(__instance, dinfo.Instigator))
+                return true;
+            __result = new DamageWorker.DamageResult();
+            return false;
+        }
+    }
+
     // Vanilla-compatible 2D fortifications; no extra multi-floor mod.
     internal static class AragornTrialStructures
     {
@@ -461,7 +479,7 @@ namespace AragornArmy
             if (!p.InBounds(map)) return;
             foreach (Thing thing in p.GetThingList(map).ToList())
                 if (thing.def.category == ThingCategory.Plant ||
-                    thing.def.category == ThingCategory.Item && thing.def.EverHaulable == false)
+                    thing.def.category == ThingCategory.Item && !thing.def.EverHaulable)
                     thing.Destroy(DestroyMode.Vanish);
             TerrainDef floor = DefDatabase<TerrainDef>.GetNamedSilentFail("ProfanedTileSlate")
                 ?? DefDatabase<TerrainDef>.GetNamedSilentFail("FlagstoneSlate");
