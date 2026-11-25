@@ -10,7 +10,8 @@ namespace AragornArmy
 {
     // Fixed 52x32 layout approved before coding the sword-spirit trial.
     // Grid coordinates are from the north-west. The seven original skeleton
-    // positions are preserved; TWO skeletons per post are the new x1 baseline.
+    // positions are preserved; FOUR skeletons per post are the new x1 baseline.
+    // At x0.5 danger this produces 2 per post (14 total), not only 7.
     // We do not change the layout or ghost weapon behaviour.
     internal static class AragornSwordCryptLayout
     {
@@ -50,14 +51,14 @@ namespace AragornArmy
         public static List<Pawn> SpawnDefenders(Map map, Faction faction)
         {
             var result = new List<Pawn>();
-            // Seven original skeleton posts, doubled to 14 baseline skeletons.
+            // Seven original skeleton posts, four per post (28 at x1).
             // SpawnThemedGuards uses AragornThreat.ScaleCount, which reads the
             // existing global quest-danger multiplier and storyteller wealth.
             foreach (IntVec2 post in SkeletonAnchors)
             {
                 IntVec3 position = Cell(map, post.x, post.z);
                 List<Pawn> patrol = ProfanedEncounterUtility.SpawnThemedGuards(
-                    map, position, faction, 2, "skeletons");
+                    map, position, faction, 4, "skeletons");
                 result.AddRange(patrol);
                 MakePatrol(map, position, faction, patrol);
             }
@@ -267,7 +268,7 @@ namespace AragornArmy
                 ClearNaturalObstacles(map, Cell(map, x, 18));
 
             Log.Message("[Aragorn] Approved 52x32 sword crypt generated; " +
-                "7 skeleton posts x2 = 14 base skeletons (global danger scaling), 4 elite posts.");
+                "7 skeleton posts x4 = 28 base skeletons (14 at minimum x0.5), 4 elite posts.");
             return Cell(map, Width / 2, Height / 2);
         }
     }

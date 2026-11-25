@@ -36,7 +36,19 @@ for grave in ((41, 10), (46, 15), (41, 22)):
 
 code = source.read_text(encoding="utf-8")
 assert "Width = 52" in code and "Height = 32" in code
-assert "faction, 2, \"skeletons\"" in code, "Skeletons must be doubled per post"
+assert "faction, 4, \"skeletons\"" in code, "Skeletons must be doubled per post"
 assert "AragornThreat.ScaleCount" in code, "Danger scaling documentation lost"
-print("Sword crypt layout OK: 52x32; 7 posts x2 = 14 baseline skeletons; "
+# Guard against the original one-grave-at-a-time bug and its regression.
+trial_code = (root / "Source" / "AragornClassTrials.cs").read_text(encoding="utf-8")
+assert "trialOpenedGraveIndices" in trial_code, "Independent grave state was removed"
+assert 'Scribe_Collections.Look(ref trialOpenedGraveIndices' in trial_code, "Grave state must survive saves"
+assert "ClosedGraves()" in trial_code, "Openable graves must be selected independently"
+assert 'OrderBy(x => x.grave.Position.DistanceTo(pawn.Position))' in trial_code, (
+    "Grave action must work at any nearby unopened grave")
+assert "trialGraveGuidanceShown" in trial_code and "trialGravesReadyShown" in trial_code, (
+    "Arrival and post-combat instructions are required")
+assert "trialMarkers.Skip(trialGravesOpened)" not in trial_code, "Sequential opening returned"
+assert "trialMarkers[trialGravesOpened]" not in trial_code, "Sequential opening returned"
+
+print("Sword crypt layout OK: 52x32; 7 posts x4 = 28 baseline skeletons (14 at minimum x0.5); "
       "4 elite posts; 3 reachable tombs; 6 doors; no disconnected cells.")

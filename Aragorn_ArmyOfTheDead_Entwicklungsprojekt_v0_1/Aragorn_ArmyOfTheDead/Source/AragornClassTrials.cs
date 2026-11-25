@@ -23,6 +23,11 @@ namespace AragornArmy
         private IntVec3 trialFortCenter = IntVec3.Invalid;
         private IntVec3 trialRingCenter = IntVec3.Invalid;
         private int trialGravesOpened;
+        // Stable per-grave IDs permit opening any of the three tombs first.
+        // Old v0.35 saves only stored trialGravesOpened (sequential order).
+        private List<int> trialOpenedGraveIndices = new List<int>();
+        private bool trialGraveGuidanceShown;
+        private bool trialGravesReadyShown;
         private int trialDuelVictories;
         private int trialWavesSpawned;
         private int trialNextWaveTick;
@@ -47,6 +52,9 @@ namespace AragornArmy
             Scribe_Values.Look(ref trialFortCenter, "arTrialFortCenter", IntVec3.Invalid);
             Scribe_Values.Look(ref trialRingCenter, "arTrialRingCenter", IntVec3.Invalid);
             Scribe_Values.Look(ref trialGravesOpened, "arTrialGravesOpened", 0);
+            Scribe_Collections.Look(ref trialOpenedGraveIndices, "arTrialOpenedGraveIndices", LookMode.Value);
+            Scribe_Values.Look(ref trialGraveGuidanceShown, "arTrialGraveGuidanceShown", false);
+            Scribe_Values.Look(ref trialGravesReadyShown, "arTrialGravesReadyShown", false);
             Scribe_Values.Look(ref trialDuelVictories, "arTrialDuelVictories", 0);
             Scribe_Values.Look(ref trialWavesSpawned, "arTrialWavesSpawned", 0);
             Scribe_Values.Look(ref trialNextWaveTick, "arTrialNextWaveTick", 0);
@@ -55,6 +63,16 @@ namespace AragornArmy
             {
                 if (trialGhosts == null) trialGhosts = new List<Pawn>();
                 if (trialMarkers == null) trialMarkers = new List<Thing>();
+                if (trialOpenedGraveIndices == null) trialOpenedGraveIndices = new List<int>();
+                if (trialCampaignActive && trialIndex >= 0 &&
+                    ClassNumber(trialIndex) == 0 && trialOpenedGraveIndices.Count == 0 &&
+                    trialGravesOpened > 0)
+                {
+                    // Save migration: existing completed graves were 0,1,2
+                    // because previous releases only permitted that order.
+                    for (int i = 0; i < Math.Min(3, trialGravesOpened); i++)
+                        trialOpenedGraveIndices.Add(i);
+                }
             }
         }
 
@@ -68,6 +86,10 @@ namespace AragornArmy
             trialFortCenter = IntVec3.Invalid;
             trialRingCenter = IntVec3.Invalid;
             trialGravesOpened = 0;
+            if (trialOpenedGraveIndices == null) trialOpenedGraveIndices = new List<int>();
+            trialOpenedGraveIndices.Clear();
+            trialGraveGuidanceShown = false;
+            trialGravesReadyShown = false;
             trialDuelVictories = 0;
             trialWavesSpawned = 0;
             trialNextWaveTick = 0;
@@ -78,6 +100,17 @@ namespace AragornArmy
             pawns == null || pawns.All(p => p == null || !p.Spawned || p.Dead || p.Downed);
 
         private int RemainingMarkers => trialMarkers.Count(t => t != null && t.Spawned && !t.Destroyed);
+
+        private IEnumerable<(int index, Thing grave)> ClosedGraves()
+        {
+            for (int i = 0; i < Math.Min(3, trialMarkers.Count); i++)
+            {
+                Thing marker = trialMarkers[i];
+                if (!trialOpenedGraveIndices.Contains(i) && marker != null &&
+                    marker.Spawned && !marker.Destroyed)
+                    yield return (i, marker);
+            }
+        }
 
         private Pawn SpawnQuestGhost(int index, IntVec3 spot, Faction hostile)
         {
@@ -216,6 +249,14 @@ namespace AragornArmy
                         ", defenders=" + trialGuards.Count);
                 if (cls != 0 && cls != 1) GuardMission(hostile);
                 // Sword crypt and archer posts already have independent defending lords.
+                if (cls == 0 && !trialGraveGuidanceShown)
+                {
+                    Thing target = trialMarkers.FirstOrDefault(t => t != null && t.Spawned);
+                    Find.LetterStack.ReceiveLetter(AragornText.T("AR_Class_GraveGuideTitle"),
+                        AragornText.T("AR_Class_GraveGuideBody"),
+                        LetterDefOf.NeutralEvent, target);
+                    trialGraveGuidanceShown = true;
+                }
                 Messages.Message(AragornText.F("AR_Class_Encounter", cls + 1),
                     MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Class trial " + (cls + 1) +
@@ -239,15 +280,21 @@ namespace AragornArmy
             int cls = ClassNumber(trialIndex);
             if (cls == 0 && trialGravesOpened < 3)
             {
-                Thing grave = trialMarkers.Skip(trialGravesOpened).FirstOrDefault();
+                // Choose the nearest unopened tomb, regardless of its index.
+                // The action belongs to the selected colonist and works next
+                // to ANY of the three graves, not merely the first one.
+                var closest = ClosedGraves()
+                    .OrderBy(x => x.grave.Position.DistanceTo(pawn.Position))
+                    .FirstOrDefault();
+                Thing grave = closest.grave;
                 var cmd = new Command_Action {
-                    defaultLabel = AragornText.T("AR_Class_OpenGrave"),
+                    defaultLabel = AragornText.F("AR_Class_OpenGraveProgress", trialGravesOpened),
                     defaultDesc = AragornText.T("AR_Class_OpenGraveDesc"),
                     action = () => OpenTrialGrave(pawn)
                 };
                 if (!Cleared(trialGuards))
                     cmd.Disable(AragornText.T("AR_Class_ClearCrypt"));
-                else if (grave == null || !grave.Spawned ||
+                else if (grave == null ||
                     pawn.Position.DistanceTo(grave.Position) > 3f)
                     cmd.Disable(AragornText.T("AR_Class_GetCloser"));
                 yield return cmd;
@@ -292,25 +339,41 @@ namespace AragornArmy
             }
         }
 
+        private void SpawnOpenedGraveGhost(int index, IntVec3 spot)
+        {
+            if (trialOpenedGraveIndices.Contains(index)) return;
+            var hostile = ProfanedEncounterUtility.GetOrCreateFaction();
+            if (hostile == null) { QueueTrialRetry(); return; }
+            Pawn ghost = SpawnQuestGhost(index, spot, hostile);
+            if (ghost == null) { QueueTrialRetry(); return; }
+            trialOpenedGraveIndices.Add(index);
+            trialGravesOpened = trialOpenedGraveIndices.Count;
+            LordMaker.MakeNewLord(ghost.Faction,
+                new LordJob_DefendPoint(spot, wanderRadius: 5f,
+                    defendRadius: 14f, isCaravanSendable: false, addFleeToil: false),
+                trialMap, new List<Pawn> { ghost });
+        }
+
         private void OpenTrialGrave(Pawn pawn)
         {
-            if (trialMap == null || !Cleared(trialGuards) ||
-                trialGravesOpened >= 3 || trialMarkers.Count <= trialGravesOpened) return;
-            Thing grave = trialMarkers[trialGravesOpened];
-            if (grave == null || !grave.Spawned ||
-                pawn.Position.DistanceTo(grave.Position) > 3f) return;
-            IntVec3 point = grave.Position;
-            grave.Destroy(DestroyMode.Vanish);
-            int index = trialGravesOpened++;
-            Pawn ghost = SpawnQuestGhost(index, point,
-                ProfanedEncounterUtility.GetOrCreateFaction());
-            if (ghost != null)
-                LordMaker.MakeNewLord(ghost.Faction,
-                    new LordJob_DefendPoint(point, wanderRadius: 5f,
-                        defendRadius: 14f, isCaravanSendable: false, addFleeToil: false),
-                    trialMap, new List<Pawn> { ghost });
-            Messages.Message(AragornText.F("AR_Class_GraveAwakes", trialGravesOpened),
-                pawn, MessageTypeDefOf.ThreatBig);
+            if (trialMap == null || pawn == null || !pawn.Spawned ||
+                pawn.Map != trialMap || !Cleared(trialGuards) ||
+                trialGravesOpened >= 3) return;
+            var candidate = ClosedGraves()
+                .OrderBy(x => x.grave.Position.DistanceTo(pawn.Position))
+                .FirstOrDefault();
+            if (candidate.grave == null ||
+                pawn.Position.DistanceTo(candidate.grave.Position) > 3f) return;
+            IntVec3 point = candidate.grave.Position;
+            // Register the opening before destroying the marker so the
+            // destroyed-grave safety net cannot spawn a duplicate enemy.
+            SpawnOpenedGraveGhost(candidate.index, point);
+            if (trialOpenedGraveIndices.Contains(candidate.index))
+            {
+                candidate.grave.Destroy(DestroyMode.Vanish);
+                Messages.Message(AragornText.F("AR_Class_GraveAwakes", trialGravesOpened),
+                    pawn, MessageTypeDefOf.ThreatBig);
+            }
         }
 
         private void BreakTrialSeal(Pawn pawn)
@@ -398,24 +461,33 @@ namespace AragornArmy
                 return;
             }
             int cls = ClassNumber(trialIndex);
-            // A crypt grave can be destroyed by combat before a pawn
-            // interacts with it. It must not permanently soft-lock the quest:
-            // automatically release its ghost in that case.
-            if (cls == 0 && trialGravesOpened < 3 &&
-                trialMarkers.Count > trialGravesOpened)
+            if (cls == 0)
             {
-                Thing nextGrave = trialMarkers[trialGravesOpened];
-                if (nextGrave == null || nextGrave.Destroyed || !nextGrave.Spawned)
+                // Tell players exactly how to interact as soon as the
+                // crypt guards are defeated; clicking the letter locates
+                // a still-sealed tomb. Any tomb may be opened first.
+                if (Cleared(trialGuards) && !trialGravesReadyShown &&
+                    trialGravesOpened < 3)
                 {
-                    int index = trialGravesOpened++;
-                    IntVec3 where = AragornSwordCryptLayout.Grave(trialMap, index);
-                    Pawn awakened = SpawnQuestGhost(index, where,
-                        ProfanedEncounterUtility.GetOrCreateFaction());
-                    if (awakened != null)
-                        LordMaker.MakeNewLord(awakened.Faction,
-                            new LordJob_DefendPoint(where, wanderRadius: 5f,
-                                defendRadius: 14f, isCaravanSendable: false, addFleeToil: false),
-                            trialMap, new List<Pawn> { awakened });
+                    Thing target = ClosedGraves().Select(x => x.grave).FirstOrDefault();
+                    Find.LetterStack.ReceiveLetter(
+                        AragornText.T("AR_Class_GravesReadyTitle"),
+                        AragornText.T("AR_Class_GravesReadyBody"),
+                        LetterDefOf.PositiveEvent, target);
+                    trialGravesReadyShown = true;
+                }
+                // Grave destruction during combat must not soft-lock the
+                // quest. Handle EACH tomb independently rather than the
+                // formerly assumed next index (0 -> 1 -> 2).
+                for (int i = 0; i < Math.Min(3, trialMarkers.Count); i++)
+                {
+                    if (trialOpenedGraveIndices.Contains(i)) continue;
+                    Thing marker = trialMarkers[i];
+                    if (marker == null || marker.Destroyed || !marker.Spawned)
+                    {
+                        IntVec3 point = AragornSwordCryptLayout.Grave(trialMap, i);
+                        SpawnOpenedGraveGhost(i, point);
+                    }
                 }
             }
             if (cls == 3 && trialDuelEnemy != null)
