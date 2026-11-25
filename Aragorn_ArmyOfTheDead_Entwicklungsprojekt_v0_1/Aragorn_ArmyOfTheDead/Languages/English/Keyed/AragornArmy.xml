@@ -199,4 +199,5 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Class_DuelNeedChampion>The challenger has fallen. Select another colonist to continue the duel.</AR_Class_DuelNeedChampion>
   <AR_Class_WaveArrives>Assault wave {0}/3: More elite Profaned attack!</AR_Class_WaveArrives>
   <AR_Class_Completed>Class trial {0}/6 completed! {1}/13 ghosts unlocked.</AR_Class_Completed>
+  <AR_Class_Description>Complete six distinct class trials and liberate all thirteen spirits.</AR_Class_Description>
 </LanguageData>
