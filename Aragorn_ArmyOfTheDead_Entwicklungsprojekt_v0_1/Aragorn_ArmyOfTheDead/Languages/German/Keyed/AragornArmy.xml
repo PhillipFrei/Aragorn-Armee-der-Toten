@@ -199,4 +199,5 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Class_DuelNeedChampion>Der Herausforderer ist gefallen. Wähle einen neuen Kolonisten für das Duell.</AR_Class_DuelNeedChampion>
   <AR_Class_WaveArrives>Angriffswelle {0}/3: Neue Profaned stürmen die Festung!</AR_Class_WaveArrives>
   <AR_Class_Completed>Klassenprüfung {0}/6 bestanden! Insgesamt {1}/13 Geister freigeschaltet.</AR_Class_Completed>
+  <AR_Class_Description>Erfülle die sechs verschiedenen Klassenprüfungen und befreie alle dreizehn Geister.</AR_Class_Description>
 </LanguageData>
