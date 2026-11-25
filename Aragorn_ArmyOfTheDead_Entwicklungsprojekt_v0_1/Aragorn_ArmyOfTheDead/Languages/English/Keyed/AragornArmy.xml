@@ -200,4 +200,6 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Class_WaveArrives>Assault wave {0}/3: More elite Profaned attack!</AR_Class_WaveArrives>
   <AR_Class_Completed>Class trial {0}/6 completed! {1}/13 ghosts unlocked.</AR_Class_Completed>
   <AR_Class_Description>Complete six distinct class trials and liberate all thirteen spirits.</AR_Class_Description>
+  <AR_Class_ClearCrypt>Defeat all Profaned guards in the mountain crypt before opening the graves.</AR_Class_ClearCrypt>
+  <AR_Class_DuelFinishing>The previous duel result is still being registered.</AR_Class_DuelFinishing>
 </LanguageData>
