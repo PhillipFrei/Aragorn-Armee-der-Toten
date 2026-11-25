@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Aragorn – Armee der Toten (v0.35.1)</name>
+  <name>Aragorn – Armee der Toten (v0.36)</name>
   <author>Aragorn Mod Project</author>
   <packageId>aragorn.armyofthedead</packageId>
   <description>DEUTSCH — Aragorn – Armee der Toten
@@ -11,7 +11,7 @@ ENGLISH — Aragorn – Army of the Dead
 
 Rescue Aragorn, reforge Andúril, and release 13 spectral warriors in a connected quest campaign. Summon an army across six classes and wield the King's Command, devastating lightning strikes, Andúril's sweeping attack, and Aragorn's EMP Storm. Adjust quest difficulty, spirit armor, and abilities in the mod settings.
 
-v0.35.1 | RimWorld 1.6 | The sword crypt now has 7 skeleton posts with 4 skeletons per post as the 1x baseline, and 14 total at minimum x0.5 danger. The global danger slider still scales skeletons and elites. The three graves can be opened in ANY order, with clear quest guidance and a targetable letter on entering the crypt and after the guards fall. Save migration preserves already opened graves. All 13 ghosts, original graphics, DLC optionality and Harmony metadata remain unchanged.</description>
+v0.36 | RimWorld 1.6 | The third class quest is now a five-chamber ritual crypt with a gatehouse, two separate Profaned mage chapels, two independently breakable cursed braziers, and a northern sanctum guarded by two spectral bombardiers. Active seals shield both ghosts and cause lightning; destroying one slows the storm, destroying both ends it. The quest guides players to both objects. The user's glowing King of the Dead artwork is now used by the Ghost Trial and objective gizmos, replacing red X placeholders. All earlier quests, graphics, save IDs, Harmony metadata, and optional DLC handling remain unchanged.</description>
   <supportedVersions><li>1.6</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl><downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl></li>
