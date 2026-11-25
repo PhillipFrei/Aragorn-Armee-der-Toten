@@ -245,6 +245,12 @@ namespace AragornArmy
                 PlaceBuilding(map, Cell(map, support.x, support.z), wall, stone);
             }
 
+            // The cursed altar at T in the original sketch is decorative,
+            // not a fourth objective or a prerequisite to the three tombs.
+            ThingDef altar = DefDatabase<ThingDef>.GetNamedSilentFail("BotchJob_ProfanedBrazierDarklight")
+                ?? DefDatabase<ThingDef>.GetNamedSilentFail("BotchJob_ProfanedBrazier");
+            PlaceBuilding(map, Cell(map, 44, 18), altar, stone);
+
             // Only roof cells with a nearby support; avoids cave-ins. The
             // original 52x32 walkability structure is otherwise unchanged.
             for (int y = 0; y < Height; y++)
