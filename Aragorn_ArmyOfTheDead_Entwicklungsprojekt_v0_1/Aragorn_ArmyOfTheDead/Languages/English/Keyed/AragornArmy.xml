@@ -46,8 +46,8 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Trial_Encounter>Trial {0}/13: Overcome the oathbound spirit and its Profaned guards.</AR_Trial_Encounter>
   <AR_Trial_Unlocked>Spirit liberated: {0} ({1}/13).</AR_Trial_Unlocked>
   <AR_Trial_Failed>The trial is lost. Aragorn must survive upon the crypt's map.</AR_Trial_Failed>
-  <AR_Trial_GizmoTitle>Seek the Next Crypt</AR_Trial_GizmoTitle>
-  <AR_Trial_GizmoDesc>Reveal the next of thirteen oathbound crypts upon the world map. Travel there with Andúril and release the spirit within.</AR_Trial_GizmoDesc>
+  <AR_Trial_GizmoTitle>Discover next class trial</AR_Trial_GizmoTitle>
+  <AR_Trial_GizmoDesc>Discover the next of six class trials. Each quest unlocks every spirit of its class together.</AR_Trial_GizmoDesc>
   <AR_Gizmo_SummonTitle>Summon the Oathbound</AR_Gizmo_SummonTitle>
   <AR_Gizmo_SummonDesc>Call upon the spirits already liberated. They will fight at Aragorn's side until dismissed.</AR_Gizmo_SummonDesc>
   <AR_Gizmo_RecallTitle>Recall the Oathbound</AR_Gizmo_RecallTitle>
@@ -170,4 +170,33 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Msg_RescueAvailable>Aragorn rescue quest: Available in the Quests tab.</AR_Msg_RescueAvailable>
   <AR_Msg_RescueAborted>Aragorn rescue abandoned: A new rescue quest will be offered.</AR_Msg_RescueAborted>
   <AR_Dev_AndurilFailed>Could not equip Andúril after completing the quest.</AR_Dev_AndurilFailed>
+  <AR_Class_Site>Trial {0}/6: {1}</AR_Class_Site>
+  <AR_Class_Title>The Six Oaths – Trial {0}/6: {1}</AR_Class_Title>
+  <AR_Class_ArrivalBody>Class trial {0}/6: {1}. Bring Aragorn to the marked site and complete its unique objective.</AR_Class_ArrivalBody>
+  <AR_Class_Description0>The swordsmen await deep under a mountain. Enter the profaned crypt, defeat scattered undead patrols, and open three sealed graves. One ghost rises from each tomb. Defeat all three to release the entire swordsman class.</AR_Class_Description0>
+  <AR_Class_Description1>Three spectral archers hold separate fortified firing platforms, surrounded by numerous Profaned bowmen. Break the central oath seal, then defeat all three ghosts and the defenders to unlock the entire archer class.</AR_Class_Description1>
+  <AR_Class_Description2>Two spectral bombardiers and numerous Profaned curse-mages protect a ritual site. Break both seals. As long as one remains, magical lightning threatens your colonists. Defeat the wardens and both ghosts to free the bombardiers.</AR_Class_Description2>
+  <AR_Class_Description3>A grand temple filled with ghouls and heavy undead guards the two axe spirits. Clear the temple first. Then send exactly one colonist into the dueling circle to challenge each axe spirit in sequence. Spectators cannot harm the opponent.</AR_Class_Description3>
+  <AR_Class_Description4>Two cursed captains defend a fortress. Elite Profaned reinforcements arrive in three separate waves. Defeat every wave and both captains to release the two commanders together.</AR_Class_Description4>
+  <AR_Class_Description5>The final trial takes place in the throne room of the King of the Dead. Elite Profaned guard him. Three oath seals protect the king from all damage. Lightning keeps striking throughout the fight. Break the seals, survive the storm, and defeat the king.</AR_Class_Description5>
+  <AR_Class_Encounter>Class trial {0}/6 has started. Each class has its own objective.</AR_Class_Encounter>
+  <AR_Class_OpenGrave>Open sealed grave</AR_Class_OpenGrave>
+  <AR_Class_OpenGraveDesc>Stand next to the next sealed grave. A spectral swordsman will arise.</AR_Class_OpenGraveDesc>
+  <AR_Class_GetCloser>The selected colonist must stand within 3 cells.</AR_Class_GetCloser>
+  <AR_Class_BreakSeal>Break cursed oath seal</AR_Class_BreakSeal>
+  <AR_Class_BreakSealDesc>Break the nearest oath seal at close range to weaken Profaned magic.</AR_Class_BreakSealDesc>
+  <AR_Class_StartDuel>Challenge an axe spirit to single combat</AR_Class_StartDuel>
+  <AR_Class_StartDuelDesc>Send exactly one colonist into the dueling ring. Defeat the two axe spirits one at a time. Other colonists cannot interfere.</AR_Class_StartDuelDesc>
+  <AR_Class_ClearTemple>Defeat the temple guards first.</AR_Class_ClearTemple>
+  <AR_Class_EnterArena>Move the selected colonist into the arena (within 5 cells of its center).</AR_Class_EnterArena>
+  <AR_Class_DuelInProgress>Another champion is already fighting a duel.</AR_Class_DuelInProgress>
+  <AR_Class_DuelAlone>Only one allied colonist may be inside the dueling circle.</AR_Class_DuelAlone>
+  <AR_Class_GraveAwakes>Grave {0}/3 opened: a spectral swordsman rises!</AR_Class_GraveAwakes>
+  <AR_Class_KingShieldBroken>All three seals are broken! The king can now be harmed.</AR_Class_KingShieldBroken>
+  <AR_Class_SealsLeft>Oath seal broken. {0} remain.</AR_Class_SealsLeft>
+  <AR_Class_DuelRound>Single-combat duel {0}/2 begins!</AR_Class_DuelRound>
+  <AR_Class_DuelWon>Duel {0}/2 won. The next axe spirit awaits.</AR_Class_DuelWon>
+  <AR_Class_DuelNeedChampion>The challenger has fallen. Select another colonist to continue the duel.</AR_Class_DuelNeedChampion>
+  <AR_Class_WaveArrives>Assault wave {0}/3: More elite Profaned attack!</AR_Class_WaveArrives>
+  <AR_Class_Completed>Class trial {0}/6 completed! {1}/13 ghosts unlocked.</AR_Class_Completed>
 </LanguageData>
