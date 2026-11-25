@@ -442,7 +442,7 @@ namespace AragornArmy
                 Quest quest = Quest.MakeRaw();
                 quest.root = root;
                 quest.name = AragornText.F("AR_Class_Title", groupIndex + 1, GhostDefinitions.Names[firstGhost]);
-                quest.description = AragornText.T("AR_Class_Description");
+                quest.description = AragornText.T("AR_Class_Description" + groupIndex);
                 quest.acceptanceExpireTick = -1;
                 quest.SetNotYetAccepted();
                 quest.AddPart(new QuestPart_AragornRescueTarget { site = site });
