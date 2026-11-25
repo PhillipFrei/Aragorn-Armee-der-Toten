@@ -135,6 +135,11 @@ namespace AragornArmy
                 (x.kind.defName ?? "").IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0 ||
                 (x.kind.label ?? "").IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0))
                 .ToList();
+            // Profaned's combat pool also includes animals. For bow towers,
+            // prefer actual humanlike ToolUsers, who can wield a greatbow.
+            var bowUsers = pool.Where(x => x.kind.race != null &&
+                x.kind.race.race != null && x.kind.race.race.Humanlike &&
+                x.kind.race.race.ToolUser).ToList();
             int amount = AragornThreat.ScaleCount(map, faction, requested, role == "elite" ? 1.6f : 1.25f);
             var rangedBow = DefDatabase<ThingDef>.GetNamedSilentFail("BotchJob_SpectralGreatbow");
             for (int i = 0; i < amount; i++)
@@ -142,6 +147,8 @@ namespace AragornArmy
                 PawnKindDef kind = null;
                 if (forced.Count > 0 && (role != "archers" || i % 4 == 0))
                     kind = forced[i % forced.Count];
+                else if (role == "archers" && bowUsers.Count > 0)
+                    kind = bowUsers.RandomElementByWeight(x => x.selectionWeight).kind;
                 else if (themed.Count > 0)
                     kind = themed.RandomElementByWeight(x => x.selectionWeight).kind;
                 else
