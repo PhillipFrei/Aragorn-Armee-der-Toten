@@ -88,6 +88,94 @@ namespace AragornArmy
                 + " original Profaned pawns, allegiance=" + faction.Name);
             return result;
         }
+        // Encounter composition for the six class trials. Always use genuine
+        // Profaned PawnKinds, and gracefully fall back to their Combat pool.
+        // A ranged-equipped Profaned human becomes an archer even where a
+        // separate 'archer' PawnKind is absent in a given Profaned version.
+        public static List<Pawn> SpawnThemedGuards(Map map, IntVec3 center,
+            Faction faction, int requested, string role)
+        {
+            var result = new List<Pawn>();
+            if (map == null || faction == null) return result;
+            FactionDef def = DefDatabase<FactionDef>.GetNamedSilentFail(ProfanedDefName);
+            var combat = def?.pawnGroupMakers?.FirstOrDefault(x =>
+                x.kindDef == PawnGroupKindDefOf.Combat);
+            var pool = combat?.options?.Where(x => x.kind != null && x.selectionWeight > 0).ToList()
+                ?? new List<PawnGenOption>();
+            if (pool.Count == 0) return SpawnGuards(map, center, faction, requested);
+            string[] keywords;
+            string[] forceKinds;
+            switch (role)
+            {
+                case "archers":
+                    keywords = new[] { "archer", "bow", "ranger", "marksman", "sharpshoot", "scourgeknight" };
+                    forceKinds = new[] { "BotchJob_ScourgeKnight" };
+                    break;
+                case "mages":
+                    keywords = new[] { "curse", "mage", "caster", "warlock", "lich", "necrom", "sorcer", "priest" };
+                    forceKinds = new[] { "BotchJob_ProfanedCursebearer" };
+                    break;
+                case "ghouls":
+                    keywords = new[] { "ghoul", "colossus", "cryptlurker", "warg" };
+                    forceKinds = new[] { "BotchJob_Ghoul", "BotchJob_UndeadColossus" };
+                    break;
+                case "elite":
+                    keywords = new[] { "lord", "colossus", "scourge", "wraith", "cryptlurker", "curse" };
+                    forceKinds = new[] { "BotchJob_ScourgeLord", "BotchJob_UndeadColossus",
+                        "BotchJob_ScourgeKnight", "BotchJob_Wraith", "BotchJob_ProfanedCursebearer" };
+                    break;
+                default:
+                    keywords = new[] { "skeleton", "wraith", "ghoul" };
+                    forceKinds = new[] { "BotchJob_Skeleton", "BotchJob_Wraith", "BotchJob_Ghoul" };
+                    break;
+            }
+            var forced = forceKinds.Select(DefDatabase<PawnKindDef>.GetNamedSilentFail)
+                .Where(k => k != null).ToList();
+            var themed = pool.Where(x => keywords.Any(k =>
+                (x.kind.defName ?? "").IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                (x.kind.label ?? "").IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0))
+                .ToList();
+            int amount = AragornThreat.ScaleCount(map, faction, requested, role == "elite" ? 1.6f : 1.25f);
+            var rangedBow = DefDatabase<ThingDef>.GetNamedSilentFail("BotchJob_SpectralGreatbow");
+            for (int i = 0; i < amount; i++)
+            {
+                PawnKindDef kind = null;
+                if (forced.Count > 0 && (role != "archers" || i % 4 == 0))
+                    kind = forced[i % forced.Count];
+                else if (themed.Count > 0)
+                    kind = themed.RandomElementByWeight(x => x.selectionWeight).kind;
+                else
+                    kind = pool.RandomElementByWeight(x => x.selectionWeight).kind;
+                try
+                {
+                    Pawn guard = PawnGenerator.GeneratePawn(kind, faction);
+                    // Every archer unit gets a working bow, not just a
+                    // vaguely archer-sounding label.
+                    if (role == "archers" && rangedBow != null &&
+                        guard.equipment != null && guard.RaceProps.ToolUser)
+                    {
+                        ThingWithComps bow = ThingMaker.MakeThing(rangedBow,
+                            rangedBow.MadeFromStuff ? ThingDefOf.WoodLog : null) as ThingWithComps;
+                        if (bow != null)
+                        {
+                            guard.equipment.DestroyAllEquipment();
+                            guard.equipment.AddEquipment(bow);
+                        }
+                    }
+                    IntVec3 cell = CellFinder.RandomClosewalkCellNear(center, map, 5);
+                    GenSpawn.Spawn(guard, cell, map);
+                    result.Add(guard);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("[Aragorn] Themed " + role + " guard " +
+                        (kind?.defName ?? "?") + ": " + ex.Message);
+                }
+            }
+            Log.Message("[Aragorn] " + role + " Profaned defenders: " + result.Count);
+            return result;
+        }
+
         // Heavier military group specifically for the Anduril siege.
         // The regular crypt encounters keep their existing difficulty.
         public static List<Pawn> SpawnSiegeWave(Map map, IntVec3 edge,
