@@ -117,9 +117,11 @@ namespace AragornArmy
                 trialMap, point, hostile, baseAmount, role));
         }
 
-        private void GuardMission(Faction hostile)
+        private void GuardMission(Faction hostile, bool includeGhosts = true)
         {
-            var defenders = trialGuards.Concat(trialGhosts)
+            // Existing captains retain their original Lord; each later wave
+            // gets its own Lord instead of being re-assigned to a new group.
+            var defenders = (includeGhosts ? trialGuards.Concat(trialGhosts) : trialGuards)
                 .Where(p => p != null && p.Spawned && !p.Dead).Distinct().ToList();
             if (defenders.Count == 0) return;
             LordMaker.MakeNewLord(hostile,
@@ -451,7 +453,7 @@ namespace AragornArmy
                     IntVec3 gate = trialFortCenter + new IntVec3(
                         trialWavesSpawned % 2 == 0 ? -14 : 14, 0, -13);
                     AddDefenders(gate, hostile, 8 + trialWavesSpawned * 2, "elite");
-                    GuardMission(hostile);
+                    GuardMission(hostile, includeGhosts: false);
                     Messages.Message(AragornText.F("AR_Class_WaveArrives", trialWavesSpawned),
                         MessageTypeDefOf.ThreatBig);
                 }
