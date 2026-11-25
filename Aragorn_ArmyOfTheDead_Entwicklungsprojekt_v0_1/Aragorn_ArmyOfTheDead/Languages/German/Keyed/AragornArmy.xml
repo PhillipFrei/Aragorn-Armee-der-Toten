@@ -200,4 +200,6 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Class_WaveArrives>Angriffswelle {0}/3: Neue Profaned stürmen die Festung!</AR_Class_WaveArrives>
   <AR_Class_Completed>Klassenprüfung {0}/6 bestanden! Insgesamt {1}/13 Geister freigeschaltet.</AR_Class_Completed>
   <AR_Class_Description>Erfülle die sechs verschiedenen Klassenprüfungen und befreie alle dreizehn Geister.</AR_Class_Description>
+  <AR_Class_ClearCrypt>Zuerst alle Profaned-Wächter in der Bergkrypta besiegen.</AR_Class_ClearCrypt>
+  <AR_Class_DuelFinishing>Der vorherige Duellausgang wird noch festgestellt.</AR_Class_DuelFinishing>
 </LanguageData>
