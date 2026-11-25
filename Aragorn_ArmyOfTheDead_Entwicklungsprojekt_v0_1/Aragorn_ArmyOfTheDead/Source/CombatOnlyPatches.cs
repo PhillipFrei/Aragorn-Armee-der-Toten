@@ -306,6 +306,11 @@ namespace AragornArmy
             }
 
             foreach (var gizmo in vanilla) yield return gizmo;
+            // Mission objectives are available on any selected player colonist:
+            // one fighter can be sent into the axe duel instead of Aragorn.
+            if (game != null && pawn.Faction == Faction.OfPlayer)
+                foreach (Gizmo questGizmo in game.GetClassTrialGizmos(pawn))
+                    yield return questGizmo;
             if (game == null || !GhostDefinitions.IsAragorn(pawn)) yield break;
 
             if (Prefs.DevMode && pawn.Faction == Faction.OfPlayer)
