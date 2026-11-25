@@ -441,7 +441,7 @@ namespace AragornArmy
 
                 Quest quest = Quest.MakeRaw();
                 quest.root = root;
-                quest.name = AragornText.F("AR_Class_Title", groupIndex + 1, GhostDefinitions.Names[firstGhost]);
+                quest.name = AragornText.T("AR_Class_Title" + groupIndex);
                 quest.description = AragornText.T("AR_Class_Description" + groupIndex);
                 quest.acceptanceExpireTick = -1;
                 quest.SetNotYetAccepted();

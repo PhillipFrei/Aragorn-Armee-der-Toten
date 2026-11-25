@@ -19,6 +19,8 @@ jobs:
           dotnet-version: '8.0.x'
       - name: Validate German and English localization
         run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_localization.py"
+      - name: Validate approved sword crypt map
+        run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_sword_crypt.py"
       - name: Compile RimWorld 1.6 assembly
         run: dotnet build "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/Aragorn_ArmyOfTheDead/Source/Aragorn_ArmyOfTheDead.csproj" -c Release --nologo
       - name: Upload mod build

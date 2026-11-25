@@ -173,12 +173,12 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Class_Site>Trial {0}/6: {1}</AR_Class_Site>
   <AR_Class_Title>The Six Oaths – Trial {0}/6: {1}</AR_Class_Title>
   <AR_Class_ArrivalBody>Class trial {0}/6: {1}. Bring Aragorn to the marked site and complete its unique objective.</AR_Class_ArrivalBody>
-  <AR_Class_Description0>The swordsmen await deep under a mountain. Enter the profaned crypt, defeat scattered undead patrols, and open three sealed graves. One ghost rises from each tomb. Defeat all three to release the entire swordsman class.</AR_Class_Description0>
-  <AR_Class_Description1>Three spectral archers hold separate fortified firing platforms, surrounded by numerous Profaned bowmen. Break the central oath seal, then defeat all three ghosts and the defenders to unlock the entire archer class.</AR_Class_Description1>
-  <AR_Class_Description2>Two spectral bombardiers and numerous Profaned curse-mages protect a ritual site. Break both seals. As long as one remains, magical lightning threatens your colonists. Defeat the wardens and both ghosts to free the bombardiers.</AR_Class_Description2>
-  <AR_Class_Description3>A grand temple filled with ghouls and heavy undead guards the two axe spirits. Clear the temple first. Then send exactly one colonist into the dueling circle to challenge each axe spirit in sequence. Spectators cannot harm the opponent.</AR_Class_Description3>
-  <AR_Class_Description4>Two cursed captains defend a fortress. Elite Profaned reinforcements arrive in three separate waves. Defeat every wave and both captains to release the two commanders together.</AR_Class_Description4>
-  <AR_Class_Description5>The final trial takes place in the throne room of the King of the Dead. Elite Profaned guard him. Three oath seals protect the king from all damage. Lightning keeps striking throughout the fight. Break the seals, survive the storm, and defeat the king.</AR_Class_Description5>
+  <AR_Class_Description0>Deep beneath the mountain lie three warriors whose oath was broken long ago. Pass through the cursed halls and overcome the dead who keep watch. Open the three graves and defeat their guardians, that their ancient vow may be renewed.</AR_Class_Description0>
+  <AR_Class_Description1>Upon dark battlements stand three archers whose arrows seek the living. Break the oath seal, survive their volleys and free them from the curse.</AR_Class_Description1>
+  <AR_Class_Description2>Two spirits guard the fires of a forbidden rite, attended by sorcerers of darkness. Shatter both seals and withstand their corrupting magic.</AR_Class_Description2>
+  <AR_Class_Description3>Within the ancient temple, two axe warriors await the fulfilment of their oath. Drive out the ghouls and challenge each spirit alone in honourable combat.</AR_Class_Description3>
+  <AR_Class_Description4>Two captains raise their banners against the living. Endure three assaults of the forsaken and break their power.</AR_Class_Description4>
+  <AR_Class_Description5>In the hall of the forgotten throne waits a king whose vow remains unfulfilled. Break his three seals and walk through the storm of lightning to claim his allegiance.</AR_Class_Description5>
   <AR_Class_Encounter>Class trial {0}/6 has started. Each class has its own objective.</AR_Class_Encounter>
   <AR_Class_OpenGrave>Open sealed grave</AR_Class_OpenGrave>
   <AR_Class_OpenGraveDesc>Stand next to the next sealed grave. A spectral swordsman will arise.</AR_Class_OpenGraveDesc>
@@ -202,4 +202,10 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Class_Description>Complete six distinct class trials and liberate all thirteen spirits.</AR_Class_Description>
   <AR_Class_ClearCrypt>Defeat all Profaned guards in the mountain crypt before opening the graves.</AR_Class_ClearCrypt>
   <AR_Class_DuelFinishing>The previous duel result is still being registered.</AR_Class_DuelFinishing>
+  <AR_Class_Title0>The Three Graves of the Oath</AR_Class_Title0>
+  <AR_Class_Title1>The Shadowed Battlements</AR_Class_Title1>
+  <AR_Class_Title2>The Fires of the Curse</AR_Class_Title2>
+  <AR_Class_Title3>The Axes of the Forsworn</AR_Class_Title3>
+  <AR_Class_Title4>The Banners of the Lost</AR_Class_Title4>
+  <AR_Class_Title5>The Final Oath</AR_Class_Title5>
 </LanguageData>

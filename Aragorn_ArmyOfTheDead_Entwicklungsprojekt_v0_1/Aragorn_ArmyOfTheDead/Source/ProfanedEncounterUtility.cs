@@ -107,6 +107,12 @@ namespace AragornArmy
             string[] forceKinds;
             switch (role)
             {
+                case "skeletons":
+                    // Explicit skeleton-only pool for the approved crypt sketch.
+                    // Two per original post at 1x difficulty, globally scaled.
+                    keywords = new[] { "skeleton" };
+                    forceKinds = new[] { "BotchJob_Skeleton" };
+                    break;
                 case "archers":
                     keywords = new[] { "archer", "bow", "ranger", "marksman", "sharpshoot", "scourgeknight" };
                     forceKinds = new[] { "BotchJob_ScourgeKnight" };
@@ -146,7 +152,7 @@ namespace AragornArmy
             {
                 PawnKindDef kind = null;
                 if (forced.Count > 0 && (role != "archers" || i % 4 == 0))
-                    kind = forced[i % forced.Count];
+                    kind = role == "elite" ? forced.RandomElement() : forced[i % forced.Count];
                 else if (role == "archers" && bowUsers.Count > 0)
                     kind = bowUsers.RandomElementByWeight(x => x.selectionWeight).kind;
                 else if (themed.Count > 0)

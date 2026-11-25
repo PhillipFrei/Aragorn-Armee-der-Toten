@@ -90,7 +90,7 @@ namespace AragornArmy
             return ghost;
         }
 
-        private Thing AddTrialMarker(IntVec3 at)
+        private Thing AddTrialMarker(IntVec3 at, bool fixedPosition = false)
         {
             ThingDef sarcophagus = DefDatabase<ThingDef>.GetNamedSilentFail("Sarcophagus");
             if (sarcophagus == null) return null;
@@ -99,7 +99,8 @@ namespace AragornArmy
             {
                 Thing marker = ThingMaker.MakeThing(sarcophagus,
                     sarcophagus.MadeFromStuff ? stone : null);
-                IntVec3 cell = CellFinder.RandomClosewalkCellNear(at, trialMap, 2);
+                IntVec3 cell = fixedPosition && at.InBounds(trialMap) && at.Standable(trialMap)
+                    ? at : CellFinder.RandomClosewalkCellNear(at, trialMap, 2);
                 GenSpawn.Spawn(marker, cell, trialMap, WipeMode.Vanish);
                 trialMarkers.Add(marker);
                 return marker;
@@ -150,12 +151,13 @@ namespace AragornArmy
                 trialNextMagicTick = Ticks + 480;
                 switch (cls)
                 {
-                    case 0: // Three graves after a corridor of separate Profaned patrols.
-                        for (int z = -14; z <= 6; z += 7)
-                            AddDefenders(trialFortCenter + new IntVec3(0, 0, z),
-                                hostile, 3, "undead");
+                    case 0: // Approved 52x32 map: 7 positions x 2 skeletons, 4 elites.
+                        // This is the *baseline*. Each Profaned group uses the
+                        // existing global quest-danger slider through ScaleCount.
+                        trialGuards.AddRange(AragornSwordCryptLayout.SpawnDefenders(map, hostile));
                         for (int i = 0; i < 3; i++)
-                            AddTrialMarker(trialFortCenter + new IntVec3((i - 1) * 7, 0, 15));
+                            AddTrialMarker(AragornSwordCryptLayout.Grave(map, i),
+                                fixedPosition: true);
                         break;
                     case 1: // Three separate archer commands hold their own positions.
                         for (int i = 0; i < 3; i++)
@@ -212,7 +214,8 @@ namespace AragornArmy
                         ", ghosts=" + trialGhosts.Count + "/" + expectedGhosts +
                         ", markers=" + trialMarkers.Count + "/" + expectedMarkers +
                         ", defenders=" + trialGuards.Count);
-                if (cls != 1) GuardMission(hostile); // do not move archers off their towers
+                if (cls != 0 && cls != 1) GuardMission(hostile);
+                // Sword crypt and archer posts already have independent defending lords.
                 Messages.Message(AragornText.F("AR_Class_Encounter", cls + 1),
                     MessageTypeDefOf.ThreatBig);
                 Log.Message("[Aragorn] Class trial " + (cls + 1) +
@@ -405,7 +408,7 @@ namespace AragornArmy
                 if (nextGrave == null || nextGrave.Destroyed || !nextGrave.Spawned)
                 {
                     int index = trialGravesOpened++;
-                    IntVec3 where = trialFortCenter + new IntVec3((index - 1) * 7, 0, 15);
+                    IntVec3 where = AragornSwordCryptLayout.Grave(trialMap, index);
                     Pawn awakened = SpawnQuestGhost(index, where,
                         ProfanedEncounterUtility.GetOrCreateFaction());
                     if (awakened != null)
@@ -613,21 +616,12 @@ namespace AragornArmy
 
         public static IntVec3 Build(Map map, int cls)
         {
+            // The sword quest uses the explicitly approved 52x32 blueprint;
+            // all other class maps retain their existing layouts.
+            if (cls == 0) return AragornSwordCryptLayout.Build(map);
             IntVec3 c = CellFinder.RandomClosewalkCellNear(map.Center, map, 18);
-            bool mountain = cls == 0;
-            OuterFort(map, c, cls == 0 ? 22 : 24, 19, mountain);
-            if (cls == 0)
-            {
-                // Mountain chapel: stone roof, deep floor, three bends and
-                // separated patrol rooms before the three sealed tombs.
-                for (int z = -7; z <= 7; z += 7)
-                for (int x = -20; x <= 20; x++)
-                {
-                    if (Math.Abs(x) <= 2 || Math.Abs(x) >= 16) continue;
-                    Place(map, c + new IntVec3(x, 0, z), "Wall");
-                }
-            }
-            else if (cls == 1)
+            OuterFort(map, c, 24, 19, false);
+            if (cls == 1)
             {
                 // Three low-walled ranged platforms with open firing lines.
                 for (int t = -1; t <= 1; t++)

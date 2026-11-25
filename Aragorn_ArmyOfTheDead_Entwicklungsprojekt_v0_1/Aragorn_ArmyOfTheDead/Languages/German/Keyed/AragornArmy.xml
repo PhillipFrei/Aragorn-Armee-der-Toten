@@ -173,12 +173,12 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Class_Site>Prüfung {0}/6: {1}</AR_Class_Site>
   <AR_Class_Title>Die sechs Eide – Prüfung {0}/6: {1}</AR_Class_Title>
   <AR_Class_ArrivalBody>Klassenprüfung {0}/6: {1}. Reise mit Aragorn zur Festung. Besiege die Profaned und erfülle die jeweilige Prüfung.</AR_Class_ArrivalBody>
-  <AR_Class_Description0>Die Prüfung der Schwertgeister führt tief unter einen Berg. Betritt die profanierte Gruft, bekämpfe die getrennt patrouillierenden Untoten und öffne am Ende drei versiegelte Gräber. Aus jedem erhebt sich ein Schwertgeist, den du bezwingen musst. Alle drei Schwertgeister werden zusammen freigeschaltet.</AR_Class_Description0>
-  <AR_Class_Description1>Drei Geisterbogenschützen verteidigen eine befestigte Anlage von getrennten Schützenständen aus. Sehr viele Profaned-Bogenschützen decken ihre Positionen. Zerschlage das zentrale Eidsiegel und besiege die drei Geister sowie alle Verteidiger, um alle drei Bogenschützen gleichzeitig freizuschalten.</AR_Class_Description1>
-  <AR_Class_Description2>Zwei Geisterbombardiere haben sich mit verfluchten Profaned-Magiern in einem Ritualtempel verschanzt. Zerschlage beide Siegel. Solange eines besteht, schlägt verfluchte Magie auf die Angreifer ein. Bezwinge die Ritualwächter und beide Geister, um die zwei Bombardiere freizuschalten.</AR_Class_Description2>
-  <AR_Class_Description3>Ein großer Tempel voller Ghule und schwerer Untoter schützt die zwei Axtgeister. Säubere zuerst den Tempel. Schicke dann genau einen Kolonisten in den Duellkreis und fordere jeden Axtgeist nacheinander heraus. Zuschauer können den Gegner nicht verletzen. Beide Siege befreien die zwei Axtgeister.</AR_Class_Description3>
-  <AR_Class_Description4>Die zwei verfluchten Hauptleute halten eine Festung. Starke Profaned-Krieger rücken in drei aufeinanderfolgenden Wellen durch die Zugänge nach. Besiege sämtliche Wellen und beide Hauptleute, um zwei Hauptleute gleichzeitig zu befreien.</AR_Class_Description4>
-  <AR_Class_Description5>Die letzte Prüfung führt in den Thronsaal des Königs der Toten. Die stärksten Profaned verteidigen den Saal. Drei Eidsiegel schützen den König zunächst vor jedem Schaden. Während des Kampfes schlagen wiederholt Blitze ein. Zerstöre die Siegel, überlebe den Sturm und bezwinge den König.</AR_Class_Description5>
+  <AR_Class_Description0>Tief unter dem Berg ruhen drei Krieger, deren Eid vor langen Jahren gebrochen ward. Schreite durch die verfluchten Hallen und überwinde die Wächter der Toten. Öffne die drei Gräber und bezwinge ihre Hüter, auf dass ihr alter Schwur von Neuem gelte.</AR_Class_Description0>
+  <AR_Class_Description1>Auf dunklen Zinnen wachen drei Schützen, deren Pfeile den Lebenden gelten. Brich das Eidsiegel, überstehe den Pfeilhagel und befreie sie von ihrem Bann.</AR_Class_Description1>
+  <AR_Class_Description2>Zwei Geister hüten die Feuer eines verbotenen Ritus, umringt von finsteren Fluchkundigen. Zerbrich die beiden Siegel und trotze ihrer verderblichen Magie.</AR_Class_Description2>
+  <AR_Class_Description3>Im alten Tempel harren zwei Axtkrieger des letzten Schwures. Vertreibe die Ghule und tritt jedem von ihnen allein im ehrbaren Zweikampf entgegen.</AR_Class_Description3>
+  <AR_Class_Description4>Zwei Hauptleute halten ihre Banner gegen die Lebenden erhoben. Überstehe drei Anstürme der Verdammten und brich ihre Macht.</AR_Class_Description4>
+  <AR_Class_Description5>Im Saal des vergessenen Thrones harrt ein König, dessen Eid nie erfüllt ward. Zerbrich seine drei Siegel und schreite durch den Blitzsturm, um seine Treue einzufordern.</AR_Class_Description5>
   <AR_Class_Encounter>Klassenprüfung {0}/6 hat begonnen. Achtung: Jede Klasse hat ein eigenes Missionsziel.</AR_Class_Encounter>
   <AR_Class_OpenGrave>Versiegeltes Grab öffnen</AR_Class_OpenGrave>
   <AR_Class_OpenGraveDesc>Stehe direkt am nächsten versiegelten Grab. Ein neuer Schwertgeist wird daraus hervortreten.</AR_Class_OpenGraveDesc>
@@ -202,4 +202,10 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Class_Description>Erfülle die sechs verschiedenen Klassenprüfungen und befreie alle dreizehn Geister.</AR_Class_Description>
   <AR_Class_ClearCrypt>Zuerst alle Profaned-Wächter in der Bergkrypta besiegen.</AR_Class_ClearCrypt>
   <AR_Class_DuelFinishing>Der vorherige Duellausgang wird noch festgestellt.</AR_Class_DuelFinishing>
+  <AR_Class_Title0>Die drei Gräber des Eides</AR_Class_Title0>
+  <AR_Class_Title1>Die Zinnen der Schatten</AR_Class_Title1>
+  <AR_Class_Title2>Die Feuer des Fluchs</AR_Class_Title2>
+  <AR_Class_Title3>Die Äxte des gebrochenen Schwurs</AR_Class_Title3>
+  <AR_Class_Title4>Die Banner der Verlorenen</AR_Class_Title4>
+  <AR_Class_Title5>Der letzte Eid</AR_Class_Title5>
 </LanguageData>
