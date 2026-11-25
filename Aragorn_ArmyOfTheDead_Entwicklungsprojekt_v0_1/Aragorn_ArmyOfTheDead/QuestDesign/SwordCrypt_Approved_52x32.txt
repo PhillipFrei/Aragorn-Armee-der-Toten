@@ -8,12 +8,12 @@ P = Profaned stone floor (FlagstoneSlate if unavailable)
 W = slate wall
 D = door
 A = player approach / cave entrance
-S = Profaned skeleton post (2 skeletons per S at 1x global quest danger)
+S = Profaned skeleton post (4 skeletons per S at 1x global quest danger (2 at minimum x0.5))
 E = elite Profaned guard post (1 enemy per E at 1x, scales too)
-G = sealed grave; each releases one sword ghost when opened
+G = sealed grave; each releases its OWN sword ghost; graves open in any order
 T = cursed altar decoration (no separate objective)
 
-Global quest-danger multiplier scales the 14 baseline skeletons
+Global quest-danger multiplier scales the 28 baseline skeletons (14 on minimum x0.5 danger)
 and four elite guards using AragornThreat.ScaleCount.
 All three graves, guards and walkable passages are connected.
 Two small roof-support pillars are added at (44,12), (44,20)
