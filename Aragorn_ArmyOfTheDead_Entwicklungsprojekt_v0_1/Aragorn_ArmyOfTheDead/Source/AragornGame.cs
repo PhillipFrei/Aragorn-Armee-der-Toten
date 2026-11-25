@@ -11,7 +11,7 @@ using Verse.AI.Group;
 namespace AragornArmy
 {
     // Saved once per RimWorld save. Trial encounters take place in separate world-map crypts.
-    public sealed class AragornGame : GameComponent
+    public sealed partial class AragornGame : GameComponent
     {
         public AragornGame(Game game) { }
         public int Unlocked = 0;
@@ -57,6 +57,7 @@ namespace AragornArmy
             Scribe_Collections.Look(ref trialGuards, "trialGuards", LookMode.Reference);
             Scribe_References.Look(ref trialAragorn, "trialAragorn");
             Scribe_References.Look(ref trialMap, "trialMap");
+            ExposeCampaignTrial();
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (ghosts == null) ghosts = new List<Pawn>();
@@ -199,6 +200,7 @@ namespace AragornArmy
                 trialAragorn = null;
                 trialIndex = -1;
                 trialGuards.Clear();
+                ResetCampaignTrial();
 
                 Unlocked = 13;
                 Current.Game?.GetComponent<AragornMechQuestGame>()?.DevUnlock(aragorn);
@@ -432,31 +434,34 @@ namespace AragornArmy
                 Site site = SiteMaker.MakeSite(part, tile, hostile,
                     ifHostileThenMustRemainHostile: false,
                     threatPoints: AragornThreat.Points(1.25f));
-                site.customLabel = AragornText.F("AR_Trial_Site", Unlocked + 1, GhostDefinitions.Names[Unlocked]);
+                int groupIndex = ClassNumber(Unlocked);
+                int firstGhost = ClassStart(Unlocked);
+                site.customLabel = AragornText.F("AR_Class_Site", groupIndex + 1, GhostDefinitions.Names[firstGhost]);
                 Find.WorldObjects.Add(site);
 
                 Quest quest = Quest.MakeRaw();
                 quest.root = root;
-                quest.name = AragornText.F("AR_Trial_Title", Unlocked + 1, GhostDefinitions.Names[Unlocked]);
-                quest.description = AragornText.T("AR_Trial_Description");
+                quest.name = AragornText.F("AR_Class_Title", groupIndex + 1, GhostDefinitions.Names[firstGhost]);
+                quest.description = AragornText.T("AR_Class_Description" + groupIndex);
                 quest.acceptanceExpireTick = -1;
                 quest.SetNotYetAccepted();
                 quest.AddPart(new QuestPart_AragornRescueTarget { site = site });
                 Find.QuestManager.Add(quest);
                 quest.Accept(aragorn);
 
-                trialIndex = Unlocked;
+                trialIndex = firstGhost;
                 trialSite = site;
                 trialQuest = quest;
                 trialAragorn = aragorn;
                 trialMap = null;
                 trialBoss = null;
                 trialGuards.Clear();
+                ResetCampaignTrial();
                 Find.LetterStack.ReceiveLetter(
                     AragornText.T("AR_Trial_ArrivalTitle"),
-                    AragornText.F("AR_Trial_ArrivalBody", Unlocked + 1, GhostDefinitions.Names[Unlocked]),
+                    AragornText.F("AR_Class_ArrivalBody", groupIndex + 1, GhostDefinitions.Names[firstGhost]),
                     LetterDefOf.NeutralEvent, site);
-                Log.Message("[Aragorn] Trial " + trialIndex + " created at world tile " + tile);
+                Log.Message("[Aragorn] Class trial " + (groupIndex + 1) + "/6 at " + tile);
             }
             catch (Exception ex)
             {
@@ -467,42 +472,7 @@ namespace AragornArmy
 
         public void PopulateTrialMap(Map map)
         {
-            if (map == null || trialSite == null || trialSite != map.Parent
-                || trialIndex < 0 || trialBoss != null) return;
-            Faction hostile = ProfanedEncounterUtility.GetOrCreateFaction();
-            if (hostile == null) { Log.Error("[Aragorn] No Profaned faction for trial map."); return; }
-            try
-            {
-                IntVec3 crypt = AragornCryptBuilder.Build(map, map.Center);
-                Pawn boss = CreateGhost(trialIndex, hostile);
-                if (boss == null) { Log.Error("[Aragorn] Trial boss could not be generated."); return; }
-                IntVec3 location = CellFinder.RandomClosewalkCellNear(crypt, map, 4);
-                GenSpawn.Spawn(boss, location, map);
-                // A single global danger slider scales ALL mod encounters.
-                // SpawnGuards applies AragornThreat.ScaleCount to this baseline.
-                var guards = ProfanedEncounterUtility.SpawnGuards(map, crypt, hostile, 20);
-                if (guards.Count == 0)
-                {
-                    Log.Error("[Aragorn] Trial site guard generation failed.");
-                    return;
-                }
-                trialBoss = boss;
-                trialMap = map;
-                trialGuards = guards;
-                var defenders = new List<Pawn>(guards) { boss };
-                LordMaker.MakeNewLord(hostile,
-                    new LordJob_DefendPoint(crypt, wanderRadius: 8f,
-                        defendRadius: 30f, isCaravanSendable: false, addFleeToil: false),
-                    map, defenders);
-                Messages.Message(AragornText.F("AR_Trial_Encounter", trialIndex + 1),
-                    boss, MessageTypeDefOf.ThreatBig);
-                Log.Message("[Aragorn] Trial site populated: " + (trialIndex + 1)
-                    + "/13; " + guards.Count + " Profaned guards.");
-            }
-            catch (Exception ex)
-            {
-                Log.Error("[Aragorn] Geisterprüfung-Karte konnte nicht aufgebaut werden: " + ex);
-            }
+            PopulateClassTrial(map);
         }
 
         private void CheckTrialAbandoned()
@@ -534,6 +504,7 @@ namespace AragornArmy
             trialMap = null;
             trialIndex = -1;
             trialGuards.Clear();
+            ResetCampaignTrial();
             trialAragorn = null;
             trialAbandonedSinceTick = -1;
             if (hero != null && !hero.Dead && !hero.Destroyed)
@@ -566,6 +537,7 @@ namespace AragornArmy
 
         private void CheckTrialOutcome()
         {
+            if (trialCampaignActive) { TickClassTrial(); return; }
             if (trialBoss == null || trialIndex < 0) return;
             if (!trialBoss.Dead && !trialBoss.Downed) return;
             if (trialGuards.Any(g => g != null && g.Spawned && !g.Dead && !g.Downed))
@@ -600,6 +572,7 @@ namespace AragornArmy
             trialQuest = null;
             trialGuards.Clear();
             trialIndex = -1;
+            ResetCampaignTrial();
         }
 
         public void StartSpin(Pawn aragorn)

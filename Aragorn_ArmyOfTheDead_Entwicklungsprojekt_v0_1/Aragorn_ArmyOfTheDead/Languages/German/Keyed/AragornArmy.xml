@@ -46,8 +46,8 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Trial_Encounter>Prüfung {0}/13: Bezwinge den eidverpflichteten Geist und seine Profaned-Wachen.</AR_Trial_Encounter>
   <AR_Trial_Unlocked>Geist befreit: {0} ({1}/13).</AR_Trial_Unlocked>
   <AR_Trial_Failed>Die Prüfung ist verloren. Aragorn muss auf der Kryptenkarte überleben.</AR_Trial_Failed>
-  <AR_Trial_GizmoTitle>Nächste Geisterkrypta entdecken</AR_Trial_GizmoTitle>
-  <AR_Trial_GizmoDesc>Entdecke die nächste der dreizehn Krypten auf der Weltkarte. Reise mit Andúril dorthin und befreie den gebundenen Geist.</AR_Trial_GizmoDesc>
+  <AR_Trial_GizmoTitle>Nächste Klassenprüfung entdecken</AR_Trial_GizmoTitle>
+  <AR_Trial_GizmoDesc>Entdecke die nächste der sechs großen Klassenquests. Jede Prüfung schaltet alle Geister ihres Typs auf einmal frei.</AR_Trial_GizmoDesc>
   <AR_Gizmo_SummonTitle>Eidverpflichtete Geister rufen</AR_Gizmo_SummonTitle>
   <AR_Gizmo_SummonDesc>Rufe die bereits befreiten Geister. Sie kämpfen an Aragorns Seite, bis du sie zurückrufst.</AR_Gizmo_SummonDesc>
   <AR_Gizmo_RecallTitle>Geister zurückrufen</AR_Gizmo_RecallTitle>
@@ -170,4 +170,33 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Msg_RescueAvailable>Aragorn-Rettungsquest: Unter Aufträge → Verfügbar verfügbar.</AR_Msg_RescueAvailable>
   <AR_Msg_RescueAborted>Aragorn-Rettung abgebrochen: Ein neuer Rettungsauftrag wird angeboten.</AR_Msg_RescueAborted>
   <AR_Dev_AndurilFailed>Andúril konnte nach dem Questabschluss nicht ausgerüstet werden.</AR_Dev_AndurilFailed>
+  <AR_Class_Site>Prüfung {0}/6: {1}</AR_Class_Site>
+  <AR_Class_Title>Die sechs Eide – Prüfung {0}/6: {1}</AR_Class_Title>
+  <AR_Class_ArrivalBody>Klassenprüfung {0}/6: {1}. Reise mit Aragorn zur Festung. Besiege die Profaned und erfülle die jeweilige Prüfung.</AR_Class_ArrivalBody>
+  <AR_Class_Description0>Die Prüfung der Schwertgeister führt tief unter einen Berg. Betritt die profanierte Gruft, bekämpfe die getrennt patrouillierenden Untoten und öffne am Ende drei versiegelte Gräber. Aus jedem erhebt sich ein Schwertgeist, den du bezwingen musst. Alle drei Schwertgeister werden zusammen freigeschaltet.</AR_Class_Description0>
+  <AR_Class_Description1>Drei Geisterbogenschützen verteidigen eine befestigte Anlage von getrennten Schützenständen aus. Sehr viele Profaned-Bogenschützen decken ihre Positionen. Zerschlage das zentrale Eidsiegel und besiege die drei Geister sowie alle Verteidiger, um alle drei Bogenschützen gleichzeitig freizuschalten.</AR_Class_Description1>
+  <AR_Class_Description2>Zwei Geisterbombardiere haben sich mit verfluchten Profaned-Magiern in einem Ritualtempel verschanzt. Zerschlage beide Siegel. Solange eines besteht, schlägt verfluchte Magie auf die Angreifer ein. Bezwinge die Ritualwächter und beide Geister, um die zwei Bombardiere freizuschalten.</AR_Class_Description2>
+  <AR_Class_Description3>Ein großer Tempel voller Ghule und schwerer Untoter schützt die zwei Axtgeister. Säubere zuerst den Tempel. Schicke dann genau einen Kolonisten in den Duellkreis und fordere jeden Axtgeist nacheinander heraus. Zuschauer können den Gegner nicht verletzen. Beide Siege befreien die zwei Axtgeister.</AR_Class_Description3>
+  <AR_Class_Description4>Die zwei verfluchten Hauptleute halten eine Festung. Starke Profaned-Krieger rücken in drei aufeinanderfolgenden Wellen durch die Zugänge nach. Besiege sämtliche Wellen und beide Hauptleute, um zwei Hauptleute gleichzeitig zu befreien.</AR_Class_Description4>
+  <AR_Class_Description5>Die letzte Prüfung führt in den Thronsaal des Königs der Toten. Die stärksten Profaned verteidigen den Saal. Drei Eidsiegel schützen den König zunächst vor jedem Schaden. Während des Kampfes schlagen wiederholt Blitze ein. Zerstöre die Siegel, überlebe den Sturm und bezwinge den König.</AR_Class_Description5>
+  <AR_Class_Encounter>Klassenprüfung {0}/6 hat begonnen. Achtung: Jede Klasse hat ein eigenes Missionsziel.</AR_Class_Encounter>
+  <AR_Class_OpenGrave>Versiegeltes Grab öffnen</AR_Class_OpenGrave>
+  <AR_Class_OpenGraveDesc>Stehe direkt am nächsten versiegelten Grab. Ein neuer Schwertgeist wird daraus hervortreten.</AR_Class_OpenGraveDesc>
+  <AR_Class_GetCloser>Der ausgewählte Kolonist muss höchstens 3 Felder entfernt sein.</AR_Class_GetCloser>
+  <AR_Class_BreakSeal>Verfluchtes Eidsiegel brechen</AR_Class_BreakSeal>
+  <AR_Class_BreakSealDesc>Brich das nächstgelegene Eidsiegel in unmittelbarer Nähe. Die Magie der Profaned wird geschwächt.</AR_Class_BreakSealDesc>
+  <AR_Class_StartDuel>Axtgeist zum Einzelduell fordern</AR_Class_StartDuel>
+  <AR_Class_StartDuelDesc>Schicke genau einen Kolonisten in den Duellring. Die zwei Axtgeister müssen nacheinander im Einzelkampf besiegt werden. Andere Kolonisten dürfen nicht eingreifen.</AR_Class_StartDuelDesc>
+  <AR_Class_ClearTemple>Zuerst alle Tempelwachen besiegen.</AR_Class_ClearTemple>
+  <AR_Class_EnterArena>Den ausgewählten Kolonisten in die Arena schicken (max. 5 Felder zur Mitte).</AR_Class_EnterArena>
+  <AR_Class_DuelInProgress>Ein Duell mit einem anderen Kämpfer läuft bereits.</AR_Class_DuelInProgress>
+  <AR_Class_DuelAlone>Nur ein verbündeter Kolonist darf im Duellring stehen.</AR_Class_DuelAlone>
+  <AR_Class_GraveAwakes>Grab {0}/3 geöffnet: Ein Schwertgeist erhebt sich!</AR_Class_GraveAwakes>
+  <AR_Class_KingShieldBroken>Alle drei Siegel sind gebrochen! Der König ist jetzt verwundbar.</AR_Class_KingShieldBroken>
+  <AR_Class_SealsLeft>Eidsiegel zerbrochen. Noch {0} aktiv.</AR_Class_SealsLeft>
+  <AR_Class_DuelRound>Einzelduell {0}/2 beginnt!</AR_Class_DuelRound>
+  <AR_Class_DuelWon>Einzelduell {0}/2 gewonnen. Der nächste Axtgeist wartet.</AR_Class_DuelWon>
+  <AR_Class_DuelNeedChampion>Der Herausforderer ist gefallen. Wähle einen neuen Kolonisten für das Duell.</AR_Class_DuelNeedChampion>
+  <AR_Class_WaveArrives>Angriffswelle {0}/3: Neue Profaned stürmen die Festung!</AR_Class_WaveArrives>
+  <AR_Class_Completed>Klassenprüfung {0}/6 bestanden! Insgesamt {1}/13 Geister freigeschaltet.</AR_Class_Completed>
 </LanguageData>
