@@ -36,7 +36,7 @@ for grave in ((41, 10), (46, 15), (41, 22)):
 
 code = source.read_text(encoding="utf-8")
 assert "Width = 52" in code and "Height = 32" in code
-assert "faction, 2, \"skeletons\"" in code, "Skeletons must be doubled per post"
+assert "faction, 4, \"skeletons\"" in code, "Skeletons must be doubled per post"
 assert "AragornThreat.ScaleCount" in code, "Danger scaling documentation lost"
-print("Sword crypt layout OK: 52x32; 7 posts x2 = 14 baseline skeletons; "
+print("Sword crypt layout OK: 52x32; 7 posts x4 = 28 baseline skeletons (14 at minimum x0.5); "
       "4 elite posts; 3 reachable tombs; 6 doors; no disconnected cells.")
