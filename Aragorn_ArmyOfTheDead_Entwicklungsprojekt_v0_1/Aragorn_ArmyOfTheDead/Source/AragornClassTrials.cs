@@ -352,6 +352,26 @@ namespace AragornArmy
         {
             if (!trialCampaignActive || trialIndex < 0 || trialMap == null) return;
             int cls = ClassNumber(trialIndex);
+            // A crypt grave can be destroyed by combat before a pawn
+            // interacts with it. It must not permanently soft-lock the quest:
+            // automatically release its ghost in that case.
+            if (cls == 0 && trialGravesOpened < 3 &&
+                trialMarkers.Count > trialGravesOpened)
+            {
+                Thing nextGrave = trialMarkers[trialGravesOpened];
+                if (nextGrave == null || nextGrave.Destroyed || !nextGrave.Spawned)
+                {
+                    int index = trialGravesOpened++;
+                    IntVec3 where = trialFortCenter + new IntVec3((index - 1) * 7, 0, 15);
+                    Pawn awakened = SpawnQuestGhost(index, where,
+                        ProfanedEncounterUtility.GetOrCreateFaction());
+                    if (awakened != null)
+                        LordMaker.MakeNewLord(awakened.Faction,
+                            new LordJob_DefendPoint(where, wanderRadius: 5f,
+                                defendRadius: 14f, isCaravanSendable: false, addFleeToil: false),
+                            trialMap, new List<Pawn> { awakened });
+                }
+            }
             if (cls == 3 && trialDuelEnemy != null)
             {
                 if (trialDuelEnemy.Dead || trialDuelEnemy.Downed || !trialDuelEnemy.Spawned)
@@ -478,8 +498,7 @@ namespace AragornArmy
         {
             if (!p.InBounds(map)) return;
             foreach (Thing thing in p.GetThingList(map).ToList())
-                if (thing.def.category == ThingCategory.Plant ||
-                    thing.def.category == ThingCategory.Item && !thing.def.EverHaulable)
+                if (thing.def.category == ThingCategory.Plant)
                     thing.Destroy(DestroyMode.Vanish);
             TerrainDef floor = DefDatabase<TerrainDef>.GetNamedSilentFail("ProfanedTileSlate")
                 ?? DefDatabase<TerrainDef>.GetNamedSilentFail("FlagstoneSlate");
