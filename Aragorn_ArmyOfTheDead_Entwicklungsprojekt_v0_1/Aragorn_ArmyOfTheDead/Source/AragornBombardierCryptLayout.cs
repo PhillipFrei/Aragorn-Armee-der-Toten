@@ -162,6 +162,18 @@ namespace AragornArmy
                     }
                 }
 
+            // Validate every planned wall, door and support column after
+            // construction; the objective rooms must all be present.
+            for (int y = 0; y < Height; y++)
+            for (int x = 0; x < Width; x++)
+            {
+                if (b[x, y] != 'W' && b[x, y] != 'D' &&
+                    b[x, y] != 'C') continue;
+                AragornTrialSitePreparation.RequireBuilding(
+                    map, Point(map, x, y),
+                    b[x, y] == 'D' ? Door : Wall);
+            }
+
             // Lamps are visual dressing, not mission targets or kill objectives.
             // Their definitions come from the already-required Profaned mod;
             // missing decorative objects never prevent the quest from starting.
