@@ -73,7 +73,7 @@ namespace AragornArmy
 
         // Roof only tiles with a supporting wall no more than six cells away
         // (RimWorld's own roof-support range). Open-air yards are never roofed.
-        private static void RoofRoom(Map map, IntVec3 origin,
+        public static void RoofRoom(Map map, IntVec3 origin,
             int minX, int minZ, int maxX, int maxZ)
         {
             for (int x = minX + 1; x < maxX; x++)
