@@ -350,7 +350,7 @@ namespace AragornArmy
                         SpawnQuestGhost(11, trialFortCenter + new IntVec3(7, 0, 12), hostile);
                         AddTrialMarker(trialFortCenter + new IntVec3(-7, 0, 18),
                             fixedPosition: true);
-                        AddTrialMarker(trialFortCenter + new IntVec3(7, 0, 7),
+                        AddTrialMarker(trialFortCenter + new IntVec3(7, 0, 18),
                             fixedPosition: true);
                         AddDefenders(trialFortCenter + new IntVec3(0, 0, -13), hostile, 8, "elite");
                         trialWavesSpawned = 1;
