@@ -322,6 +322,18 @@ namespace AragornArmy
             }
 
             foreach (var gizmo in vanilla) yield return gizmo;
+            // The rescue-map crossing is a mission objective for any player
+            // colonist. Reuse this known-working Pawn.GetGizmos Harmony patch;
+            // adding another patch with the wrong signature previously broke
+            // ALL Aragorn buttons.
+            if (pawn.Faction == Faction.OfPlayer)
+            {
+                AragornRescueGame rescue = Current.Game?
+                    .GetComponent<AragornRescueGame>();
+                if (rescue != null)
+                    foreach (Gizmo crossing in rescue.GetMoatGizmos(pawn))
+                        yield return crossing;
+            }
             // Mission objectives are available on any selected player colonist:
             // one fighter can be sent into the axe duel instead of Aragorn.
             if (game != null && pawn.Faction == Faction.OfPlayer)
