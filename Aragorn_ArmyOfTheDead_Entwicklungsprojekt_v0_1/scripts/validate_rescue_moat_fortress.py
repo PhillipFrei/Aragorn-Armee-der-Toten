@@ -33,7 +33,7 @@ assert "int bridgeCells = 0;" not in moat
 assert "Four small Profaned guard houses" not in moat
 assert "four small Profaned guard houses" not in moat.lower()
 assert "public static List<IntVec3> GuardPositions" not in moat
-assert "AragornCryptBuilder.BuildRescuePrison(map, map.Center" in quest
+assert "AragornCryptBuilder.BuildRescuePrison(" in quest and "map.Center, out guardPost" in quest
 assert "return AragornRescueMoatFortress.Build(map, near, out guardPost)" in builder
 assert "SpawnThemedGuards(" in quest
 assert 'perArcherPost, "archers"' in quest
