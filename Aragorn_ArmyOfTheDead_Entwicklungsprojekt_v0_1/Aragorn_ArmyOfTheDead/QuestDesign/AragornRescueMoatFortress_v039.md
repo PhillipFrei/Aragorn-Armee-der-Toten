@@ -1,47 +1,49 @@
-# Aragorn-Rettungsmission – Wassergraben und Gefängnis im Raum (v0.39)
+# Aragorn-Rettungsmission – Wassergraben und verschachteltes Gefängnis (v0.39.1)
 
-**Aufbau:** Vor dem Kartenerstellen wird das vollständige 77 × 65-Felder-Baufeld inklusive Sicherheitsrand geräumt. Die Festung wird in der Mitte aufgebaut, unabhängig von natürlichem Fels, Dächern und Flüssen.
+**Größe:** 77 × 65 Felder. Ein 6–7 Felder tiefer, anfangs ununterbrochener `WaterDeep`-Ring umgibt einen äußeren Mauerring von 53 × 41 Feldern.
 
-## Draufsicht, schematisch
+## Grundriss, schematisch
 
 ```text
-              NORDEN
+                  NORDEN
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      ~      TIEFWASSER         ~
-      ~  +-------------------+  ~
-      ~  | Wachhaus  Wachhaus|  ~
-      ~  |                   |  ~
-      ~  |    +---------+    |  ~
-      ~  |    | BERGFRIED|    |  ~
-      ~  |    | +-----+ |    |  ~
-      ~  |    | |ARAGORN| |   |  ~
-      ~  |    | +--T--+ |    |  ~
-      ~  |    +----T----+    |  ~
-      ~  | Wachhaus  Wachhaus|  ~
-      ~  +--------TTT--------+  ~
-      ~~~~~~~~~~BBB~~~~~~~~~~~~~
-                BBB
-              SÜDEN
+      ~        TIEFWASSER       ~
+      ~   +-----------------+   ~
+      ~   |   [===] [===]   |   ~
+      ~   |   Bogenschützen |   ~
+      ~   |   +---------+   |   ~
+      ~   |   |SKELETTE |   |   ~
+      ~   |   | +-----+ |   |   ~
+      ~   |   | |ARAGORN|    |   ~
+      ~   |   | +--T--+ |   |   ~
+      ~   |   +----T----+   |   ~
+      ~   |   [===] [===]   |   ~
+      ~   |   Bogenschützen |   ~
+      ~   +-------TTT-------+   ~
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                ??????
+            SÜDLICHES UFER
 ```
 
-- **~** = durchgehender, unpassierbarer Wassergraben aus `WaterDeep` (6–7 Felder tief)
-- **BBB** = einzige, drei Felder breite, begehbare Brücke im Süden
-- **T** = verschließbare Türen, davor gegnerische Profaned-Wachen
-- **äußerer Mauerring** = 53×41 Felder mit dreifachem Südtor
-- **innerer Bergfried** = überdachter 27×21-Felder-Raum mit einer Tür
-- **Aragorns Gefängnis** = eigener, komplett ummauerter und überdachter 13×9-Felder-Raum *im Bergfried*
-- **vier Wachhäuser** = Profaned-Laternen, verfluchte Feuer und Deckung im äußeren Hof
+- **~** = durchgehender Tiefwassergraben ohne fertige Brücke
+- **??????** = vom Spieler zunächst selbst herzustellender Übergang
+- **[===]** = vier befestigte Barrikadenfronten mit Profaned-Bogenschützen hinter Deckung; **keine Wachhäuser oder Türme**
+- **T** = Türen im äußeren Mauerring, zum Bergfried und zu Aragorns Innengefängnis
+- **Bergfried:** überdachter 27×21-Felder-Raum; **zwei Gruppen Skelette greifen Eindringlinge an**
+- **Gefängnis:** vollständig eingeschlossene 13×9-Felder-Zelle im Bergfried
 
-## Spielablauf
+## Rettungsablauf
 
-1. Karawane nähert sich der Festung; das tiefe Wasser umschließt den gesamten Bau.
-2. Sie muss die einzige Südbrücke benutzen und den bewachten Haupteingang überwinden.
-3. Im Hof halten Profaned-Wachen an fünf verschiedenen Stellungen Wache.
-4. Eine zweite Tür führt in den überdachten Bergfried, dahinter die dritte Tür in Aragorns Gefängnis.
-5. Die bisherigen Freischaltbedingungen bleiben: Wenn alle Profaned-Wachen gefallen sind, wird Aragorn befreit und schließt sich an.
+1. Der Spieler trifft auf einen unüberwindbaren Tiefwassergraben. Die Brücke aus v0.39 wurde restlos entfernt; das Wasser bleibt anfangs vollständig `WaterDeep`.
+2. Der Spieler bewegt einen Kolonisten an das **südliche Ufer**. Dort erscheint beim Auswählen des Kolonisten das Gizmo **„Übergang bereiten“**.
+3. Der Spieler aktiviert das Gizmo, um einen **drei Felder breiten, sieben Felder langen provisorischen Weg** anzulegen. Im Normalspiel kann man über `WaterDeep` keine Vanilla-Brücke bauen; deshalb besitzt die Rettungsmission diese eigene, sichtbare Bauaktion. Es sind **keine zusätzlichen Brückenmods oder Materialien** erforderlich.
+4. Über den hergestellten Weg gelangt die Gruppe zum dreiteiligen Außentor.
+5. Vier einzelne Gruppen **Profaned-Bogenschützen** halten hinter realen Barrikaden Stellungen, ohne Wachtürme.
+6. Im inneren, überdachten Bergfried warten zwei **Skelett-Gruppen** neben der zweiten Mauerschicht auf die Spieler; sie greifen innerhalb ihres Verteidigungsbereichs an.
+7. Aragorn liegt weiterhin bewusstlos in der geschlossenen Innenzelle. Sind alle Wachen besiegt, schließt er sich der Kolonie an.
 
-**Technik:** Die Brückenoberfläche wird bevorzugt mit Vanilla-`Bridge` erzeugt; falls sie im Deep-Water-Bereich nicht begehbar ist, wird der Übergang als begehbarer Steinweg hergestellt. Alle anderen Grabenfelder bleiben `WaterDeep`.
+**Technik:** Die Brückenfläche ist zu Beginn unpassierbares `WaterDeep`. Die neue Questaktion verändert bei der Benutzung genau 21 Zellen zu begehbarer Oberfläche, bevorzugt einem Brückenterrain (sonst FlagstoneSlate). Das ist absichtlich nicht der normale Vanilla-Baubefehl, denn Vanilla-Brücken können echtes Tiefwasser nicht überqueren.
 
-**Spielstände:** Bereits besuchte Rettungsorte werden nicht rückwirkend umgebaut. Mit einem Spielstand vor dem ersten Betreten kann diese Version neu generiert werden. Schwert- und Schmiede-Quests sowie die sechs Geisterprüfungen bleiben unangetastet.
+**Spielstände:** Begonnene Rettungsmissionen aus v0.39 behalten ihre alte Karte und benötigen keinen neuen Bau-Befehl. Die angepasste Rettungsmap gilt für neu generierte Questorte. Alle übrigen Missionen, Schmiede, Waffen und Grafiken bleiben unangetastet.
 
-**Prüfung:** Automatischer 4-Wege-Pfadtest kontrolliert, dass die Brücke die einzige Landverbindung durch den Wassergraben ist und die äußere Festung, der Bergfried, das innere Gefängnis sowie alle fünf Wachpositionen erreichbar sind.
+**Prüfungen:** Vor der Bauaktion gibt es keinen Pfad vom südlichen Ufer zu Aragorn; danach sind die drei Türen, alle Schützenstellungen und der Gefangene erreichbar. Keine Barrikade darf auf den Bergfriedmauern liegen, keine Skelette im Innengefängnis starten.
