@@ -942,16 +942,6 @@ namespace AragornArmy
             Current.Game?.GetComponent<AragornGame>()?.IsQuestSarcophagus(__instance) != true;
     }
 
-    [HarmonyPatch(typeof(Building), nameof(Building.DeconstructibleBy))]
-    internal static class AragornOathSarcophagusNoDeconstruction
-    {
-        private static void Postfix(Building __instance, ref bool __result)
-        {
-            if (Current.Game?.GetComponent<AragornGame>()?.IsQuestSarcophagus(__instance) == true)
-                __result = false;
-        }
-    }
-
     // Vanilla-compatible 2D fortifications; no extra multi-floor mod.
     internal static class AragornTrialStructures
     {

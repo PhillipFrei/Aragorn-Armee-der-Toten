@@ -30,7 +30,6 @@ assert ".Destroy(" not in break_seal, "breaking a seal deletes its coffin"
 for required in [
     "IsQuestSarcophagus(target)",
     "AragornOathSarcophagusNoDestroy",
-    "AragornOathSarcophagusNoDeconstruction",
     "trialOpenedGraveIndices",
     "TowerStillGuarded(grave)",
     "trialDuelVictories >= 2",
@@ -42,6 +41,22 @@ for required in [
     "AragornSwordCryptLayout.Build(map)",
 ]:
     assert required in trials, "missing feature: " + required
+# Critical load regression: Building.DeconstructibleBy returns
+# AcceptanceReport. A second Postfix using ref bool caused Harmony
+# PatchAll to fail, taking Aragorn's GetGizmos patch and his trial button
+# down with it even after Anduril was forged.
+assert "AragornOathSarcophagusNoDeconstruction" not in trials
+assert "ref bool __result" not in trials.split("HarmonyPatch(typeof(Building)", 1)[-1], (
+    "Never patch DeconstructibleBy with ref bool")
+assert "class PreventDivineGoldDeconstruction" in gizmos
+decon = gizmos.split("class PreventDivineGoldDeconstruction", 1)[1].split(
+    "class PreventDivineGoldClaiming", 1)[0]
+assert "ref AcceptanceReport __result" in decon
+assert "IsQuestSarcophagus(__instance)" in decon
+assert "[HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]" in gizmos
+assert "game.StartTrial(pawn)" in gizmos
+assert "forgeGame != null && forgeGame.Completed" in gizmos
+
 assert "TrialSarcophagusInspect(__instance)" in gizmos
 assert "Unlocked = Math.Max(Unlocked, ClassEnd(trialIndex))" in trials
 assert "QuestEndOutcome.Success" in trials
