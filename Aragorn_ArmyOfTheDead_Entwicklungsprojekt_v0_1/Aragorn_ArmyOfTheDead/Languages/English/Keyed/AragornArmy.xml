@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <AR_Rescue_Title>The Lost Heir</AR_Rescue_Title>
-  <AR_Rescue_Description>Beyond a ring of black deep water the Profaned Legion holds an heir captive. Cross the single guarded bridge, breach the outer fortress and seek the locked chamber at the heart of the inner keep. There Aragorn awaits his freedom.</AR_Rescue_Description>
+  <AR_Rescue_Description>Beyond a ring of black deep water the Profaned Legion holds Aragorn in the heart of their fortress. No bridge crosses the moat: prepare your own route from its southern bank. Defeat the bowmen behind their barricades and the skeletons in the keep to free the heir from the innermost chamber.</AR_Rescue_Description>
   <AR_Rescue_Site>Aragorn's Prison</AR_Rescue_Site>
   <AR_Rescue_ArrivalTitle>The Prison Revealed</AR_Rescue_ArrivalTitle>
-  <AR_Rescue_ArrivalBody>The trail ends at a fortress surrounded by deep water on all sides. Only one guarded crossing leads within. The lost heir is said to lie in the innermost chamber.</AR_Rescue_ArrivalBody>
+  <AR_Rescue_ArrivalBody>The trail ends at a fortress surrounded by deep water on all sides. There is no bridge. Prepare your own crossing, then overcome the Profaned archers holding their barricades and the skeletons inside the keep.</AR_Rescue_ArrivalBody>
   <AR_Rescue_Encounter>Aragorn is held here. Defeat his {0} Profaned guards.</AR_Rescue_Encounter>
   <AR_Rescue_Success>Aragorn is free, and has joined your people.</AR_Rescue_Success>
   <AR_Forge_Title>The Blade Reforged</AR_Forge_Title>
@@ -242,5 +242,11 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_OathGraves_Sealed>Sealed</AR_OathGraves_Sealed>
   <AR_OathGraves_Indestructible>Indestructible oath sarcophagus</AR_OathGraves_Indestructible>
   <AR_Rescue_MoatTitle>The Profaned Moat Prison</AR_Rescue_MoatTitle>
-  <AR_Rescue_MoatBody>A broad ring of deep water surrounds the fortress. Find the narrow crossing to the south, overcome the guarded gate and enter the roofed inner keep. Aragorn lies behind a second locked door in the central prison room. Defeat his Profaned wardens to free him.</AR_Rescue_MoatBody>
+  <AR_Rescue_MoatBody>The deep-water moat cannot be crossed. There is no ready-made bridge. Bring a colonist to the southern bank and use 'Prepare crossing' to make a passable route. Profaned archers hold barricades in the outer courtyard; skeletons attack inside the keep. Aragorn waits behind the innermost door.</AR_Rescue_MoatBody>
+  <AR_Rescue_PrepareCrossing>Prepare crossing</AR_Rescue_PrepareCrossing>
+  <AR_Rescue_PrepareCrossingDesc>The fortress is surrounded by genuine deep water. Bring a selected colonist to the southern bank and use this command to construct a makeshift, three-tile-wide causeway. No bridge exists on arrival and no additional bridge mod is needed.</AR_Rescue_PrepareCrossingDesc>
+  <AR_Rescue_GoToSouthBank>Move this colonist to the southern bank of the moat, near the marked location.</AR_Rescue_GoToSouthBank>
+  <AR_Rescue_CrossingReadyTitle>A Road Across the Waters</AR_Rescue_CrossingReadyTitle>
+  <AR_Rescue_CrossingReadyBody>The makeshift crossing is ready. A passable route now traverses the southern part of the deep-water moat. Profaned bowmen behind their barricades and skeletons in the keep await you.</AR_Rescue_CrossingReadyBody>
+  <AR_Rescue_CrossingFailed>The crossing could not be built. Check the game log for details.</AR_Rescue_CrossingFailed>
 </LanguageData>
