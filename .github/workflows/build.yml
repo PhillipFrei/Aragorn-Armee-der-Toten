@@ -27,6 +27,8 @@ jobs:
         run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_oath_graves.py"
       - name: Validate unobstructed trial building footprints
         run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_quest_footprints.py"
+      - name: Validate vaulted crypt rooms, fog and tactical guard positions
+        run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_crypt_architecture.py"
       - name: Compile RimWorld 1.6 assembly
         run: dotnet build "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/Aragorn_ArmyOfTheDead/Source/Aragorn_ArmyOfTheDead.csproj" -c Release --nologo
       - name: Upload mod build
