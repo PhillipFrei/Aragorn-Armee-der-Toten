@@ -40,9 +40,12 @@ for expected in [
     "AragornSwordCryptLayout.Width, AragornSwordCryptLayout.Height",
     "AragornBombardierCryptLayout.Width, AragornBombardierCryptLayout.Height",
     "AragornTrialSitePreparation.ClearFootprint(map, c, 71, 55)",
-    "AragornTrialSitePreparation.RequireBuilding(map,",
 ]:
     assert expected in main, f"Missing trial-map pre-clearance: {expected}"
+
+# The verified wall check may be formatted across two C# lines.
+import re
+assert re.search(r"AragornTrialSitePreparation\.RequireBuilding\s*\(\s*map\s*,", main)
 
 assert main.index("ClearFootprint(map, map.Center,") < main.index(
     "AragornSwordCryptLayout.Build(map)")
