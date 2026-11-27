@@ -389,10 +389,23 @@ namespace AragornArmy
             {
                 Log.Message("[Aragorn] Forge map stage 1: clearing terrain " +
                     "and generating the golden hall.");
-                forge = AndurilForgeBuilder.Build(map, map.Center, site.Faction);
-                if (forge == null || !forge.Spawned)
-                    throw new InvalidOperationException(
-                        "Forge workbench not created in generated golden hall.");
+                try
+                {
+                    forge = AndurilForgeBuilder.Build(map, map.Center, site.Faction);
+                    if (forge == null || !forge.Spawned)
+                        throw new InvalidOperationException(
+                            "Forge workbench not created in generated golden hall.");
+                }
+                catch (Exception layoutEx)
+                {
+                    // The fallback is intentionally small and independent of
+                    // the large footprint/roof system. The smith and Anduril
+                    // quest are more important than a decorative golden hall.
+                    Log.Error("[Aragorn] Main forge hall failed; switching " +
+                        "to safe smithy layout: " + layoutEx);
+                    forge = AndurilForgeBuilder.BuildRecoverySmithy(
+                        map, site.Faction);
+                }
                 // Champion receives the original Divine Order plate armor and open
                 // plate helmet by default, much tougher than a commoner.
                 PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail("BotchJob_DivineOrderChampion");
@@ -631,6 +644,58 @@ namespace AragornArmy
     public static class AndurilForgeBuilder
     {
         // All architecture is vanilla, with gold as real stuff. No graphics files.
+
+        // A 23x19 emergency workshop for partially generated old quest maps.
+        // If a major roof/terrain operation fails, building the bench and
+        // preserving the smith takes priority over rich architecture.
+        public static Thing BuildRecoverySmithy(Map map, Faction owner)
+        {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+            ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
+            ThingDef door = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
+            ThingDef smithy = DefDatabase<ThingDef>.GetNamedSilentFail("FueledSmithy")
+                ?? DefDatabase<ThingDef>.GetNamedSilentFail("ElectricSmithy");
+            if (wall == null || door == null || smithy == null)
+                throw new InvalidOperationException(
+                    "[Aragorn] Cannot recover the smithy: vanilla defs absent.");
+
+            IntVec3 center = map.Center;
+            for (int z = -9; z <= 9; z++)
+            for (int x = -11; x <= 11; x++)
+            {
+                IntVec3 cell = center + new IntVec3(x, 0, z);
+                if (!cell.InBounds(map)) continue;
+                try { map.roofGrid.SetRoof(cell, null); }
+                catch (Exception ex)
+                {
+                    Log.WarningOnce("[Aragorn] Emergency forge roof: " +
+                        ex.Message, 392522);
+                }
+                foreach (Thing t in cell.GetThingList(map).ToList())
+                {
+                    if (t == null || !t.Spawned || t is Pawn) continue;
+                    t.Destroy(DestroyMode.Vanish);
+                }
+                map.terrainGrid.SetTerrain(cell, TerrainDefOf.Soil);
+            }
+            for (int x = -10; x <= 10; x++)
+            for (int z = -8; z <= 8; z++)
+            {
+                if (Math.Abs(x) != 10 && Math.Abs(z) != 8) continue;
+                bool gate = x == 0 && z == -8;
+                SpawnBuilding(gate ? door : wall, ThingDefOf.Gold,
+                    center + new IntVec3(x, 0, z), map, owner);
+            }
+            IntVec3 benchCell = center + new IntVec3(0, 0, 5);
+            Thing bench = SpawnBuilding(smithy, ThingDefOf.Gold,
+                benchCell, map, owner);
+            if (bench == null || !bench.Spawned)
+                throw new InvalidOperationException(
+                    "[Aragorn] Recovery smithy still has no workbench.");
+            Log.Warning("[Aragorn] Recovered the empty forge map using a " +
+                "smaller golden workshop with accessible smith and player posts.");
+            return bench;
+        }
         public static Thing Build(Map map, IntVec3 near, Faction owner)
         {
             ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
