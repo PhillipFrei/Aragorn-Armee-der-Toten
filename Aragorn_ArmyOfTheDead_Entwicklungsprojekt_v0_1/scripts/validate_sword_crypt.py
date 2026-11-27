@@ -66,7 +66,7 @@ for grave in ((41, 10), (46, 15), (41, 22)):
     assert (grave[0] + ox, grave[1] + oy) in reached
 for annex in ((15, 37), (17, 5), (59, 27)):
     assert annex in reached, f"Unreachable roofed annex: {annex}"
-assert Counter("".join(map("".join, expanded)))["D"] == 9
+assert Counter("".join(map("".join, expanded)))["D"] == 10
 
 code = source.read_text(encoding="utf-8")
 assert "Width = 64" in code and "Height = 44" in code
@@ -87,4 +87,4 @@ assert "trialMarkers.Skip(trialGravesOpened)" not in trial_code, "Sequential ope
 assert "trialMarkers[trialGravesOpened]" not in trial_code, "Sequential opening returned"
 
 print("Sword crypt layout OK: 64x44 with 52x32 approved core; 7 posts x4 = 28 baseline skeletons (14 at minimum x0.5); "
-      "4 elite posts; 3 reachable tombs; 9 doors; 3 new foggable annexes; no disconnected cells.")
+      "4 elite posts; 3 reachable tombs; 10 doors; 3 new foggable annexes; no disconnected cells.")
