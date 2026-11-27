@@ -73,7 +73,13 @@ namespace AragornArmy
                     // It would prevent the intended new wall from spawning.
                     try
                     {
-                        thing.Destroy(DestroyMode.Vanish);
+                        // Some natural map objects (notably SteamGeyser) cannot
+                        // be Destroy()'d. DeSpawn removes those map blockers
+                        // without violating their indestructible ThingDef.
+                        if (!thing.def.destroyable)
+                            thing.DeSpawn(DestroyMode.Vanish);
+                        else
+                            thing.Destroy(DestroyMode.Vanish);
                     }
                     catch (Exception e)
                     {
