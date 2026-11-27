@@ -35,10 +35,12 @@ jobs:
         run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_empty_quest_recovery.py"
       - name: Compile RimWorld 1.6 assembly
         run: dotnet build "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/Aragorn_ArmyOfTheDead/Source/Aragorn_ArmyOfTheDead.csproj" -c Release --nologo
-      - name: Upload mod build
+      - name: Package complete installable mod with original folder
+        run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/package_mod.py"
+      - name: Upload correctly named installable ZIP
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Aragorn-ArmyOfTheDead-build
-          path: Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/Aragorn_ArmyOfTheDead/
+          name: Aragorn_Armee_der_Toten_v0.39.3_Profaned_Bogenschuetzen_Skelette_Eigener_Uebergang_Komplettmod
+          path: Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/dist/Aragorn_Armee_der_Toten_v0.39.3_Profaned_Bogenschuetzen_Skelette_Eigener_Uebergang_Komplettmod.zip
           if-no-files-found: error
