@@ -598,33 +598,54 @@ namespace AragornArmy
         private void BeginAxeDuel(Pawn pawn)
         {
             if (trialMap == null || trialDuelVictories >= 2 || !Cleared(trialGuards) ||
-                pawn == null || pawn.Downed || pawn.Position.DistanceTo(trialRingCenter) > 5f)
-                return;
+                pawn == null || pawn.Downed || !pawn.Spawned ||
+                pawn.Map != trialMap ||
+                pawn.Position.DistanceTo(trialRingCenter) > 5f) return;
             if (trialMap.mapPawns.AllPawnsSpawned.Any(other =>
                 other != pawn && other.Faction == Faction.OfPlayer &&
-                other.Position.DistanceTo(trialRingCenter) < 7f))
-                return;
-            if (trialDuelEnemy != null && trialDuelEnemy.Spawned &&
-                !trialDuelEnemy.Dead && !trialDuelEnemy.Downed &&
-                trialDuelChampion != null && trialDuelChampion.Spawned &&
-                !trialDuelChampion.Dead && !trialDuelChampion.Downed) return;
-            // Wait for TickClassTrial to register the previous victory.
+                other.Position.DistanceTo(trialRingCenter) < 7f)) return;
             if (trialDuelEnemy != null && (trialDuelEnemy.Dead || trialDuelEnemy.Downed))
-                return;
-            trialDuelChampion = pawn;
-            if (trialDuelEnemy == null || !trialDuelEnemy.Spawned)
+                return; // result is still being recorded
+
+            // If the previous challenger was downed, another colonist may
+            // take their place, but the same spirit continues fighting.
+            if (trialDuelEnemy != null && trialDuelEnemy.Spawned)
             {
-                Pawn ghost = SpawnQuestGhost(8 + trialDuelVictories,
-                    trialRingCenter + new IntVec3(0, 0, 3),
-                    ProfanedEncounterUtility.GetOrCreateFaction());
-                trialDuelEnemy = ghost;
-                if (ghost != null)
-                    LordMaker.MakeNewLord(ghost.Faction,
-                        new LordJob_DefendPoint(trialRingCenter,
-                            wanderRadius: 3f, defendRadius: 8f,
-                            isCaravanSendable: false, addFleeToil: false),
-                        trialMap, new List<Pawn> { ghost });
+                if (trialDuelChampion != null && trialDuelChampion.Spawned &&
+                    !trialDuelChampion.Dead && !trialDuelChampion.Downed) return;
+                trialDuelChampion = pawn;
+                Messages.Message(AragornText.T("AR_Class_DuelNeedChampion"),
+                    pawn, MessageTypeDefOf.ThreatBig);
+                return;
             }
+
+            int chosenGrave = -1;
+            IntVec3 spawnAt = trialRingCenter + new IntVec3(0, 0, 3);
+            int ghostIndex = 8 + trialDuelVictories;
+            if (!LegacyTrial)
+            {
+                var nearest = SealedSarcophagi().OrderBy(x =>
+                    x.grave.Position.DistanceTo(pawn.Position)).FirstOrDefault();
+                if (nearest.grave == null ||
+                    pawn.Position.DistanceTo(nearest.grave.Position) > 4f) return;
+                chosenGrave = nearest.index;
+                spawnAt = nearest.grave.Position;
+                ghostIndex = 8 + chosenGrave;
+            }
+
+            Faction hostile = ProfanedEncounterUtility.GetOrCreateFaction();
+            if (hostile == null) return;
+            Pawn ghost = SpawnQuestGhost(ghostIndex, spawnAt, hostile);
+            if (ghost == null) return;
+            trialDuelChampion = pawn;
+            trialDuelEnemy = ghost;
+            trialCurrentDuelGrave = chosenGrave;
+            if (chosenGrave >= 0) MarkSarcophagusOpened(chosenGrave);
+            LordMaker.MakeNewLord(hostile,
+                new LordJob_DefendPoint(trialRingCenter,
+                    wanderRadius: 3f, defendRadius: 8f,
+                    isCaravanSendable: false, addFleeToil: false),
+                trialMap, new List<Pawn> { ghost });
             Messages.Message(AragornText.F("AR_Class_DuelRound", trialDuelVictories + 1),
                 pawn, MessageTypeDefOf.ThreatBig);
         }
