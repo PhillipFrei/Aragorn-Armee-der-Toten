@@ -923,6 +923,26 @@ namespace AragornArmy
         }
     }
 
+    // A genuine quest sarcophagus is neither an ordinary lootable grave
+    // nor a ritual prop: no explosions, fire, melee or direct vanish may
+    // delete it while its six-class mission is active.
+    [HarmonyPatch(typeof(Thing), nameof(Thing.Destroy))]
+    internal static class AragornOathSarcophagusNoDestroy
+    {
+        private static bool Prefix(Thing __instance) =>
+            Current.Game?.GetComponent<AragornGame>()?.IsQuestSarcophagus(__instance) != true;
+    }
+
+    [HarmonyPatch(typeof(Building), nameof(Building.DeconstructibleBy))]
+    internal static class AragornOathSarcophagusNoDeconstruction
+    {
+        private static void Postfix(Building __instance, ref bool __result)
+        {
+            if (Current.Game?.GetComponent<AragornGame>()?.IsQuestSarcophagus(__instance) == true)
+                __result = false;
+        }
+    }
+
     // Vanilla-compatible 2D fortifications; no extra multi-floor mod.
     internal static class AragornTrialStructures
     {
@@ -1030,9 +1050,16 @@ namespace AragornArmy
             }
             else if (cls == 5)
             {
-                // Throne and triple cursed-seal positions. Bolts are genuine
-                // RimWorld weather events with warning flash.
-                Place(map, c + new IntVec3(0, 0, 16), "Sarcophagus");
+                // The royal sarcophagus is placed by PopulateClassTrial,
+                // not as a second decorative coffin.
+                // Two aisle lines and pillars lead to the throne, but the
+                // central route remains open for players and enemy AI.
+                for (int z = -8; z <= 13; z += 7)
+                    foreach (int x in new[] { -16, -12, 12, 16 })
+                        Place(map, c + new IntVec3(x, 0, z), "Wall");
+                for (int x = -17; x <= 17; x++)
+                    if (Math.Abs(x) > 4)
+                        Place(map, c + new IntVec3(x, 0, 8), "Barricade");
             }
             return c;
         }
