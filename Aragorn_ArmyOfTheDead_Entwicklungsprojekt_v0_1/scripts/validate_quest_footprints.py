@@ -27,6 +27,11 @@ for name, width, height in [
 assert prep.index("map.roofGrid.SetRoof(cell, null)") < prep.index("thing.Destroy(DestroyMode.Vanish)")
 assert prep.index("thing.Destroy(DestroyMode.Vanish)") < prep.index(
     "map.terrainGrid.SetTerrain(cell, buildableGround)")
+# Regression from Player.log 2026-11-27: SteamGeyser is indestructible.
+# Map preparation must despawn such objects instead of aborting the quest.
+assert "if (!thing.def.destroyable)" in prep
+assert "thing.DeSpawn(DestroyMode.Vanish)" in prep
+assert prep.index("if (!thing.def.destroyable)") < prep.index("thing.Destroy(DestroyMode.Vanish)")
 assert "TerrainDefOf.Soil" in prep
 assert "thing is Pawn" in prep, "Never delete live quest pawns while clearing the building"
 assert "thing is Building && t.Spawned" in prep or "t is Building && t.Spawned" in prep
