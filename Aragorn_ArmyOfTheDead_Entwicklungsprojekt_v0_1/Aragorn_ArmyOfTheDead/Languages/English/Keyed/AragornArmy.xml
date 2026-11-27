@@ -174,11 +174,11 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Class_Title>The Six Oaths – Trial {0}/6: {1}</AR_Class_Title>
   <AR_Class_ArrivalBody>Class trial {0}/6: {1}. Bring Aragorn to the marked site and complete its unique objective.</AR_Class_ArrivalBody>
   <AR_Class_Description0>Deep beneath the mountain lie three oathbound warriors. Defeat the guardians of their halls and open the three graves in any order. Conquer the spirits, that their ancient oath may be renewed.</AR_Class_Description0>
-  <AR_Class_Description1>Upon dark battlements stand three archers whose arrows seek the living. Break the oath seal, survive their volleys and free them from the curse.</AR_Class_Description1>
-  <AR_Class_Description2>Deep beneath the dark stone burn two fires of a profane rite. The Profaned sorcerers guard their chapels, and thunder echoes through the crypt. Extinguish both seals and confront the two spectral bombardiers.</AR_Class_Description2>
-  <AR_Class_Description3>Within the ancient temple, two axe warriors await the fulfilment of their oath. Drive out the ghouls and challenge each spirit alone in honourable combat.</AR_Class_Description3>
-  <AR_Class_Description4>Two captains raise their banners against the living. Endure three assaults of the forsaken and break their power.</AR_Class_Description4>
-  <AR_Class_Description5>In the hall of the forgotten throne waits a king whose vow remains unfulfilled. Break his three seals and walk through the storm of lightning to claim his allegiance.</AR_Class_Description5>
+  <AR_Class_Description1>Three cursed archers guard their battlements, surrounded by Profaned bowmen. Capture all three emplacements and unseal each indestructible sarcophagus. Only then can those spectral archers be harmed.</AR_Class_Description1>
+  <AR_Class_Description2>Curse-mages guard ancient oath coffins in two separate chapels. Lift both rituals to silence the lightning. Two spectral bombardiers await release in the inner sanctum.</AR_Class_Description2>
+  <AR_Class_Description3>Ghouls of the Profaned haunt the ancient halls. Drive them out, enter the arena alone and open the two coffins, one at a time. Each axe spirit must be faced in honourable single combat.</AR_Class_Description3>
+  <AR_Class_Description4>Three Profaned armies defend a forgotten fortress. Survive the assault waves, unseal both captains' tombs and defeat their spectral guardians. Only then shall their banners rest.</AR_Class_Description4>
+  <AR_Class_Description5>A forgotten king awaits the fulfilment of his oath. Defeat his guards and open the single royal sarcophagus. Endure three further assaults amid ever fiercer lightning before facing the king himself.</AR_Class_Description5>
   <AR_Class_Encounter>Class trial {0}/6 has started. Each class has its own objective.</AR_Class_Encounter>
   <AR_Class_OpenGrave>Open sealed grave</AR_Class_OpenGrave>
   <AR_Class_OpenGraveDesc>Defeat all Profaned guards first. Then stand within three cells of ANY unopened sarcophagus, select your colonist, and use this command. The graves may be opened in any order.</AR_Class_OpenGraveDesc>
@@ -214,12 +214,12 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Class_GravesReadyTitle>The Dead's Watch Has Ended</AR_Class_GravesReadyTitle>
   <AR_Class_GravesReadyBody>All Profaned defenders have fallen. The three sealed graves are ready, in ANY order. Stand beside a sarcophagus, select your colonist, and use 'Open grave' in the colonist's commands. This letter points to one of the three graves as an example.</AR_Class_GravesReadyBody>
   <AR_Bombardier_GuideTitle>The Two Fires of the Curse</AR_Bombardier_GuideTitle>
-  <AR_Bombardier_GuideBody>The ritual crypt has two side chapels, west and east. Each holds a cursed seal guarded by Profaned mages. While the seals burn, the two spectral bombardiers are protected and lightning strikes. Move a colonist within 3 cells of either seal, select that colonist, and click 'Break cursed oath seal'. Clear the chapels in either order.</AR_Bombardier_GuideBody>
-  <AR_Bombardier_SealGizmoDesc>The ritual fires stand in the western and eastern chapels. Move a selected colonist within 3 cells of either one. Break both seals to end the lightning storm and make the spectral bombardiers vulnerable.</AR_Bombardier_SealGizmoDesc>
+  <AR_Bombardier_GuideBody>The ritual crypt has two side chapels, one west and one east. An indestructible stone sarcophagus binds the curse in each. While sealed, they shield the two bombardiers and summon lightning. Defeat the mages, bring a colonist within three cells of either coffin and choose 'Unseal oath coffin'. The order is free and the sarcophagi remain intact.</AR_Bombardier_GuideBody>
+  <AR_Bombardier_SealGizmoDesc>The two mage chapels contain indestructible oath sarcophagi. Move a selected colonist within three cells of either one. Unseal both to end the lightning storm and expose the bombardiers.</AR_Bombardier_SealGizmoDesc>
   <AR_Bombardier_OneSealTitle>The First Fire Is Extinguished</AR_Bombardier_OneSealTitle>
-  <AR_Bombardier_OneSealBody>Part of the curse has been lifted. Lightning strikes less often. The remaining seal in the other chapel must also be extinguished.</AR_Bombardier_OneSealBody>
+  <AR_Bombardier_OneSealBody>The first sarcophagus is unsealed. The lightning weakens. Enter the opposite chapel and lift its curse as well.</AR_Bombardier_OneSealBody>
   <AR_Bombardier_SealsBrokenTitle>The Ritual's Power Is Broken</AR_Bombardier_SealsBrokenTitle>
-  <AR_Bombardier_SealsBrokenBody>Both cursed fires are out. The lightning storm is over and the two spectral bombardiers in the northern sanctum can now be harmed. Defeat them and the remaining wardens to free both spirits.</AR_Bombardier_SealsBrokenBody>
+  <AR_Bombardier_SealsBrokenBody>Both sarcophagi are unsealed and remain intact. Lightning ceases and the two spectral bombardiers in the northern sanctum are vulnerable. Defeat them and their remaining wardens.</AR_Bombardier_SealsBrokenBody>
   <AR_OathGraves_GuideTitle>The Unbreakable Oath Coffins</AR_OathGraves_GuideTitle>
   <AR_OathGraves_GuideBody>Trial {1}/6: This stronghold holds {0} enchanted sarcophagi. Lightning, explosives and weapons cannot destroy them. Defeat their wardens, move a colonist within three cells of a sealed tomb, select that colonist, and choose 'Unseal oath coffin'. The coffin remains in place; only its curse is lifted.</AR_OathGraves_GuideBody>
   <AR_OathGraves_OpenProgress>Unseal oath coffin ({0}/{1})</AR_OathGraves_OpenProgress>
