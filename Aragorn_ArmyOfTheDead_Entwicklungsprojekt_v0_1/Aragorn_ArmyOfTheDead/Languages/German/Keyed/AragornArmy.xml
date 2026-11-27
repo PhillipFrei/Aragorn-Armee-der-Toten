@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <AR_Rescue_Title>Der verlorene Erbe</AR_Rescue_Title>
-  <AR_Rescue_Description>Gerüchte sprechen von einem Mann edlen Blutes, gefangen in finsteren Händen. Man nennt ihn Aragorn. Wenn dies wahr ist, darf er nicht im Schatten vergehen.
-
-Finde sein Gefängnis auf der Weltkarte. Besiege die Profaned-Wachen und bringe ihn nach Hause.</AR_Rescue_Description>
+  <AR_Rescue_Description>Hinter einem Ring aus schwarzem Tiefwasser hält die Profaned-Legion einen Erben gefangen. Überquere den einzigen bewachten Steg, durchbrich die äußere Festung und suche die verschlossene Kammer im Herzen des inneren Bergfrieds. Dort harrt Aragorn seiner Befreiung.</AR_Rescue_Description>
   <AR_Rescue_Site>Aragorns Gefängnis</AR_Rescue_Site>
   <AR_Rescue_ArrivalTitle>Das Gefängnis entdeckt</AR_Rescue_ArrivalTitle>
-  <AR_Rescue_ArrivalBody>Die Spur führt zu einer Festung der Profaned. Zieh aus und befreie den Erben.</AR_Rescue_ArrivalBody>
+  <AR_Rescue_ArrivalBody>Die Spur führt zu einer Festung, ringsum vom tiefen Wasser umschlossen. Nur ein bewachter Übergang führt hinein. Im innersten Raum soll der Erbe gefangen liegen.</AR_Rescue_ArrivalBody>
   <AR_Rescue_Encounter>Hier wird Aragorn gefangen gehalten. Besiege seine {0} Profaned-Wachen.</AR_Rescue_Encounter>
   <AR_Rescue_Success>Aragorn ist frei und hat sich deiner Kolonie angeschlossen.</AR_Rescue_Success>
   <AR_Forge_Title>Die Klinge neu geschmiedet</AR_Forge_Title>
@@ -243,4 +241,6 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_OathGraves_Opened>Entsiegelt</AR_OathGraves_Opened>
   <AR_OathGraves_Sealed>Versiegelt</AR_OathGraves_Sealed>
   <AR_OathGraves_Indestructible>Unzerstörbarer Eidsarkophag</AR_OathGraves_Indestructible>
+  <AR_Rescue_MoatTitle>Das Wassergefängnis der Profaned</AR_Rescue_MoatTitle>
+  <AR_Rescue_MoatBody>Ein breiter Ring tiefen Wassers umgibt die Festung. Suche den schmalen Übergang im Süden, überwinde das bewachte Tor und betrete den überdachten Bergfried. Aragorn liegt hinter einer zweiten verschlossenen Tür im Raum ganz im Zentrum. Besiege seine Profaned-Wachen, um ihn zu befreien.</AR_Rescue_MoatBody>
 </LanguageData>
