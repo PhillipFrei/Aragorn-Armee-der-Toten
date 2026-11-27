@@ -41,8 +41,21 @@ paint(32, 3, "W")
 columns = [(27, 40), (37, 40), (27, 28), (37, 28),
            (10, 19), (15, 19), (49, 19), (54, 19),
            (24, 7), (40, 7)]
-for x, y in columns:
+for x, y in columns + [
+    (10, 26), (15, 26), (49, 26), (54, 26), (31, 10), (33, 10)
+]:
     paint(x, y, "C")
+for x in range(28, 37, 2):
+    if x != 32:
+        paint(x, 41, "B")
+        paint(x, 30, "B")
+for y in range(22, 33, 2):
+    if y != 28:
+        paint(18, y, "B")
+        paint(46, y, "B")
+for x in range(24, 41, 2):
+    if x != 32:
+        paint(x, 16, "B")
 
 reachable = {(32, 47)}
 queue = deque(reachable)
@@ -50,11 +63,11 @@ while queue:
     x, y = queue.popleft()
     for target in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
         tx, ty = target
-        if 0 <= tx < w and 0 <= ty < h and grid[ty][tx] in "PD" and target not in reachable:
+        if 0 <= tx < w and 0 <= ty < h and grid[ty][tx] in "PDB" and target not in reachable:
             queue.append(target)
             reachable.add(target)
 
-walkable = {(x, y) for y in range(h) for x in range(w) if grid[y][x] in "PD"}
+walkable = {(x, y) for y in range(h) for x in range(w) if grid[y][x] in "PDB"}
 assert reachable - {(32, 47)} == walkable, f"Unreachable tiles: {walkable - reachable}"
 for name, x, y in [
     ("west ritual seal", 11, 24), ("east ritual seal", 53, 24),
@@ -63,6 +76,14 @@ for name, x, y in [
 ]:
     assert (x, y) in reachable, f"Cannot reach {name} at {(x, y)}"
 assert Counter("".join(map("".join, grid)))["D"] == 5
+assert Counter("".join(map("".join, grid)))["B"] >= 20, (
+    "Ritual chapels must have actual barricaded guard positions")
+assert "RoofChapel(map, 3, 14, 22, 35)" in layout
+assert "RoofChapel(map, 42, 14, 61, 35)" in layout
+assert "RoofChapel(map, 20, 2, 44, 21)" in layout
+assert "firingSquares" in layout and "SpawnThemedGuards(" in layout
+assert "wanderRadius: 2f" in layout
+
 assert "AragornBombardierCryptLayout.Build(map)" in trials
 assert "AragornBombardierCryptLayout.SpawnMages(map, hostile)" in trials
 assert "AR_Bombardier_GuideBody" in trials and "AR_Bombardier_SealsBrokenBody" in trials
@@ -74,6 +95,6 @@ for lang in ("German", "English"):
     for name in ("AR_Bombardier_GuideTitle", "AR_Bombardier_SealsBrokenBody",
                  "AR_Bombardier_SealGizmoDesc", "AR_Class_Description2"):
         assert f"<{name}>" in keys, f"Missing {name} in {lang}"
-print("Bombardier quest verified: 65x49, five connected chambers, "
+print("Bombardier quest verified: 65x49, five connected, roofed chambers with defended barricades, "
       "both seals + both ghosts reachable, five gates, lightning phase logic, "
       "quest guidance and objective gizmo icons present.")
