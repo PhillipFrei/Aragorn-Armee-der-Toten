@@ -154,6 +154,15 @@ namespace AragornArmy
             trialCampaignActive && trialMap != null && thing != null &&
             thing.Map == trialMap && trialMarkers.Contains(thing);
 
+        public string TrialSarcophagusInspect(Thing marker)
+        {
+            if (!IsQuestSarcophagus(marker)) return null;
+            int index = trialMarkers.IndexOf(marker);
+            return AragornText.T(MarkerActivated(index)
+                ? "AR_OathGraves_Opened" : "AR_OathGraves_Sealed")
+                + " · " + AragornText.T("AR_OathGraves_Indestructible");
+        }
+
         private void MarkSarcophagusOpened(int index)
         {
             if (index < 0 || index >= trialMarkers.Count ||
