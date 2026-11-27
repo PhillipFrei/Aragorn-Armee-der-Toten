@@ -548,7 +548,7 @@ namespace AragornArmy
                 (trialWavesSpawned < 3 || !Cleared(trialGuards))) return;
             if (cls == 5 && !LegacyTrial && !Cleared(trialGuards)) return;
 
-            // Unlike the v0.36 implementation, NO marker.Destroy() call.
+            // Unlike v0.36, ritual markers are never physically removed.
             MarkSarcophagusOpened(target.index);
 
             if (cls == 2)
