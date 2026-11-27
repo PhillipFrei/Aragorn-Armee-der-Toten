@@ -273,7 +273,7 @@ namespace AragornArmy
             var supports = new[] { new IntVec2(44, 12), new IntVec2(44, 20) };
             foreach (var support in supports)
             {
-                grid[support.x, support.z] = 'W';
+                grid[support.x + OffsetX, support.z + OffsetY] = 'W';
                 PlaceBuilding(map, LegacyCell(map, support.x, support.z), wall, stone);
             }
 
