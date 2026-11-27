@@ -50,9 +50,10 @@ assert main.index("ClearFootprint(map, c, 49, 39)") < main.index(
     "OuterFort(map, c, 24, 19, false)")
 
 for name, contents in [("sword", sword), ("ritual", bomb)]:
-    assert "AragornTrialSitePreparation.RequireBuilding(" in contents, (
+    build = contents.split("public static IntVec3 Build(Map map)", 1)[1]
+    assert "AragornTrialSitePreparation.RequireBuilding(" in build, (
         f"{name} must validate every planned wall and doorway")
-    assert contents.index("RequireBuilding(") < contents.index("return "), (
+    assert build.index("RequireBuilding(") < build.rindex("return "), (
         f"{name} must validate the structure before returning success")
 print("Quest footprint QA: all 6 trials clear full 52x32 / 65x49 / 49x39 "
       "construction rectangles + 3-cell margin; roofs before rock, obstacles "
