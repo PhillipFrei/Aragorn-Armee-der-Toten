@@ -174,11 +174,11 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Class_Title>Die sechs Eide – Prüfung {0}/6: {1}</AR_Class_Title>
   <AR_Class_ArrivalBody>Klassenprüfung {0}/6: {1}. Reise mit Aragorn zur Festung. Besiege die Profaned und erfülle die jeweilige Prüfung.</AR_Class_ArrivalBody>
   <AR_Class_Description0>Tief unter dem Berg ruhen drei Krieger, deren Eid gebrochen ward. Vertreibe die Wächter aus ihren Hallen und öffne die drei Gräber in beliebiger Reihenfolge. Bezwinge die Geister, auf dass ihr alter Schwur von Neuem gelte.</AR_Class_Description0>
-  <AR_Class_Description1>Auf dunklen Zinnen wachen drei Schützen, deren Pfeile den Lebenden gelten. Brich das Eidsiegel, überstehe den Pfeilhagel und befreie sie von ihrem Bann.</AR_Class_Description1>
-  <AR_Class_Description2>Tief unter den dunklen Steinen brennen zwei Flammen eines verderbten Ritus. Fluchkundige der Profaned hüten ihre Kapellen, und Donner hallt durch das Gewölbe. Lösche beide Siegel und tritt den zwei Geisterbombardieren entgegen.</AR_Class_Description2>
-  <AR_Class_Description3>Im alten Tempel harren zwei Axtkrieger des letzten Schwures. Vertreibe die Ghule und tritt jedem von ihnen allein im ehrbaren Zweikampf entgegen.</AR_Class_Description3>
-  <AR_Class_Description4>Zwei Hauptleute halten ihre Banner gegen die Lebenden erhoben. Überstehe drei Anstürme der Verdammten und brich ihre Macht.</AR_Class_Description4>
-  <AR_Class_Description5>Im Saal des vergessenen Thrones harrt ein König, dessen Eid nie erfüllt ward. Zerbrich seine drei Siegel und schreite durch den Blitzsturm, um seine Treue einzufordern.</AR_Class_Description5>
+  <AR_Class_Description1>Drei verfluchte Schützen bewachen ihre Zinnen, umringt von Profaned-Bogenschützen. Erobere die drei Schützenstellungen und entsiegele jeden ihrer unzerstörbaren Sarkophage. Erst dann verlieren die drei Geister ihren Schutz.</AR_Class_Description1>
+  <AR_Class_Description2>In zwei Seitenkapellen bewachen Fluchkundige uralte Eidsarkophage. Brich die zwei Rituale, auf dass der Blitzsturm verstumme. Im Heiligtum warten zwei Geisterbombardiere auf ihre Erlösung.</AR_Class_Description2>
+  <AR_Class_Description3>In den alten Hallen harren die Ghule der Profaned. Vertreibe sie, betritt allein den Duellring und öffne die beiden Sarkophage einzeln. Im ehrbaren Kampf soll jeder Axtgeist seinen Eid aufs Neue schwören.</AR_Class_Description3>
+  <AR_Class_Description4>Drei Heerscharen der Profaned verteidigen eine verlassene Festung. Überstehe die Angriffswellen, entsiegele die zwei Hauptmannsgräber und bezwinge ihre Hüter. Erst dann mögen ihre Banner ruhen.</AR_Class_Description4>
+  <AR_Class_Description5>Ein vergessener König harrt seines Schwures. Besiege seine Leibgarde und öffne den einzigen königlichen Sarkophag. Überstehe drei weitere Anstürme unter immer stärkeren Blitzen, ehe du dem König selbst gegenübertrittst.</AR_Class_Description5>
   <AR_Class_Encounter>Klassenprüfung {0}/6 hat begonnen. Achtung: Jede Klasse hat ein eigenes Missionsziel.</AR_Class_Encounter>
   <AR_Class_OpenGrave>Versiegeltes Grab öffnen</AR_Class_OpenGrave>
   <AR_Class_OpenGraveDesc>Besiege zuerst alle Profaned-Wachen. Stelle dann einen Kolonisten höchstens drei Felder neben EIN beliebiges ungeöffnetes Grab, wähle den Kolonisten aus und nutze diesen Befehl. Die Reihenfolge ist frei.</AR_Class_OpenGraveDesc>
@@ -214,10 +214,33 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_Class_GravesReadyTitle>Die Wächter sind gefallen</AR_Class_GravesReadyTitle>
   <AR_Class_GravesReadyBody>Alle Profaned-Wachen sind besiegt. Du kannst jetzt jedes der drei Gräber zuerst öffnen. Gehe mit einem Kolonisten dicht an einen Sarkophag, wähle den Kolonisten aus und klicke auf „Grab öffnen“. Diese Meldung markiert beispielhaft eines der drei Gräber.</AR_Class_GravesReadyBody>
   <AR_Bombardier_GuideTitle>Die zwei Feuer des Fluchs</AR_Bombardier_GuideTitle>
-  <AR_Bombardier_GuideBody>Die Ritualkrypta besitzt zwei Seitenkapellen – eine im Westen, eine im Osten. In jeder brennt ein verfluchtes Siegel, geschützt von Profaned-Magiern. Solange die Siegel bestehen, schützen sie die beiden Geisterbombardiere und rufen Blitze hervor. Stelle einen Kolonisten höchstens 3 Felder neben ein Fluchsiegel, wähle ihn aus und klicke auf „Verfluchtes Eidsiegel brechen“. Die Kapellen können in beliebiger Reihenfolge gesäubert werden.</AR_Bombardier_GuideBody>
-  <AR_Bombardier_SealGizmoDesc>Die Ritualfeuer stehen in den beiden Seitenkapellen. Stelle einen ausgewählten Kolonisten höchstens 3 Felder neben eines der Siegel. Breche beide Feuer, um den Blitzsturm zu beenden und die Bombardiere verwundbar zu machen.</AR_Bombardier_SealGizmoDesc>
+  <AR_Bombardier_GuideBody>Die Ritualkrypta besitzt zwei Seitenkapellen, eine im Westen und eine im Osten. Je ein unzerstörbarer Sarkophag bindet dort die Macht des Fluchs. Solange sie versiegelt sind, schützen sie die Geisterbombardiere und rufen Blitze hervor. Vertreibe die Magier, stelle einen Kolonisten höchstens drei Felder neben einen Sarkophag und wähle „Eidsarg entsiegeln“. Beide Reihenfolgen sind möglich; die Särge bleiben erhalten.</AR_Bombardier_GuideBody>
+  <AR_Bombardier_SealGizmoDesc>In den beiden Magierkapellen stehen unzerstörbare Eidsarkophage. Gehe mit dem ausgewählten Kolonisten bis auf drei Felder an einen davon heran. Entsiegele beide, um den Blitzsturm zu beenden und die Bombardiere verwundbar zu machen.</AR_Bombardier_SealGizmoDesc>
   <AR_Bombardier_OneSealTitle>Das erste Feuer ist erloschen</AR_Bombardier_OneSealTitle>
-  <AR_Bombardier_OneSealBody>Ein Teil des Fluchs ist gebrochen. Die Blitze schlagen seltener ein. Das verbliebene Siegel in der anderen Kapelle muss ebenfalls gelöscht werden.</AR_Bombardier_OneSealBody>
+  <AR_Bombardier_OneSealBody>Der erste Sarkophag ist entsiegelt. Die Blitze werden schwächer. Begib dich zur anderen Kapelle und löse auch deren Bann.</AR_Bombardier_OneSealBody>
   <AR_Bombardier_SealsBrokenTitle>Die Magie des Rituals zerfällt</AR_Bombardier_SealsBrokenTitle>
-  <AR_Bombardier_SealsBrokenBody>Beide verfluchten Feuer sind erloschen. Der Blitzsturm verstummt, und die zwei Geisterbombardiere im nördlichen Heiligtum sind nun verwundbar. Bezwinge sie und die übrigen Wächter, um beide Geister zu befreien.</AR_Bombardier_SealsBrokenBody>
+  <AR_Bombardier_SealsBrokenBody>Beide Sarkophage sind entsiegelt und stehen unversehrt. Der Blitzsturm endet, die zwei Geisterbombardiere im nördlichen Heiligtum sind nun verwundbar. Bezwinge sie und die letzten Wächter.</AR_Bombardier_SealsBrokenBody>
+  <AR_OathGraves_GuideTitle>Die unzerbrechlichen Eidsärge</AR_OathGraves_GuideTitle>
+  <AR_OathGraves_GuideBody>Prüfung {1}/6: In dieser Festung stehen {0} magisch geschützte Sarkophage. Sie können weder durch Blitze, Bomben noch durch Waffen zerstört werden. Besiege die jeweiligen Wächter, gehe mit einem Kolonisten höchstens drei Felder an einen noch versiegelten Sarg, wähle ihn aus und betätige „Eidsarg entsiegeln“. Der Sarkophag bleibt stehen; nur sein Fluch wird gelöst.</AR_OathGraves_GuideBody>
+  <AR_OathGraves_OpenProgress>Eidsarg entsiegeln ({0}/{1})</AR_OathGraves_OpenProgress>
+  <AR_OathGraves_OpenDescription>Wähle einen Kolonisten nahe einem versiegelten Sarkophag. Nur dessen Ritual wird ausgelöst; der Sarg bleibt stehen und ist unzerstörbar. Andere Gräber können separat geöffnet werden.</AR_OathGraves_OpenDescription>
+  <AR_OathGraves_DuelDescription>Vertreibe erst alle Ghule. Schicke genau einen Kolonisten neben einen der zwei Sarkophage im inneren Duellring und fordere den zugehörigen Axtgeist heraus. Nur dieser Kolonist darf kämpfen.</AR_OathGraves_DuelDescription>
+  <AR_OathGraves_DuelApproach>Ein Kolonist muss allein im Ring stehen und höchstens vier Felder von einem ungeöffneten Axtgrab entfernt sein.</AR_OathGraves_DuelApproach>
+  <AR_OathGraves_ArchersRemain>Die Profaned-Bogenschützen an diesem Grab müssen zuerst bezwungen werden.</AR_OathGraves_ArchersRemain>
+  <AR_OathGraves_CaptainsWait>Die drei Angriffswellen müssen zuerst vollständig besiegt werden.</AR_OathGraves_CaptainsWait>
+  <AR_OathGraves_RoyalGuards>Zuerst die königliche Profaned-Leibgarde besiegen.</AR_OathGraves_RoyalGuards>
+  <AR_OathGraves_ArcherFreedTitle>Der Schwur des Schützen erwacht</AR_OathGraves_ArcherFreedTitle>
+  <AR_OathGraves_ArcherFreedBody>Der Sarkophag {0}/3 ist entsiegelt. Sein Geisterbogenschütze kann jetzt besiegt und erlöst werden. Zwei andere Schützenstellungen bleiben zu erobern.</AR_OathGraves_ArcherFreedBody>
+  <AR_OathGraves_CaptainAwakesTitle>Ein Hauptmann legt den Eid ab</AR_OathGraves_CaptainAwakesTitle>
+  <AR_OathGraves_CaptainAwakesBody>Der Sarkophag {0}/2 ist entsiegelt. Der zugehörige Hauptmann ist nun verwundbar. Beide Hauptleute müssen bezwungen werden.</AR_OathGraves_CaptainAwakesBody>
+  <AR_OathGraves_CaptainsReadyTitle>Die Banner der Verdammten sinken</AR_OathGraves_CaptainsReadyTitle>
+  <AR_OathGraves_CaptainsReadyBody>Drei Angriffswellen sind gefallen. Die zwei Hauptleute werden erst verwundbar, wenn du ihre jeweiligen Sarkophage im inneren Hof entsiegelst. Gehe mit einem Kolonisten zu den Gräbern.</AR_OathGraves_CaptainsReadyBody>
+  <AR_OathGraves_KingAwakesTitle>Der letzte Eid ist erwacht</AR_OathGraves_KingAwakesTitle>
+  <AR_OathGraves_KingAwakesBody>Das königliche Grab ist entsiegelt, doch der König bleibt durch den Sturm geschützt. Drei weitere Elitewellen ziehen herauf; nach deren Niederlage verliert sein Blitzschutz seine Macht.</AR_OathGraves_KingAwakesBody>
+  <AR_OathGraves_KingWave>Königliche Elitewelle {0}/3! Die Blitze werden heftiger.</AR_OathGraves_KingWave>
+  <AR_OathGraves_KingVulnerableTitle>Der König ist nicht länger geschützt</AR_OathGraves_KingVulnerableTitle>
+  <AR_OathGraves_KingVulnerableBody>Alle drei königlichen Wellen sind besiegt. Der König der Toten ist nun verwundbar. Bezwinge ihn im Blitzsturm und fordere seinen Eid ein.</AR_OathGraves_KingVulnerableBody>
+  <AR_OathGraves_Opened>Entsiegelt</AR_OathGraves_Opened>
+  <AR_OathGraves_Sealed>Versiegelt</AR_OathGraves_Sealed>
+  <AR_OathGraves_Indestructible>Unzerstörbarer Eidsarkophag</AR_OathGraves_Indestructible>
 </LanguageData>

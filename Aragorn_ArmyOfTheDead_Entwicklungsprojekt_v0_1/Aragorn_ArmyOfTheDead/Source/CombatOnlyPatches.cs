@@ -14,6 +14,13 @@ namespace AragornArmy
     {
         private static void Postfix(ThingWithComps __instance, ref string __result)
         {
+            string oathStatus = Current.Game?.GetComponent<AragornGame>()
+                ?.TrialSarcophagusInspect(__instance);
+            if (!string.IsNullOrEmpty(oathStatus))
+            {
+                if (!string.IsNullOrEmpty(__result)) __result += "\n";
+                __result += oathStatus;
+            }
             AragornForgeGame game = Current.Game?.GetComponent<AragornForgeGame>();
             if (game == null || game.ForgeBuilding != __instance ||
                 !game.ShowForgeProgress(__instance.Map)) return;

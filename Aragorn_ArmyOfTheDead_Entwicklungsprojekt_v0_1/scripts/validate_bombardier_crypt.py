@@ -66,7 +66,7 @@ assert Counter("".join(map("".join, grid)))["D"] == 5
 assert "AragornBombardierCryptLayout.Build(map)" in trials
 assert "AragornBombardierCryptLayout.SpawnMages(map, hostile)" in trials
 assert "AR_Bombardier_GuideBody" in trials and "AR_Bombardier_SealsBrokenBody" in trials
-assert "trialGhosts.Contains(target as Pawn)" in trials
+assert "cls == 2 && RemainingMarkers > 0" in trials and "trialGhosts.Contains(spirit)" in trials
 assert '"Aragorn/Gizmos/GhostTrial"' in trials
 assert "RemainingMarkers >= 2 ? 480 : 780" in trials
 for lang in ("German", "English"):
