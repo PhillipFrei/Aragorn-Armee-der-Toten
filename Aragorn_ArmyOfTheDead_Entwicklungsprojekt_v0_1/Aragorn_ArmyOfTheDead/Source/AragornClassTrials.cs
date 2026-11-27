@@ -510,12 +510,13 @@ namespace AragornArmy
             if (candidate.grave == null ||
                 pawn.Position.DistanceTo(candidate.grave.Position) > 3f) return;
             IntVec3 point = candidate.grave.Position;
-            // Register the opening before destroying the marker so the
-            // destroyed-grave safety net cannot spawn a duplicate enemy.
+            // The sarcophagus NEVER vanishes: the saved ritual status
+            // is what changes. Its ghost emerges beside the stone coffin.
             SpawnOpenedGraveGhost(candidate.index, point);
             if (trialOpenedGraveIndices.Contains(candidate.index))
             {
-                candidate.grave.Destroy(DestroyMode.Vanish);
+                FleckMaker.ThrowDustPuffThick(candidate.grave.DrawPos, trialMap,
+                    2.4f, new Color(.15f, .9f, .75f));
                 Messages.Message(AragornText.F("AR_Class_GraveAwakes", trialGravesOpened),
                     pawn, MessageTypeDefOf.ThreatBig);
             }
@@ -523,14 +524,21 @@ namespace AragornArmy
 
         private void BreakTrialSeal(Pawn pawn)
         {
-            Thing nearest = trialMarkers.Where(t => t != null && t.Spawned)
-                .OrderBy(t => t.Position.DistanceTo(pawn.Position)).FirstOrDefault();
-            if (nearest == null || pawn.Position.DistanceTo(nearest.Position) > 3f) return;
-            Vector3 dustAt = nearest.DrawPos;
-            nearest.Destroy(DestroyMode.Vanish);
-            FleckMaker.ThrowDustPuffThick(dustAt, trialMap, 2f,
-                new Color(.15f, .86f, .7f));
+            if (pawn == null || !pawn.Spawned || pawn.Map != trialMap ||
+                pawn.Faction != Faction.OfPlayer) return;
+            var target = SealedSarcophagi().OrderBy(x =>
+                x.grave.Position.DistanceTo(pawn.Position)).FirstOrDefault();
+            Thing grave = target.grave;
+            if (grave == null || pawn.Position.DistanceTo(grave.Position) > 3f) return;
             int cls = ClassNumber(trialIndex);
+            if (cls == 1 && !LegacyTrial && TowerStillGuarded(grave)) return;
+            if (cls == 4 && !LegacyTrial &&
+                (trialWavesSpawned < 3 || !Cleared(trialGuards))) return;
+            if (cls == 5 && !LegacyTrial && !Cleared(trialGuards)) return;
+
+            // Unlike the v0.36 implementation, NO marker.Destroy() call.
+            MarkSarcophagusOpened(target.index);
+
             if (cls == 2)
             {
                 if (RemainingMarkers == 0)
@@ -544,20 +552,47 @@ namespace AragornArmy
                 }
                 else
                 {
-                    trialNextMagicTick = Ticks + 780; // one seal: slower storm
-                    Thing remaining = trialMarkers.FirstOrDefault(t => t != null && t.Spawned);
+                    trialNextMagicTick = Ticks + 780;
+                    Thing remaining = SealedSarcophagi().Select(x => x.grave)
+                        .FirstOrDefault();
                     Find.LetterStack.ReceiveLetter(
                         AragornText.T("AR_Bombardier_OneSealTitle"),
                         AragornText.T("AR_Bombardier_OneSealBody"),
                         LetterDefOf.NeutralEvent, remaining);
                 }
             }
-            else if (cls == 5 && RemainingMarkers == 0)
-                Messages.Message(AragornText.T("AR_Class_KingShieldBroken"),
-                    pawn, MessageTypeDefOf.PositiveEvent);
-            else
-                Messages.Message(AragornText.F("AR_Class_SealsLeft", RemainingMarkers),
-                    pawn, MessageTypeDefOf.NeutralEvent);
+            else if (cls == 5)
+            {
+                if (!LegacyTrial)
+                {
+                    trialKingPhase = 1;
+                    trialKingPhaseTick = Ticks + 300;
+                    trialNextMagicTick = Ticks + 220;
+                    Find.LetterStack.ReceiveLetter(
+                        AragornText.T("AR_OathGraves_KingAwakesTitle"),
+                        AragornText.T("AR_OathGraves_KingAwakesBody"),
+                        LetterDefOf.ThreatBig, trialBoss);
+                }
+                else if (RemainingMarkers == 0)
+                    Messages.Message(AragornText.T("AR_Class_KingShieldBroken"),
+                        pawn, MessageTypeDefOf.PositiveEvent);
+            }
+            else if (cls == 1)
+            {
+                Find.LetterStack.ReceiveLetter(
+                    AragornText.T("AR_OathGraves_ArcherFreedTitle"),
+                    AragornText.F("AR_OathGraves_ArcherFreedBody", target.index + 1),
+                    LetterDefOf.ThreatBig, trialGhosts.Count > target.index
+                        ? trialGhosts[target.index] : pawn);
+            }
+            else if (cls == 4)
+            {
+                Find.LetterStack.ReceiveLetter(
+                    AragornText.T("AR_OathGraves_CaptainAwakesTitle"),
+                    AragornText.F("AR_OathGraves_CaptainAwakesBody", target.index + 1),
+                    LetterDefOf.ThreatBig, trialGhosts.Count > target.index
+                        ? trialGhosts[target.index] : pawn);
+            }
         }
 
         private void BeginAxeDuel(Pawn pawn)
