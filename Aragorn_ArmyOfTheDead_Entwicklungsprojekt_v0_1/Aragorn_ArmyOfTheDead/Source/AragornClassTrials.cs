@@ -83,8 +83,7 @@ namespace AragornArmy
                 // mission, rather than resetting it.
                 if (trialCampaignActive && trialIndex >= 0 && ClassNumber(trialIndex) != 0)
                     for (int i = 0; i < trialMarkers.Count; i++)
-                        if (trialMarkers[i] == null || trialMarkers[i].Destroyed ||
-                            !trialMarkers[i].Spawned)
+                        if (trialMarkers[i] == null || trialMarkers[i].Destroyed)
                             if (!trialActivatedSarcophagi.Contains(i))
                                 trialActivatedSarcophagi.Add(i);
                 if (trialOpenedGraveIndices == null) trialOpenedGraveIndices = new List<int>();
@@ -271,10 +270,12 @@ namespace AragornArmy
                             AddTrialMarker(AragornSwordCryptLayout.Grave(map, i),
                                 fixedPosition: true);
                         break;
-                    case 1: // Three separate archer commands hold their own positions.
+                    case 1: // Three fortified positions with one oath tomb
+                            // controlling each otherwise invulnerable archer.
                         for (int i = 0; i < 3; i++)
                         {
                             IntVec3 tower = trialFortCenter + new IntVec3((i - 1) * 13, 0, 9);
+                            AddTrialMarker(tower + new IntVec3(0, 0, -5), fixedPosition: true);
                             Pawn archer = SpawnQuestGhost(3 + i, tower, hostile);
                             List<Pawn> bowmen = ProfanedEncounterUtility.SpawnThemedGuards(
                                 trialMap, tower + new IntVec3(0, 0, -4), hostile, 9, "archers");
@@ -286,7 +287,6 @@ namespace AragornArmy
                                         defendRadius: 32f, isCaravanSendable: false, addFleeToil: false),
                                     trialMap, bowmen);
                         }
-                        AddTrialMarker(trialFortCenter);
                         break;
                     case 2: // True ritual crypt: two guarded side chapels
                             // and a northern sanctum with both bombardiers.
@@ -296,36 +296,47 @@ namespace AragornArmy
                             AragornBombardierCryptLayout.SecondGhost(map), hostile);
                         trialGuards.AddRange(AragornBombardierCryptLayout.SpawnMages(map, hostile));
                         AddTrialMarker(AragornBombardierCryptLayout.WestShrine(map),
-                            fixedPosition: true, preferredDef: "BotchJob_ProfanedBrazierDarklight");
+                            fixedPosition: true);
                         AddTrialMarker(AragornBombardierCryptLayout.EastShrine(map),
-                            fixedPosition: true, preferredDef: "BotchJob_ProfanedBrazierDarklight");
+                            fixedPosition: true);
                         AragornBombardierCryptLayout.AssignBombardierGuard(
                             map, hostile, westGhost, eastGhost);
                         break;
-                    case 3: // Temple first; two sequential one-on-one axe duels later.
+                    case 3: // Temple: two indestructible challenge graves
+                            // activate distinct one-on-one axe fights.
                         AddDefenders(trialFortCenter + new IntVec3(-8, 0, -9), hostile, 8, "ghouls");
                         AddDefenders(trialFortCenter + new IntVec3(8, 0, -9), hostile, 8, "ghouls");
+                        AddTrialMarker(trialRingCenter + new IntVec3(-3, 0, 0),
+                            fixedPosition: true);
+                        AddTrialMarker(trialRingCenter + new IntVec3(3, 0, 0),
+                            fixedPosition: true);
                         break;
-                    case 4: // Two captains hold the inner fort behind three waves.
+                    case 4: // Three enemy waves, then two captain graves
+                            // unlock distinct commanders in the fortress.
                         SpawnQuestGhost(10, trialFortCenter + new IntVec3(-7, 0, 12), hostile);
                         SpawnQuestGhost(11, trialFortCenter + new IntVec3(7, 0, 12), hostile);
+                        AddTrialMarker(trialFortCenter + new IntVec3(-7, 0, 7),
+                            fixedPosition: true);
+                        AddTrialMarker(trialFortCenter + new IntVec3(7, 0, 7),
+                            fixedPosition: true);
                         AddDefenders(trialFortCenter + new IntVec3(0, 0, -13), hostile, 8, "elite");
                         trialWavesSpawned = 1;
                         break;
-                    case 5: // King, three oath-seals, elite guard and lightning.
+                    case 5: // One royal sarcophagus releases a three-wave
+                            // throne ritual with escalating lightning.
                         SpawnQuestGhost(12, trialFortCenter + new IntVec3(0, 0, 13), hostile);
                         AddDefenders(trialFortCenter + new IntVec3(-9, 0, 5), hostile, 10, "elite");
                         AddDefenders(trialFortCenter + new IntVec3(9, 0, 5), hostile, 10, "elite");
-                        for (int i = 0; i < 3; i++)
-                            AddTrialMarker(trialFortCenter + new IntVec3((i - 1) * 9, 0, -1));
+                        AddTrialMarker(trialFortCenter + new IntVec3(0, 0, 2),
+                            fixedPosition: true);
                         break;
                 }
                 // Every quest must have its intended targets; a partial map
                 // must never grant free spirits or trap a save in an unwinnable site.
                 int expectedGhosts = cls == 0 || cls == 3 ? 0 :
                     cls == 1 ? 3 : cls == 5 ? 1 : 2;
-                int expectedMarkers = cls == 0 || cls == 5 ? 3 :
-                    cls == 1 ? 1 : cls == 2 ? 2 : 0;
+                int[] markerCounts = { 3, 3, 2, 2, 2, 1 };
+                int expectedMarkers = markerCounts[cls];
                 if (trialGhosts.Count != expectedGhosts ||
                     trialMarkers.Count != expectedMarkers || trialGuards.Count == 0)
                     throw new InvalidOperationException("Incomplete class trial map: class=" + cls +
@@ -350,6 +361,15 @@ namespace AragornArmy
                         AragornText.T("AR_Bombardier_GuideTitle"),
                         AragornText.T("AR_Bombardier_GuideBody"),
                         LetterDefOf.NeutralEvent, firstSeal);
+                }
+                if (cls != 0 && !trialSarcophagusGuideShown)
+                {
+                    Find.LetterStack.ReceiveLetter(
+                        AragornText.T("AR_OathGraves_GuideTitle"),
+                        AragornText.F("AR_OathGraves_GuideBody",
+                            expectedMarkers, cls + 1),
+                        LetterDefOf.NeutralEvent, trialMarkers[0]);
+                    trialSarcophagusGuideShown = true;
                 }
                 Messages.Message(AragornText.F("AR_Class_Encounter", cls + 1),
                     MessageTypeDefOf.ThreatBig);
