@@ -227,6 +227,15 @@ namespace AragornArmy
         private static void Postfix(Building __instance, Faction faction,
             ref AcceptanceReport __result)
         {
+            // The patched RimWorld method returns AcceptanceReport, NOT bool.
+            // Keep this in the existing valid Harmony patch; a second patch
+            // with ref bool prevented PatchAll from completing, removing all
+            // Aragorn gizmos and the ability to launch post-forge quests.
+            if (Current.Game?.GetComponent<AragornGame>()?.IsQuestSarcophagus(__instance) == true)
+            {
+                __result = false;
+                return;
+            }
             if (faction == Faction.OfPlayer &&
                 Current.Game?.GetComponent<AragornForgeGame>()?.IsDivineGoldProperty(__instance) == true)
                 __result = false;
