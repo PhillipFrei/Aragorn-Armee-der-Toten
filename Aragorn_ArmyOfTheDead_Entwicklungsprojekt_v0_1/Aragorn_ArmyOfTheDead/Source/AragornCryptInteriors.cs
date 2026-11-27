@@ -193,7 +193,7 @@ namespace AragornArmy
                 rebuild?.Invoke(updater, null);
                 object fog = map.fogGrid;
                 MethodInfo refog = fog.GetType().GetMethod(
-                    "RefogMap",
+                    "Refog",
                     BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                     null, Type.EmptyTypes, null);
                 if (refog != null)
@@ -202,7 +202,7 @@ namespace AragornArmy
                     Log.Message("[Aragorn] Enclosed crypt chambers refogged after construction.");
                 }
                 else
-                    Log.Warning("[Aragorn] FogGrid.RefogMap was unavailable; " +
+                    Log.Warning("[Aragorn] FogGrid.Refog was unavailable; " +
                         "rooms are still built and roofed but fog must be checked in-game.");
             }
             catch (Exception e)
