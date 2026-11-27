@@ -84,6 +84,29 @@ namespace AragornArmy
                 new IntVec2(49, 19), new IntVec2(54, 19),
                 new IntVec2(24, 7), new IntVec2(40, 7)
             }) Paint(p.x, p.z, 'C');
+
+            // Additional supports for the middle of the larger, roofed
+            // chapels and the spectral throne hall.
+            foreach (var pillar in new[] {
+                new IntVec2(10, 26), new IntVec2(15, 26),
+                new IntVec2(49, 26), new IntVec2(54, 26),
+                new IntVec2(31, 10), new IntVec2(33, 10)
+            }) Paint(pillar.x, pillar.z, 'C');
+
+            // Profaned crossbowmen and curse-mages now have actual cover
+            // facing the approaching player, instead of an empty square.
+            for (int x = 28; x <= 36; x += 2)
+            {
+                if (x != 32) Paint(x, 41, 'B');  // first guardhouse
+                if (x != 32) Paint(x, 30, 'B');  // central courtyard
+            }
+            for (int y = 22; y <= 32; y += 2)
+            {
+                if (y != 28) Paint(18, y, 'B');  // west chapel faces east
+                if (y != 28) Paint(46, y, 'B');  // east chapel faces west
+            }
+            for (int x = 24; x <= 40; x += 2)
+                if (x != 32) Paint(x, 16, 'B');  // ghost sanctum
             return b;
         }
 
@@ -159,6 +182,8 @@ namespace AragornArmy
                         case 'W': Structure(map, p, Wall); break;
                         case 'D': Structure(map, p, Door); break;
                         case 'C': Structure(map, p, Wall); break;
+                        case 'B': Structure(map, p,
+                            DefDatabase<ThingDef>.GetNamedSilentFail("Barricade")); break;
                     }
                 }
 
@@ -168,11 +193,31 @@ namespace AragornArmy
             for (int x = 0; x < Width; x++)
             {
                 if (b[x, y] != 'W' && b[x, y] != 'D' &&
-                    b[x, y] != 'C') continue;
+                    b[x, y] != 'C' && b[x, y] != 'B') continue;
                 AragornTrialSitePreparation.RequireBuilding(
                     map, Point(map, x, y),
-                    b[x, y] == 'D' ? Door : Wall);
+                    b[x, y] == 'D' ? Door : b[x, y] == 'B'
+                        ? DefDatabase<ThingDef>.GetNamedSilentFail("Barricade")
+                        : Wall);
             }
+
+            // The western/eastern ritual halls and the northern sanctum
+            // are solid-roofed enclosed rooms. The open gatehouse/crossroads
+            // still allow real lightning to strike the attackers.
+            RoofChapel(map, 3, 14, 22, 35);
+            RoofChapel(map, 42, 14, 61, 35);
+            RoofChapel(map, 20, 2, 44, 21);
+
+            AragornCryptInteriors.Decoration(map, Point(map, 11, 20), 0, 0,
+                "BotchJob_ProfanedStele", "BotchJob_ProfanedStela",
+                "BotchJob_ProfanedBrazierDarklight");
+            AragornCryptInteriors.Decoration(map, Point(map, 53, 20), 0, 0,
+                "BotchJob_ProfanedStele", "BotchJob_ProfanedStela",
+                "BotchJob_ProfanedBrazierDarklight");
+            AragornCryptInteriors.Decoration(map, Point(map, 32, 6), 0, 0,
+                "BotchJob_ProfanedThrone",
+                "BotchJob_ProfanedBrazierDarklight",
+                "BotchJob_ProfanedLantern");
 
             // Lamps are visual dressing, not mission targets or kill objectives.
             // Their definitions come from the already-required Profaned mod;
@@ -198,12 +243,25 @@ namespace AragornArmy
             return Point(map, 32, 26);
         }
 
+        private static void RoofChapel(Map map, int x0, int y0,
+            int x1, int y1)
+        {
+            // The map's north/south axis is opposite the local blueprint's
+            // y axis. Convert the room bounds to normal map-relative coords.
+            int left = x0 - Width / 2;
+            int right = x1 - Width / 2;
+            int south = Height / 2 - 1 - y1;
+            int north = Height / 2 - 1 - y0;
+            AragornCryptInteriors.RoofRoom(map, map.Center,
+                left, south, right, north);
+        }
+
         private static void StandGuard(Map map, IntVec3 at, Faction faction,
             List<Pawn> pawns)
         {
             if (pawns.Count == 0) return;
             LordMaker.MakeNewLord(faction,
-                new LordJob_DefendPoint(at, wanderRadius: 4f, defendRadius: 20f,
+                new LordJob_DefendPoint(at, wanderRadius: 2f, defendRadius: 16f,
                     isCaravanSendable: false, addFleeToil: false),
                 map, pawns);
         }
@@ -226,8 +284,24 @@ namespace AragornArmy
             foreach (var post in posts)
             {
                 IntVec3 position = Point(map, post.x, post.y);
+                // Fixed tactical squares behind the actual chapel/gatehouse
+                // barricades. A single Lord holds EACH separate strongpoint.
+                var firingSquares = new List<IntVec3>();
+                if (post.x == 11 || post.x == 53)
+                {
+                    int behindX = post.x == 11 ? 15 : 49;
+                    for (int y = 22; y <= 32; y++)
+                        for (int dx = -1; dx <= 1; dx++)
+                            firingSquares.Add(Point(map, behindX + dx, y));
+                }
+                else
+                {
+                    for (int y = post.y - 2; y <= post.y; y++)
+                        for (int dx = -5; dx <= 5; dx++)
+                            firingSquares.Add(Point(map, post.x + dx, y));
+                }
                 List<Pawn> group = ProfanedEncounterUtility.SpawnThemedGuards(
-                    map, position, hostile, post.n, post.role);
+                    map, position, hostile, post.n, post.role, firingSquares);
                 all.AddRange(group);
                 StandGuard(map, position, hostile, group);
             }
@@ -239,6 +313,8 @@ namespace AragornArmy
         {
             var ghosts = new [] { first, second }
                 .Where(p => p != null && p.Spawned && !p.Dead).ToList();
+            // The two spectral bombardiers remain in their dark, roofed
+            // sanctum until attackers have reached the inner chamber.
             StandGuard(map, Sanctum(map), hostile, ghosts);
         }
     }
