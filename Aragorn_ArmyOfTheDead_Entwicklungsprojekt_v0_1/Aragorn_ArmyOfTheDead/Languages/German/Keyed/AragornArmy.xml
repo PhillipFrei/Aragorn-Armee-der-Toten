@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <AR_Rescue_Title>Der verlorene Erbe</AR_Rescue_Title>
-  <AR_Rescue_Description>Hinter einem Ring aus schwarzem Tiefwasser hält die Profaned-Legion einen Erben gefangen. Überquere den einzigen bewachten Steg, durchbrich die äußere Festung und suche die verschlossene Kammer im Herzen des inneren Bergfrieds. Dort harrt Aragorn seiner Befreiung.</AR_Rescue_Description>
+  <AR_Rescue_Description>Hinter einem Ring aus schwarzem Tiefwasser hält die Profaned-Legion Aragorn im Inneren ihrer Festung gefangen. Kein Steg führt über den Graben: Bereite am südlichen Ufer selbst einen Übergang. Besiege die Bogenschützen hinter ihren Barrikaden und die Skelette des Bergfrieds, um den Erben aus der innersten Kammer zu befreien.</AR_Rescue_Description>
   <AR_Rescue_Site>Aragorns Gefängnis</AR_Rescue_Site>
   <AR_Rescue_ArrivalTitle>Das Gefängnis entdeckt</AR_Rescue_ArrivalTitle>
-  <AR_Rescue_ArrivalBody>Die Spur führt zu einer Festung, ringsum vom tiefen Wasser umschlossen. Nur ein bewachter Übergang führt hinein. Im innersten Raum soll der Erbe gefangen liegen.</AR_Rescue_ArrivalBody>
+  <AR_Rescue_ArrivalBody>Die Spur führt zu einer Festung, ringsum vom tiefen Wasser umschlossen. Es gibt keine Brücke. Bereite selbst einen Weg über den Graben, überwinde die Profaned-Bogenschützenstellungen und die Skelette im Bergfried.</AR_Rescue_ArrivalBody>
   <AR_Rescue_Encounter>Hier wird Aragorn gefangen gehalten. Besiege seine {0} Profaned-Wachen.</AR_Rescue_Encounter>
   <AR_Rescue_Success>Aragorn ist frei und hat sich deiner Kolonie angeschlossen.</AR_Rescue_Success>
   <AR_Forge_Title>Die Klinge neu geschmiedet</AR_Forge_Title>
@@ -242,5 +242,11 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_OathGraves_Sealed>Versiegelt</AR_OathGraves_Sealed>
   <AR_OathGraves_Indestructible>Unzerstörbarer Eidsarkophag</AR_OathGraves_Indestructible>
   <AR_Rescue_MoatTitle>Das Wassergefängnis der Profaned</AR_Rescue_MoatTitle>
-  <AR_Rescue_MoatBody>Ein breiter Ring tiefen Wassers umgibt die Festung. Suche den schmalen Übergang im Süden, überwinde das bewachte Tor und betrete den überdachten Bergfried. Aragorn liegt hinter einer zweiten verschlossenen Tür im Raum ganz im Zentrum. Besiege seine Profaned-Wachen, um ihn zu befreien.</AR_Rescue_MoatBody>
+  <AR_Rescue_MoatBody>Der Graben aus tiefem Wasser ist unpassierbar. Eine fertige Brücke gibt es nicht. Gehe mit einem Kolonisten ans südliche Ufer und nutze den Befehl „Übergang bereiten“, um einen begehbaren Weg anzulegen. Im äußeren Hof lauern Profaned-Bogenschützen hinter Barrikaden; im Bergfried greifen Skelette an. Aragorn liegt hinter der innersten Tür.</AR_Rescue_MoatBody>
+  <AR_Rescue_PrepareCrossing>Übergang bereiten</AR_Rescue_PrepareCrossing>
+  <AR_Rescue_PrepareCrossingDesc>Die Festung ist von echtem Tiefwasser umgeben. Ein Kolonist muss am Südufer stehen und diesen Befehl nutzen, um einen provisorischen, drei Felder breiten Weg über den Graben anzulegen. Es gibt keine vorgebaute Brücke und du benötigst keinen weiteren Brücken-Mod.</AR_Rescue_PrepareCrossingDesc>
+  <AR_Rescue_GoToSouthBank>Gehe mit diesem Kolonisten zum südlichen Ufer des Wassergrabens (bei der markierten Stelle).</AR_Rescue_GoToSouthBank>
+  <AR_Rescue_CrossingReadyTitle>Ein Weg durch die Wasser</AR_Rescue_CrossingReadyTitle>
+  <AR_Rescue_CrossingReadyBody>Der provisorische Übergang ist bereitet. Nun führt ein begehbarer Weg über den südlichen Teil des tiefen Wassergrabens. Die Profaned-Bogenschützen an ihren Barrikaden und die Skelette im Bergfried erwarten dich.</AR_Rescue_CrossingReadyBody>
+  <AR_Rescue_CrossingFailed>Der Weg über den Wassergraben konnte nicht angelegt werden. Prüfe das Fehlerprotokoll.</AR_Rescue_CrossingFailed>
 </LanguageData>
