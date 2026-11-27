@@ -220,4 +220,26 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_Bombardier_OneSealBody>Part of the curse has been lifted. Lightning strikes less often. The remaining seal in the other chapel must also be extinguished.</AR_Bombardier_OneSealBody>
   <AR_Bombardier_SealsBrokenTitle>The Ritual's Power Is Broken</AR_Bombardier_SealsBrokenTitle>
   <AR_Bombardier_SealsBrokenBody>Both cursed fires are out. The lightning storm is over and the two spectral bombardiers in the northern sanctum can now be harmed. Defeat them and the remaining wardens to free both spirits.</AR_Bombardier_SealsBrokenBody>
+  <AR_OathGraves_GuideTitle>The Unbreakable Oath Coffins</AR_OathGraves_GuideTitle>
+  <AR_OathGraves_GuideBody>Trial {1}/6: This stronghold holds {0} enchanted sarcophagi. Lightning, explosives and weapons cannot destroy them. Defeat their wardens, move a colonist within three cells of a sealed tomb, select that colonist, and choose 'Unseal oath coffin'. The coffin remains in place; only its curse is lifted.</AR_OathGraves_GuideBody>
+  <AR_OathGraves_OpenProgress>Unseal oath coffin ({0}/{1})</AR_OathGraves_OpenProgress>
+  <AR_OathGraves_OpenDescription>Select a colonist beside any sealed sarcophagus. Only that tomb's ritual activates. Its stone coffin remains unbreakable and other tombs may be opened separately.</AR_OathGraves_OpenDescription>
+  <AR_OathGraves_DuelDescription>Defeat the ghouls first. Send just one colonist beside either of the two coffins in the inner arena and challenge its axe spirit. Only that colonist may fight.</AR_OathGraves_DuelDescription>
+  <AR_OathGraves_DuelApproach>A colonist must stand alone in the ring and within four cells of an unopened axe tomb.</AR_OathGraves_DuelApproach>
+  <AR_OathGraves_ArchersRemain>First defeat the Profaned bowmen guarding this tomb.</AR_OathGraves_ArchersRemain>
+  <AR_OathGraves_CaptainsWait>First defeat all three attack waves.</AR_OathGraves_CaptainsWait>
+  <AR_OathGraves_RoyalGuards>Defeat the royal Profaned bodyguards first.</AR_OathGraves_RoyalGuards>
+  <AR_OathGraves_ArcherFreedTitle>An Archer's Oath Awakens</AR_OathGraves_ArcherFreedTitle>
+  <AR_OathGraves_ArcherFreedBody>Sarcophagus {0}/3 has been unsealed. Its spectral archer can now be defeated and released. Two more archer emplacements await.</AR_OathGraves_ArcherFreedBody>
+  <AR_OathGraves_CaptainAwakesTitle>A Captain's Oath Awakens</AR_OathGraves_CaptainAwakesTitle>
+  <AR_OathGraves_CaptainAwakesBody>Sarcophagus {0}/2 has been unsealed. Its captain can now be harmed. Defeat both captains to free them.</AR_OathGraves_CaptainAwakesBody>
+  <AR_OathGraves_CaptainsReadyTitle>The Banners of the Damned Fall</AR_OathGraves_CaptainsReadyTitle>
+  <AR_OathGraves_CaptainsReadyBody>Three assault waves have fallen. The two captains remain protected until you unseal their individual coffins in the inner court. Send a colonist to each tomb.</AR_OathGraves_CaptainsReadyBody>
+  <AR_OathGraves_KingAwakesTitle>The Final Oath Awakens</AR_OathGraves_KingAwakesTitle>
+  <AR_OathGraves_KingAwakesBody>The royal coffin is unsealed, but lightning still protects the king. Three elite waves rise to defend him. Once those warriors fall, the storm's protection will fade.</AR_OathGraves_KingAwakesBody>
+  <AR_OathGraves_KingWave>Royal elite wave {0}/3! The lightning grows fiercer.</AR_OathGraves_KingWave>
+  <AR_OathGraves_KingVulnerableTitle>The King Can Be Harmed</AR_OathGraves_KingVulnerableTitle>
+  <AR_OathGraves_KingVulnerableBody>All three royal waves have fallen. The King of the Dead is vulnerable at last. Defeat him amid the lightning and claim his ancient oath.</AR_OathGraves_KingVulnerableBody>
+  <AR_OathGraves_Opened>Unsealed</AR_OathGraves_Opened>
+  <AR_OathGraves_Sealed>Sealed</AR_OathGraves_Sealed>
 </LanguageData>
