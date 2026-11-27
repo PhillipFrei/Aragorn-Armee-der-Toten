@@ -99,13 +99,13 @@ namespace AragornArmy
             // its own barricades, then guards that exact strongpoint.
             // The central 5-cell route to the keep doors stays clear.
             AragornCryptInteriors.BarricadeRow(map, center,
-                -23, -12, -16);
+                -23, -15, -16);
             AragornCryptInteriors.BarricadeRow(map, center,
-                12, 23, -16);
+                15, 23, -16);
             AragornCryptInteriors.BarricadeRow(map, center,
-                -23, -12, 5);
+                -23, -15, 5);
             AragornCryptInteriors.BarricadeRow(map, center,
-                12, 23, 5);
+                15, 23, 5);
 
             // Optional original Profaned ritual furniture, not mission objects.
             // No furniture blocks the two central doors or the prisoner tile.
@@ -235,10 +235,20 @@ namespace AragornArmy
 
         public static List<IntVec3> ArcherCoverPositions(Map map, int postIndex)
         {
+            var cells = new List<IntVec3>();
+            // No archer can accidentally be spawned INSIDE the central
+            // keep through a wall: all cover positions are in the courtyard.
             int[] xs = { -18, 18, -18, 18 };
             int[] zs = { -16, -16, 5, 5 };
-            return AragornCryptInteriors.HoldBehindRow(
-                map.Center, xs[postIndex], zs[postIndex]);
+            int centerX = xs[postIndex];
+            for (int z = zs[postIndex] + 2; z <= zs[postIndex] + 4; z++)
+            for (int dx = -4; dx <= 4; dx++)
+            {
+                int x = centerX + dx;
+                if (Math.Abs(x) < 15) continue;
+                cells.Add(At(map.Center, x, z));
+            }
+            return cells;
         }
 
         public static List<IntVec3> SkeletonPositions(Map map, bool east)
