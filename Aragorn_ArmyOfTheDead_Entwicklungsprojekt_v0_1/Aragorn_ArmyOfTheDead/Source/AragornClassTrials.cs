@@ -25,6 +25,7 @@ namespace AragornArmy
         private int trialKingPhase;
         private int trialKingPhaseTick;
         private bool trialSarcophagusGuideShown;
+        private bool trialCaptainsReadyShown;
         private Pawn trialDuelChampion;
         private Pawn trialDuelEnemy;
         private IntVec3 trialFortCenter = IntVec3.Invalid;
@@ -60,6 +61,7 @@ namespace AragornArmy
             Scribe_Values.Look(ref trialKingPhase, "arTrialKingPhase", 0);
             Scribe_Values.Look(ref trialKingPhaseTick, "arTrialKingPhaseTick", 0);
             Scribe_Values.Look(ref trialSarcophagusGuideShown, "arTrialSarcophagusGuideShown", false);
+            Scribe_Values.Look(ref trialCaptainsReadyShown, "arTrialCaptainsReadyShown", false);
             Scribe_References.Look(ref trialDuelChampion, "arTrialDuelChampion");
             Scribe_References.Look(ref trialDuelEnemy, "arTrialDuelEnemy");
             Scribe_Values.Look(ref trialFortCenter, "arTrialFortCenter", IntVec3.Invalid);
@@ -111,6 +113,7 @@ namespace AragornArmy
             trialKingPhase = 0;
             trialKingPhaseTick = 0;
             trialSarcophagusGuideShown = false;
+            trialCaptainsReadyShown = false;
             trialDuelChampion = null;
             trialDuelEnemy = null;
             trialFortCenter = IntVec3.Invalid;
@@ -656,17 +659,33 @@ namespace AragornArmy
         {
             if (!trialCampaignActive || trialMap == null || target == null ||
                 target.Map != trialMap) return true;
-            if (ClassNumber(trialIndex) == 5 && trialGhosts.Count > 0 &&
-                target == trialGhosts[0] && RemainingMarkers > 0) return false;
-            // Both bombardiers are shielded by the cursed fires. Clearing
-            // the chapel braziers makes them vulnerable and stops lightning.
-            if (ClassNumber(trialIndex) == 2 && RemainingMarkers > 0 &&
-                trialGhosts.Contains(target as Pawn)) return false;
-            if (ClassNumber(trialIndex) != 3 || trialDuelEnemy == null ||
+            if (IsQuestSarcophagus(target)) return false;
+
+            int cls = ClassNumber(trialIndex);
+            Pawn spirit = target as Pawn;
+            if (cls == 1 && !LegacyTrial && spirit != null)
+            {
+                int i = trialGhosts.IndexOf(spirit);
+                if (i >= 0 && !MarkerActivated(i)) return false;
+            }
+            if (cls == 2 && RemainingMarkers > 0 &&
+                spirit != null && trialGhosts.Contains(spirit)) return false;
+            if (cls == 4 && !LegacyTrial && spirit != null)
+            {
+                int i = trialGhosts.IndexOf(spirit);
+                if (i >= 0 && !MarkerActivated(i)) return false;
+            }
+            if (cls == 5 && spirit != null &&
+                trialGhosts.Count > 0 && spirit == trialGhosts[0] &&
+                (RemainingMarkers > 0 ||
+                    (!LegacyTrial && trialKingPhase < 5))) return false;
+
+            if (cls != 3 || trialDuelEnemy == null ||
                 !trialDuelEnemy.Spawned || trialDuelEnemy.Dead ||
                 trialDuelEnemy.Downed) return true;
-            // If the champion falls, nobody may steal the victory while
-            // the duel waits for the next legitimate challenger.
+
+            // Sacred 1v1: only the current champion and duel spirit
+            // may hurt each other. Spectators cannot kill either one.
             bool championReady = trialDuelChampion != null &&
                 trialDuelChampion.Spawned && !trialDuelChampion.Dead &&
                 !trialDuelChampion.Downed;
@@ -724,6 +743,7 @@ namespace AragornArmy
                     trialDuelVictories++;
                     trialDuelEnemy = null;
                     trialDuelChampion = null;
+                    trialCurrentDuelGrave = -1;
                     Messages.Message(AragornText.F("AR_Class_DuelWon", trialDuelVictories),
                         MessageTypeDefOf.PositiveEvent);
                 }
@@ -731,8 +751,11 @@ namespace AragornArmy
                 {
                     // A despawned but living opponent is not a victory.
                     trialGhosts.Remove(trialDuelEnemy);
+                    if (trialCurrentDuelGrave >= 0)
+                        trialActivatedSarcophagi.Remove(trialCurrentDuelGrave);
                     trialDuelEnemy = null;
                     trialDuelChampion = null;
+                    trialCurrentDuelGrave = -1;
                 }
                 else if (trialDuelChampion == null || trialDuelChampion.Dead ||
                     trialDuelChampion.Downed || !trialDuelChampion.Spawned)
@@ -760,11 +783,63 @@ namespace AragornArmy
                         MessageTypeDefOf.ThreatBig);
                 }
             }
+            if (cls == 4 && !LegacyTrial && trialWavesSpawned == 3 &&
+                Cleared(trialGuards) && RemainingMarkers > 0 &&
+                !trialCaptainsReadyShown)
+            {
+                trialCaptainsReadyShown = true;
+                Find.LetterStack.ReceiveLetter(
+                    AragornText.T("AR_OathGraves_CaptainsReadyTitle"),
+                    AragornText.T("AR_OathGraves_CaptainsReadyBody"),
+                    LetterDefOf.PositiveEvent,
+                    SealedSarcophagi().Select(x => x.grave).FirstOrDefault());
+            }
+            // The one royal tomb releases three separate elite waves.
+            // Only AFTER all three waves may the King be damaged.
+            if (cls == 5 && !LegacyTrial && trialKingPhase >= 1 &&
+                trialKingPhase < 5 && Ticks >= trialKingPhaseTick &&
+                Cleared(trialGuards))
+            {
+                trialKingPhase++;
+                trialKingPhaseTick = Ticks + 300;
+                if (trialKingPhase <= 4)
+                {
+                    trialGuards.Clear();
+                    Faction kingHostile = ProfanedEncounterUtility.GetOrCreateFaction();
+                    if (kingHostile == null) { QueueTrialRetry(); return; }
+                    IntVec3 gate = trialFortCenter + new IntVec3(
+                        trialKingPhase % 2 == 0 ? -12 : 12, 0, -9);
+                    AddDefenders(gate, kingHostile,
+                        5 + trialKingPhase * 3, "elite");
+                    if (trialGuards.Count == 0)
+                    {
+                        QueueTrialRetry();
+                        return;
+                    }
+                    GuardMission(kingHostile, includeGhosts: false);
+                    Messages.Message(AragornText.F(
+                        "AR_OathGraves_KingWave", trialKingPhase - 1),
+                        MessageTypeDefOf.ThreatBig);
+                }
+                else
+                {
+                    Find.LetterStack.ReceiveLetter(
+                        AragornText.T("AR_OathGraves_KingVulnerableTitle"),
+                        AragornText.T("AR_OathGraves_KingVulnerableBody"),
+                        LetterDefOf.PositiveEvent, trialBoss);
+                }
+            }
+
             if ((cls == 2 || cls == 5) && Ticks >= trialNextMagicTick &&
-                (cls == 5 || RemainingMarkers > 0))
+                ((cls == 5 && (LegacyTrial || trialKingPhase > 0)) ||
+                    (cls == 2 && RemainingMarkers > 0)))
             {
                 trialNextMagicTick = Ticks +
-                    (cls == 5 ? 330 : RemainingMarkers >= 2 ? 480 : 780);
+                    (cls == 5
+                        ? (LegacyTrial ? 330 :
+                            trialKingPhase >= 5 ? 180 :
+                            trialKingPhase >= 3 ? 230 : 350)
+                        : RemainingMarkers >= 2 ? 480 : 780);
                 var candidates = trialMap.mapPawns.AllPawnsSpawned.Where(p =>
                     p != null && p.Spawned && !p.Dead && p.Faction == Faction.OfPlayer &&
                     p.RaceProps.Humanlike).ToList();
@@ -792,15 +867,18 @@ namespace AragornArmy
                         Cleared(trialGuards) && RemainingMarkers == 0;
                     break;
                 case 3:
-                    complete = trialDuelVictories >= 2 && Cleared(trialGuards);
+                    complete = trialDuelVictories >= 2 && Cleared(trialGuards)
+                        && (LegacyTrial || RemainingMarkers == 0);
                     break;
                 case 4:
                     complete = trialWavesSpawned >= 3 && trialGhosts.Count == 2 &&
-                        Cleared(trialGhosts) && Cleared(trialGuards);
+                        Cleared(trialGhosts) && Cleared(trialGuards) &&
+                        (LegacyTrial || RemainingMarkers == 0);
                     break;
                 case 5:
                     complete = trialGhosts.Count == 1 && Cleared(trialGhosts) &&
-                        Cleared(trialGuards) && RemainingMarkers == 0;
+                        Cleared(trialGuards) && RemainingMarkers == 0 &&
+                        (LegacyTrial || trialKingPhase >= 5);
                     break;
             }
             if (!complete) return;
