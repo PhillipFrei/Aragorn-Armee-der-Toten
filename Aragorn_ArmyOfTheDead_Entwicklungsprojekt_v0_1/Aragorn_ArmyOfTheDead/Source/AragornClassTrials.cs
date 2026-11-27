@@ -1035,8 +1035,22 @@ namespace AragornArmy
             }
             else if (cls == 3)
             {
-                // A single arena in the inner temple. Only one player pawn
-                // may activate each duel; outside shots are also blocked in code.
+                // Two separately guarded ghoul chapels precede the inner arena.
+                // Keep 3-wide access through the central courtyard.
+                foreach (int side in new[] { -1, 1 })
+                {
+                    for (int x = 5; x <= 20; x++)
+                    {
+                        if (x != 10)
+                            Place(map, c + new IntVec3(side * x, 0, -4), "Wall");
+                        else
+                            Place(map, c + new IntVec3(side * x, 0, -4), "Door");
+                    }
+                    for (int z = -14; z <= -5; z += 5)
+                        Place(map, c + new IntVec3(side * 16, 0, z), "Wall");
+                }
+                // The arena is a separate chamber, with two distinct
+                // oath-coffins. Nobody can win the two duels from outside.
                 IntVec3 ring = c + new IntVec3(0, 0, 11);
                 for (int x = -6; x <= 6; x++)
                 for (int z = -6; z <= 6; z++)
@@ -1047,6 +1061,24 @@ namespace AragornArmy
                     else
                         Place(map, ring + new IntVec3(x, 0, z), "Wall");
                 }
+            }
+            else if (cls == 4)
+            {
+                // Captain fortress: three successive defense lines before
+                // the twin tombs. Two wide flank passages remain open at
+                // each level, to permit actual tactical approaches.
+                foreach (int z in new[] { -5, 3, 10 })
+                    for (int x = -21; x <= 21; x++)
+                    {
+                        if (Math.Abs(x) <= 3 || Math.Abs(x) >= 19) continue;
+                        if (Math.Abs(x) == 12)
+                            Place(map, c + new IntVec3(x, 0, z), "Door");
+                        else
+                            Place(map, c + new IntVec3(x, 0, z), "Wall");
+                    }
+                foreach (int x in new[] { -18, -9, 9, 18 })
+                    for (int z = -13; z <= 7; z += 7)
+                        Place(map, c + new IntVec3(x, 0, z), "Barricade");
             }
             else if (cls == 5)
             {
