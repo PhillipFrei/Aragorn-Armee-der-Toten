@@ -17,7 +17,7 @@ assert "PopulateRescueMap(rescueSite.Map)" in rescue
 assert "nextRetryTick = Find.TickManager.TicksGame + 600;" in rescue
 assert "moatRequiresPreparation = false;" in rescue
 assert "moatCrossingPrepared = true;" in rescue
-assert "BuildRecoveryPrison(map, out guardPost)" in rescue
+assert "AragornRescueMoatFortress.BuildRecoveryPrison(" in rescue and "map, out guardPost" in rescue
 assert "public static IntVec3 BuildRecoveryPrison(Map map" in fort
 
 # Check the fallback physically creates two stone rooms with two doors;
