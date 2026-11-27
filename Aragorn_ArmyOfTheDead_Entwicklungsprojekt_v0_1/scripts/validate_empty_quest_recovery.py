@@ -49,6 +49,9 @@ assert "IntVec3 center = map.Center" in forge
 assert "if (bench == null || !bench.Spawned)" in forge
 assert "if (forge == null || !forge.Spawned)" in forge
 assert "if (!smith.Spawned)" in forge
+assert "public static Thing BuildRecoverySmithy(Map map, Faction owner)" in forge
+assert "forge = AndurilForgeBuilder.BuildRecoverySmithy(" in forge
+assert "Thing bench = SpawnBuilding(smithy, ThingDefOf.Gold," in forge
 assert "retryTick = Find.TickManager.TicksGame + 600" in forge
 
 # In particular, NO additional Harmony GetGizmos postfix was added.
