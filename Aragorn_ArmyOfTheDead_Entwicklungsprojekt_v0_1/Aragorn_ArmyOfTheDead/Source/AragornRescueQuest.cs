@@ -25,6 +25,10 @@ namespace AragornArmy
         private int nextRetryTick;
         private bool rescueOfferLetterSent;
         private int abandonedSinceTick = -1;
+        // Only newly built moat-fortress rescue maps have this objective.
+        // Old already-generated rescue sites retain their previous layout.
+        private bool moatRequiresPreparation;
+        private bool moatCrossingPrepared;
 
         public AragornRescueGame(Game game) { }
 
@@ -122,6 +126,10 @@ namespace AragornArmy
             Scribe_Values.Look(ref nextRetryTick, "arRescueRetryTick");
             Scribe_Values.Look(ref rescueOfferLetterSent, "arRescueOfferLetterSent", false);
             Scribe_Values.Look(ref abandonedSinceTick, "arRescueAbandonedSince", -1);
+            Scribe_Values.Look(ref moatRequiresPreparation,
+                "arRescueMoatRequiresPreparation", false);
+            Scribe_Values.Look(ref moatCrossingPrepared,
+                "arRescueMoatCrossingPrepared", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && guards == null)
                 guards = new List<Pawn>();
         }
@@ -201,6 +209,8 @@ namespace AragornArmy
             encounterCreated = false;
             rescueOfferLetterSent = false;
             abandonedSinceTick = -1;
+            moatRequiresPreparation = false;
+            moatCrossingPrepared = false;
             nextRetryTick = Find.TickManager.TicksGame + 600;
             Messages.Message(AragornText.T("AR_Msg_RescueAborted"),
                 MessageTypeDefOf.NeutralEvent);
@@ -294,6 +304,8 @@ namespace AragornArmy
                 IntVec3 guardPost;
                 IntVec3 prisonCell = AragornCryptBuilder.BuildRescuePrison(map, map.Center,
                     out guardPost);
+                moatRequiresPreparation = true;
+                moatCrossingPrepared = false;
                 PawnGenerationRequest request = new PawnGenerationRequest(aragornKind,
                     faction: null, forceGenerateNewPawn: true,
                     canGeneratePawnRelations: false, allowAddictions: false,
@@ -315,34 +327,123 @@ namespace AragornArmy
                 }
                 if (rescueSite.Faction != guardFaction) rescueSite.SetFaction(guardFaction);
                 int count = Mathf.Clamp(AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount, 5, 50);
-                // Five Profaned detachments guard the bridge approach and
-                // the side watchrooms. Aragorn is unconscious behind BOTH
-                // sets of interior keep/prison doors, at the exact centre.
-                guards.AddRange(ProfanedEncounterUtility.SpawnGuards(
-                    map, guardPost, guardFaction, count,
-                    AragornRescueMoatFortress.GuardPositions(map)));
+                // Four Profaned bow detachments hold distinct barricade
+                // rows. Spawn explicitly BEHIND cover and assign one short-
+                // range defending Lord to each of the four strongpoints.
+                guards.Clear();
+                List<IntVec3> archerPosts = AragornRescueMoatFortress.ArcherPosts(map);
+                int perArcherPost = Math.Max(2, (count + 3) / 4);
+                for (int i = 0; i < archerPosts.Count; i++)
+                {
+                    IntVec3 at = archerPosts[i];
+                    List<Pawn> archers = ProfanedEncounterUtility.SpawnThemedGuards(
+                        map, at, guardFaction, perArcherPost, "archers",
+                        AragornRescueMoatFortress.ArcherCoverPositions(map, i));
+                    guards.AddRange(archers);
+                    if (archers.Count > 0)
+                        LordMaker.MakeNewLord(guardFaction,
+                            new LordJob_DefendPoint(at, wanderRadius: 2f,
+                                defendRadius: 18f, isCaravanSendable: false,
+                                addFleeToil: false),
+                            map, archers);
+                }
+
+                // The inner keep is not empty: skeletons wait on BOTH
+                // sides of Aragorn's second prison wall, ready to attack
+                // any player who breaches the outer keep gate.
+                int perSkeletonFlank = Math.Max(3, count / 5);
+                foreach (bool east in new[] { false, true })
+                {
+                    IntVec3 post = map.Center +
+                        new IntVec3(east ? 9 : -9, 0, 0);
+                    List<Pawn> skeletons = ProfanedEncounterUtility.SpawnThemedGuards(
+                        map, post, guardFaction, perSkeletonFlank, "skeletons",
+                        AragornRescueMoatFortress.SkeletonPositions(map, east));
+                    guards.AddRange(skeletons);
+                    if (skeletons.Count > 0)
+                        LordMaker.MakeNewLord(guardFaction,
+                            new LordJob_DefendPoint(post, wanderRadius: 2.5f,
+                                defendRadius: 14f, isCaravanSendable: false,
+                                addFleeToil: false),
+                            map, skeletons);
+                }
                 if (guards.Count == 0)
                 {
-                    Log.Error("[Aragorn] Rettungslager hat keine Wachen erhalten.");
+                    Log.Error("[Aragorn] Rettungslager hat keine Profaned erhalten.");
                     return;
                 }
-                // RimWorld's LordToil_DefendPoint breaks for wanderRadius > Region.GridSize (12).
-                LordMaker.MakeNewLord(guardFaction,
-                    new LordJob_DefendPoint(guardPost, wanderRadius: 8f,
-                        defendRadius: 28f, isCaravanSendable: false, addFleeToil: false),
-                    map, guards);
                 encounterCreated = true;
                 Messages.Message(AragornText.F("AR_Rescue_Encounter", guards.Count),
                     prisoner, MessageTypeDefOf.ThreatBig);
                 Find.LetterStack.ReceiveLetter(
                     AragornText.T("AR_Rescue_MoatTitle"),
                     AragornText.T("AR_Rescue_MoatBody"),
-                    LetterDefOf.NeutralEvent, prisoner);
+                    LetterDefOf.NeutralEvent,
+                    new TargetInfo(AragornRescueMoatFortress.SouthBank(map), map));
                 Log.Message("[Aragorn] Rettungsmission gestartet: " + guards.Count + " Wachen.");
             }
             catch (Exception ex)
             {
                 Log.Error("[Aragorn] Fehler beim Erzeugen der Rettungsbegegnung: " + ex);
+            }
+        }
+
+        // No preconstructed bridge: the user must bring a colonist to
+        // the SOUTHERN bank and explicitly choose to prepare the crossing.
+        // This is a safe quest action because vanilla bridges cannot
+        // normally be built on truly deep water (WaterDeep).
+        public IEnumerable<Gizmo> GetMoatGizmos(Pawn pawn)
+        {
+            if (!moatRequiresPreparation || moatCrossingPrepared ||
+                !encounterCreated || completed || rescueSite == null ||
+                !rescueSite.HasMap || pawn == null || !pawn.Spawned ||
+                pawn.Dead || pawn.Downed || pawn.Map != rescueSite.Map ||
+                pawn.Faction != Faction.OfPlayer ||
+                !pawn.RaceProps.Humanlike)
+                yield break;
+
+            Map map = rescueSite.Map;
+            IntVec3 bank = AragornRescueMoatFortress.SouthBank(map);
+            var cmd = new Command_Action {
+                defaultLabel = AragornText.T("AR_Rescue_PrepareCrossing"),
+                defaultDesc = AragornText.T("AR_Rescue_PrepareCrossingDesc"),
+                icon = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false),
+                action = () => PrepareMoatCrossing(pawn)
+            };
+            if (pawn.Position.DistanceTo(bank) > 5f)
+                cmd.Disable(AragornText.T("AR_Rescue_GoToSouthBank"));
+            yield return cmd;
+        }
+
+        private void PrepareMoatCrossing(Pawn pawn)
+        {
+            if (!moatRequiresPreparation || moatCrossingPrepared ||
+                !encounterCreated || rescueSite == null ||
+                !rescueSite.HasMap || pawn == null || !pawn.Spawned ||
+                pawn.Downed || pawn.Faction != Faction.OfPlayer ||
+                pawn.Map != rescueSite.Map)
+                return;
+            Map map = rescueSite.Map;
+            IntVec3 bank = AragornRescueMoatFortress.SouthBank(map);
+            if (pawn.Position.DistanceTo(bank) > 5f) return;
+            try
+            {
+                AragornRescueMoatFortress.PrepareCrossing(map);
+                if (!AragornRescueMoatFortress.CrossingIsPrepared(map))
+                    throw new InvalidOperationException(
+                        "The rescue crossing did not become walkable.");
+                moatCrossingPrepared = true;
+                Find.LetterStack.ReceiveLetter(
+                    AragornText.T("AR_Rescue_CrossingReadyTitle"),
+                    AragornText.T("AR_Rescue_CrossingReadyBody"),
+                    LetterDefOf.PositiveEvent,
+                    new TargetInfo(bank, map));
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[Aragorn] Rescue crossing could not be prepared: " + ex);
+                Messages.Message(AragornText.T("AR_Rescue_CrossingFailed"),
+                    pawn, MessageTypeDefOf.RejectInput);
             }
         }
 
@@ -390,6 +491,8 @@ namespace AragornArmy
                 siteCreated = false;
                 encounterCreated = false;
                 abandonedSinceTick = -1;
+                moatRequiresPreparation = false;
+                moatCrossingPrepared = false;
             }
         }
     }
