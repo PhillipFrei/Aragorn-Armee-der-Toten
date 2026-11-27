@@ -315,9 +315,12 @@ namespace AragornArmy
                 }
                 if (rescueSite.Faction != guardFaction) rescueSite.SetFaction(guardFaction);
                 int count = Mathf.Clamp(AragornMod.Config == null ? 20 : AragornMod.Config.profanedCount, 5, 50);
-                // The prisoner is in a separate locked-looking cell annex.
-                // All Profaned guards initially occupy the OUTSIDE crypt court.
-                guards.AddRange(ProfanedEncounterUtility.SpawnGuards(map, guardPost, guardFaction, count));
+                // Five Profaned detachments guard the bridge approach and
+                // the side watchrooms. Aragorn is unconscious behind BOTH
+                // sets of interior keep/prison doors, at the exact centre.
+                guards.AddRange(ProfanedEncounterUtility.SpawnGuards(
+                    map, guardPost, guardFaction, count,
+                    AragornRescueMoatFortress.GuardPositions(map)));
                 if (guards.Count == 0)
                 {
                     Log.Error("[Aragorn] Rettungslager hat keine Wachen erhalten.");
@@ -331,6 +334,10 @@ namespace AragornArmy
                 encounterCreated = true;
                 Messages.Message(AragornText.F("AR_Rescue_Encounter", guards.Count),
                     prisoner, MessageTypeDefOf.ThreatBig);
+                Find.LetterStack.ReceiveLetter(
+                    AragornText.T("AR_Rescue_MoatTitle"),
+                    AragornText.T("AR_Rescue_MoatBody"),
+                    LetterDefOf.NeutralEvent, prisoner);
                 Log.Message("[Aragorn] Rettungsmission gestartet: " + guards.Count + " Wachen.");
             }
             catch (Exception ex)

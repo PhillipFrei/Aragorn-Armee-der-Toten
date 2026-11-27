@@ -47,7 +47,7 @@ namespace AragornArmy
             }
         }
 
-        public static List<Pawn> SpawnGuards(Map map, IntVec3 center, Faction faction, int requested)
+        public static List<Pawn> SpawnGuards(Map map, IntVec3 center, Faction faction, int requested, List<IntVec3> posts = null)
         {
             var result = new List<Pawn>();
             FactionDef def = DefDatabase<FactionDef>.GetNamedSilentFail(ProfanedDefName);
@@ -74,7 +74,13 @@ namespace AragornArmy
                 try
                 {
                     Pawn guard = PawnGenerator.GeneratePawn(kind, faction);
-                    IntVec3 point = CellFinder.RandomClosewalkCellNear(center, map, 10);
+                    // The new rescue fortress has five separated guard
+                    // rooms/courtyards; distribute existing threat-scaled
+                    // enemy count without changing the global danger slider.
+                    IntVec3 assignedPost = posts != null && posts.Count > 0
+                        ? posts[i % posts.Count] : center;
+                    IntVec3 point = CellFinder.RandomClosewalkCellNear(
+                        assignedPost, map, posts != null ? 3 : 10);
                     GenSpawn.Spawn(guard, point, map);
                     result.Add(guard);
                 }
@@ -284,52 +290,13 @@ namespace AragornArmy
                     thing.Destroy(DestroyMode.Vanish);
         }
 
-        public static IntVec3 BuildRescuePrison(Map map, IntVec3 near, out IntVec3 guardPost)
+        public static IntVec3 BuildRescuePrison(Map map, IntVec3 near,
+            out IntVec3 guardPost)
         {
-            guardPost = Build(map, near); // hostile keep on the opposite side
-            ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
-            ThingDef door = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
-            ThingDef stone = DefDatabase<ThingDef>.GetNamedSilentFail("BlocksSlate");
-            TerrainDef floor = DefDatabase<TerrainDef>.GetNamedSilentFail("ProfanedTileSlate")
-                ?? DefDatabase<TerrainDef>.GetNamedSilentFail("FlagstoneSlate");
-            IntVec3 jail = guardPost + new IntVec3(23, 0, 0);
-            if (wall == null || door == null || stone == null ||
-                !jail.InBounds(map)) return guardPost + new IntVec3(12, 0, 0);
-            for (int dx = -6; dx <= 6; dx++)
-            for (int dz = -5; dz <= 5; dz++)
-            {
-                IntVec3 cell = jail + new IntVec3(dx, 0, dz);
-                if (!cell.InBounds(map)) continue;
-                ClearVegetation(map, cell);
-                if (floor != null && cell.Standable(map))
-                {
-                    try { map.terrainGrid.SetTerrain(cell, floor); } catch { }
-                }
-                if (Math.Abs(dx) != 6 && Math.Abs(dz) != 5) continue;
-                ThingDef structure = (dx == -6 && dz == 0) ? door : wall;
-                if (cell.GetThingList(map).Any(t => t is Building)) continue;
-                try
-                {
-                    Thing thing = ThingMaker.MakeThing(structure, stone);
-                    GenSpawn.Spawn(thing, cell, map, WipeMode.Vanish);
-                }
-                catch (Exception e) { Log.Warning("[Aragorn] Prison wall failed: " + e.Message); }
-            }
-            ThingDef bed = DefDatabase<ThingDef>.GetNamedSilentFail("Bed");
-            if (bed != null)
-            {
-                IntVec3 bedCell = jail + new IntVec3(2, 0, -2);
-                if (bedCell.InBounds(map) && bedCell.Standable(map))
-                {
-                    try { GenSpawn.Spawn(ThingMaker.MakeThing(bed,
-                        bed.MadeFromStuff ? stone : null),
-                        bedCell, map, WipeMode.Vanish); }
-                    catch { }
-                }
-            }
-            Log.Message("[Aragorn] Separate prison cell generated at " + jail +
-                " (Profaned guards remain by " + guardPost + ").");
-            return jail;
+            // Previous releases made a tiny crypt and a detached side cell.
+            // New saves generate the water-ring fortress and nested central
+            // prison, without changing the saved rescue pawn/quest references.
+            return AragornRescueMoatFortress.Build(map, near, out guardPost);
         }
 
         private static void MakeWing(Map map, IntVec3 center, ThingDef wall,

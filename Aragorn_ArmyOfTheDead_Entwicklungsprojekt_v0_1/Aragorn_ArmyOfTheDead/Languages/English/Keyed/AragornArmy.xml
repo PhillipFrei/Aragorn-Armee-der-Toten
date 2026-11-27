@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <AR_Rescue_Title>The Lost Heir</AR_Rescue_Title>
-  <AR_Rescue_Description>Rumors speak of a man of noble blood, held fast by dark hands. He is called Aragorn. If this be true, he must not be left to perish in shadow.
-
-Find his prison on the world map. Defeat the Profaned who guard him and bring him home.</AR_Rescue_Description>
+  <AR_Rescue_Description>Beyond a ring of black deep water the Profaned Legion holds an heir captive. Cross the single guarded bridge, breach the outer fortress and seek the locked chamber at the heart of the inner keep. There Aragorn awaits his freedom.</AR_Rescue_Description>
   <AR_Rescue_Site>Aragorn's Prison</AR_Rescue_Site>
   <AR_Rescue_ArrivalTitle>The Prison Revealed</AR_Rescue_ArrivalTitle>
-  <AR_Rescue_ArrivalBody>The trail leads to a Profaned stronghold. Go forth and free the heir.</AR_Rescue_ArrivalBody>
+  <AR_Rescue_ArrivalBody>The trail ends at a fortress surrounded by deep water on all sides. Only one guarded crossing leads within. The lost heir is said to lie in the innermost chamber.</AR_Rescue_ArrivalBody>
   <AR_Rescue_Encounter>Aragorn is held here. Defeat his {0} Profaned guards.</AR_Rescue_Encounter>
   <AR_Rescue_Success>Aragorn is free, and has joined your people.</AR_Rescue_Success>
   <AR_Forge_Title>The Blade Reforged</AR_Forge_Title>
@@ -243,4 +241,6 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_OathGraves_Opened>Unsealed</AR_OathGraves_Opened>
   <AR_OathGraves_Sealed>Sealed</AR_OathGraves_Sealed>
   <AR_OathGraves_Indestructible>Indestructible oath sarcophagus</AR_OathGraves_Indestructible>
+  <AR_Rescue_MoatTitle>The Profaned Moat Prison</AR_Rescue_MoatTitle>
+  <AR_Rescue_MoatBody>A broad ring of deep water surrounds the fortress. Find the narrow crossing to the south, overcome the guarded gate and enter the roofed inner keep. Aragorn lies behind a second locked door in the central prison room. Defeat his Profaned wardens to free him.</AR_Rescue_MoatBody>
 </LanguageData>
