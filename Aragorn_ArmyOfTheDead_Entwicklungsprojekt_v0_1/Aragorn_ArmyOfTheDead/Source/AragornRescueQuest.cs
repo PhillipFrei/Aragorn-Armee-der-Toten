@@ -191,6 +191,21 @@ namespace AragornArmy
             }
             if (rescueQuest.State == QuestState.Ongoing && !siteCreated && now >= nextRetryTick)
                 TryCreateRescueSite();
+
+            // The old PostMapGenerate-only route silently stranded quests
+            // when the map layout threw AFTER clearing the surface: the site
+            // remained loaded with an empty map forever. Repair it in-place
+            // on the next game tick interval; no re-acceptance is required.
+            if (rescueQuest.State == QuestState.Ongoing &&
+                siteCreated && !encounterCreated &&
+                rescueSite != null && rescueSite.HasMap &&
+                now >= nextRetryTick)
+            {
+                nextRetryTick = now + 600;
+                Log.Warning("[Aragorn] Empty/incomplete rescue site detected; " +
+                    "retrying fortress and quest NPC population on loaded map.");
+                PopulateRescueMap(rescueSite.Map);
+            }
             if (rescueQuest.State == QuestState.Ongoing && encounterCreated)
                 CheckRescueOutcome();
         }
@@ -302,22 +317,50 @@ namespace AragornArmy
             try
             {
                 IntVec3 guardPost;
-                IntVec3 prisonCell = AragornCryptBuilder.BuildRescuePrison(map, map.Center,
-                    out guardPost);
-                moatRequiresPreparation = true;
-                moatCrossingPrepared = false;
+                IntVec3 prisonCell;
+                try
+                {
+                    Log.Message("[Aragorn] Rescue map stage 1: clearing terrain " +
+                        "and building 77x65 moat fortress.");
+                    prisonCell = AragornCryptBuilder.BuildRescuePrison(
+                        map, map.Center, out guardPost);
+                    moatRequiresPreparation = true;
+                    moatCrossingPrepared = false;
+                    Log.Message("[Aragorn] Rescue map stage 2: moat, " +
+                        "barricades and nested prison complete.");
+                }
+                catch (Exception layoutException)
+                {
+                    Log.Error("[Aragorn] Main rescue fortress construction " +
+                        "failed. Switching to emergency rescue prison. " +
+                        "Original error: " + layoutException);
+                    prisonCell = AragornRescueMoatFortress.BuildRecoveryPrison(
+                        map, out guardPost);
+                    moatRequiresPreparation = false;
+                    moatCrossingPrepared = true; // emergency land path is open
+                }
                 PawnGenerationRequest request = new PawnGenerationRequest(aragornKind,
                     faction: null, forceGenerateNewPawn: true,
                     canGeneratePawnRelations: false, allowAddictions: false,
                     forceBaselinerChance: 1f, fixedGender: Gender.Male);
-                Pawn prisoner = PawnGenerator.GeneratePawn(request);
-                // Aragorn is recognizably Aragorn even before the guards are
-                // defeated: his traits, genes, armor, hair, beard and body are set now.
-                AragornGame.PrepareAragorn(prisoner, showMessage: false);
-                GenSpawn.Spawn(prisoner, prisonCell, map);
-                // Keeps the prisoner from wandering off while the guards are alive.
-                prisoner.health.AddHediff(HediffDefOf.Anesthetic);
+                // If this is a repair of a partly populated map, keep the
+                // ORIGINAL Aragorn pawn; never create a second hero and
+                // never reset an already captured player character.
+                Pawn prisoner = captive != null && captive.Spawned &&
+                    captive.Map == map && !captive.Dead
+                        ? captive
+                        : map.mapPawns.AllPawnsSpawned.FirstOrDefault(p =>
+                            p != null && !p.Dead && GhostDefinitions.IsAragorn(p) &&
+                            p.Faction != Faction.OfPlayer);
+                if (prisoner == null)
+                {
+                    prisoner = PawnGenerator.GeneratePawn(request);
+                    AragornGame.PrepareAragorn(prisoner, showMessage: false);
+                    GenSpawn.Spawn(prisoner, prisonCell, map);
+                    prisoner.health.AddHediff(HediffDefOf.Anesthetic);
+                }
                 captive = prisoner;
+                Log.Message("[Aragorn] Rescue map stage 3: captive is present.");
 
                 Faction guardFaction = ProfanedEncounterUtility.GetOrCreateFaction();
                 if (guardFaction == null)
@@ -330,6 +373,14 @@ namespace AragornArmy
                 // Four Profaned bow detachments hold distinct barricade
                 // rows. Spawn explicitly BEHIND cover and assign one short-
                 // range defending Lord to each of the four strongpoints.
+                // A failed prior attempt may have spawned some guards but
+                // never marked the encounter complete. Do not duplicate them
+                // every time the recovery logic runs.
+                foreach (Pawn orphan in guards.Where(p =>
+                    p != null && p.Spawned && p.Map == map).ToList())
+                {
+                    orphan.Destroy(DestroyMode.Vanish);
+                }
                 guards.Clear();
                 List<IntVec3> archerPosts = AragornRescueMoatFortress.ArcherPosts(map);
                 int perArcherPost = Math.Max(2, (count + 3) / 4);
@@ -368,10 +419,10 @@ namespace AragornArmy
                             map, skeletons);
                 }
                 if (guards.Count == 0)
-                {
-                    Log.Error("[Aragorn] Rettungslager hat keine Profaned erhalten.");
-                    return;
-                }
+                    throw new InvalidOperationException(
+                        "No Profaned defenders spawned on the rescue map.");
+                Log.Message("[Aragorn] Rescue map stage 4: " +
+                    guards.Count + " Profaned bowmen/skeletons spawned.");
                 encounterCreated = true;
                 Messages.Message(AragornText.F("AR_Rescue_Encounter", guards.Count),
                     prisoner, MessageTypeDefOf.ThreatBig);
@@ -384,7 +435,13 @@ namespace AragornArmy
             }
             catch (Exception ex)
             {
-                Log.Error("[Aragorn] Fehler beim Erzeugen der Rettungsbegegnung: " + ex);
+                // ALWAYS retry a failed map, even when the map itself already
+                // exists and the site remains marked siteCreated=true.
+                // This was the cause of permanently empty quest locations.
+                nextRetryTick = Find.TickManager.TicksGame + 600;
+                encounterCreated = false;
+                Log.Error("[Aragorn] Rescue generation failed; automated " +
+                    "in-place repair scheduled: " + ex);
             }
         }
 

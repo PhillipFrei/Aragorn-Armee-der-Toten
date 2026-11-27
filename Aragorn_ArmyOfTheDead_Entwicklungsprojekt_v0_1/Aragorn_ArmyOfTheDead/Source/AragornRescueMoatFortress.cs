@@ -173,6 +173,99 @@ namespace AragornArmy
             return prisoner;
         }
 
+        // FAIL-SAFE: a fully cleared site with zero structures is worse than
+        // a simpler fortress. When a terrain/roof/ruin interaction interrupts
+        // the elaborate map builder, construct a safe, entirely walkable
+        // prison at the same centre rather than leaving the mission empty.
+        // This path avoids the large-area preparation and complex roofing
+        // methods that may have triggered the original exception.
+        public static IntVec3 BuildRecoveryPrison(Map map, out IntVec3 guardPost)
+        {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+            IntVec3 c = map.Center;
+            ThingDef wall = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
+            ThingDef door = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
+            ThingDef slate = DefDatabase<ThingDef>.GetNamedSilentFail("BlocksSlate");
+            TerrainDef soil = TerrainDefOf.Soil;
+            if (wall == null || door == null || slate == null || soil == null)
+                throw new InvalidOperationException(
+                    "[Aragorn] Emergency prison lacks vanilla slate/walls/door/soil.");
+
+            // Repair the whole emergency 31x27 building area. Roofs are
+            // removed BEFORE the underlying natural rock to prevent collapse.
+            // Never remove a player colonist or Aragorn from an already saved
+            // broken map. Clear the three-wide SOUTHERN passage as well, even
+            // if the first builder previously generated a partial deep moat.
+            for (int z = -36; z <= 15; z++)
+            for (int x = -16; x <= 16; x++)
+            {
+                if (Math.Abs(z) > 15 && Math.Abs(x) > 2) continue;
+                IntVec3 p = At(c, x, z);
+                if (!p.InBounds(map)) continue;
+                map.roofGrid.SetRoof(p, null);
+                foreach (Thing t in p.GetThingList(map).ToList())
+                {
+                    if (t is Pawn || t == null || !t.Spawned) continue;
+                    t.Destroy(DestroyMode.Vanish);
+                }
+                map.terrainGrid.SetTerrain(p, soil);
+            }
+
+            // Always build two concentric rooms, with clearly visible doors
+            // along the central rescue route; the roof is deliberately
+            // optional in this emergency version.
+            void Perimeter(int halfX, int halfZ, int doorZ)
+            {
+                for (int x = -halfX; x <= halfX; x++)
+                for (int z = -halfZ; z <= halfZ; z++)
+                {
+                    if (Math.Abs(x) != halfX && Math.Abs(z) != halfZ) continue;
+                    IntVec3 p = At(c, x, z);
+                    bool gate = x == 0 && z == doorZ;
+                    ThingDef def = gate ? door : wall;
+                    Thing t = ThingMaker.MakeThing(def,
+                        def.MadeFromStuff ? slate : null);
+                    GenSpawn.Spawn(t, p, map, WipeMode.Vanish);
+                    AragornTrialSitePreparation.RequireBuilding(map, p, def);
+                }
+            }
+
+            Perimeter(13, 10, -10);
+            Perimeter(6, 4, -4);
+
+            // Barricade positions remain optional; if the recovery was
+            // reached after some props appeared, do not allow them to block
+            // the only southern access.
+            foreach (int side in new [] { -1, 1 })
+            {
+                for (int x = 15; x <= 23; x++)
+                {
+                    IntVec3 p = At(c, x * side, -16);
+                    if (p.InBounds(map) && p.Standable(map) &&
+                        !p.GetThingList(map).Any(t => t is Building))
+                    {
+                        ThingDef barricade = DefDatabase<ThingDef>
+                            .GetNamedSilentFail("Barricade");
+                        if (barricade != null)
+                        {
+                            Thing cover = ThingMaker.MakeThing(barricade,
+                                barricade.MadeFromStuff ? slate : null);
+                            GenSpawn.Spawn(cover, p, map, WipeMode.Vanish);
+                        }
+                    }
+                }
+            }
+
+            guardPost = At(c, 0, -14);
+            if (!guardPost.Standable(map) || !c.Standable(map))
+                throw new InvalidOperationException(
+                    "[Aragorn] Emergency rescue prison still inaccessible.");
+            Log.Warning("[Aragorn] RECOVERED empty rescue map: accessible " +
+                "double-room prison built with dry southern passage; " +
+                "no further terrain/roof dependency.");
+            return c;
+        }
+
         // South shore outside the moat. This square is dry because the
         // water ring ends at z=-28, and the prepared site spans to z=-35.
         public static IntVec3 SouthBank(Map map) => At(map.Center, 0, -30);

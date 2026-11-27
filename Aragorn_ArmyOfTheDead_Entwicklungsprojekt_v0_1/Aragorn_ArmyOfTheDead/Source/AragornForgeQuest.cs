@@ -244,6 +244,19 @@ namespace AragornArmy
                 CreateForgeSite();
                 return;
             }
+            // The original forge builder could place a few golden floors,
+            // fail before the workbench/smith spawned, and NEVER retry
+            // because the site already existed. Rebuild such partial sites
+            // in place, rather than leaving a blank map forever.
+            if (site != null && site.HasMap && !built &&
+                Find.TickManager.TicksGame >= retryTick)
+            {
+                retryTick = Find.TickManager.TicksGame + 600;
+                Log.Warning("[Aragorn] Empty/incomplete forge map detected; " +
+                    "retrying forge and smith generation.");
+                PopulateForgeMap(site.Map);
+                return;
+            }
             if (site == null || !site.HasMap || !built) return;
             if (smith == null || smith.Dead || smith.Destroyed || forge == null || forge.Destroyed)
             {
@@ -374,26 +387,33 @@ namespace AragornArmy
             if (site == null || map == null || map.Parent != site || built) return;
             try
             {
+                Log.Message("[Aragorn] Forge map stage 1: clearing terrain " +
+                    "and generating the golden hall.");
                 forge = AndurilForgeBuilder.Build(map, map.Center, site.Faction);
-                if (forge == null)
-                {
-                    Log.Error("[Aragorn] Forge building not created. No encounter started.");
-                    return;
-                }
+                if (forge == null || !forge.Spawned)
+                    throw new InvalidOperationException(
+                        "Forge workbench not created in generated golden hall.");
                 // Champion receives the original Divine Order plate armor and open
                 // plate helmet by default, much tougher than a commoner.
                 PawnKindDef kind = DefDatabase<PawnKindDef>.GetNamedSilentFail("BotchJob_DivineOrderChampion");
-                if (kind == null) { Log.Error("[Aragorn] Divine Order Champion PawnKind missing."); return; }
+                if (kind == null)
+                    throw new InvalidOperationException(
+                        "Divine Order Champion PawnKind missing; cannot spawn smith.");
                 Faction divine = site.Faction;
-                smith = PawnGenerator.GeneratePawn(kind, divine);
-                smith.Name = new NameSingle(AragornText.T("AR_Forge_SmithName"));
+                // Do not duplicate the neutral smith if a previous partial
+                // build already spawned him before throwing an exception.
+                if (smith == null || !smith.Spawned || smith.Map != map ||
+                    smith.Dead)
+                {
+                    smith = PawnGenerator.GeneratePawn(kind, divine);
+                    smith.Name = new NameSingle(AragornText.T("AR_Forge_SmithName"));
+                }
                 IntVec3 smithCell = SmithStandCell;
                 if (!smithCell.InBounds(map) || !smithCell.Standable(map))
-                {
-                    Log.Error("[Aragorn] Fixed smith workstation cell obstructed at " + smithCell);
-                    return;
-                }
-                GenSpawn.Spawn(smith, smithCell, map);
+                    throw new InvalidOperationException(
+                        "Fixed smith workstation cell obstructed: " + smithCell);
+                if (!smith.Spawned)
+                    GenSpawn.Spawn(smith, smithCell, map);
                 smith.Rotation = Rot4.North;
                 // The Divine Order blacksmith is a neutral quest NPC, never a colonist.
                 // He can still be attacked or killed by invading Profaned.
@@ -406,7 +426,12 @@ namespace AragornArmy
                     forge, MessageTypeDefOf.PositiveEvent);
                 Log.Message("[Aragorn] Golden forge site generated, Divine Order smith at " + smithCell);
             }
-            catch (Exception ex) { Log.Error("[Aragorn] Forge map generation failure: " + ex); }
+            catch (Exception ex)
+            {
+                retryTick = Find.TickManager.TicksGame + 600;
+                Log.Error("[Aragorn] Forge map generation failure; automatic " +
+                    "repair of existing site queued: " + ex);
+            }
         }
 
         private void SpawnWave()
@@ -617,8 +642,14 @@ namespace AragornArmy
                 ?? DefDatabase<TerrainDef>.GetNamedSilentFail("FineTile");
             if (wall == null || smithy == null) return null;
 
-            IntVec3 center = CellFinder.RandomClosewalkCellNear(near, map, 20);
+            // Deterministic retry position: a second attempt MUST rebuild
+            // the same forge, not select a random new partially blocked site.
+            IntVec3 center = map.Center;
             const int rx = 12, rz = 10;
+            // Prepare the full hall + margin BEFORE golden masonry, not just
+            // the vegetation. Mountains used to silently suppress all walls
+            // and even the smith's only workbench.
+            AragornTrialSitePreparation.ClearFootprint(map, center, 31, 27, 2);
             // Grand gold hall with two side rooms and gaps in the ramparts.
             for (int dx = -rx; dx <= rx; dx++)
             for (int dz = -rz; dz <= rz; dz++)
@@ -658,6 +689,9 @@ namespace AragornArmy
             // Forge in the NORTH of the hall, smith and Aragorn face it from south.
             IntVec3 forgePos = center + new IntVec3(0, 0, 5);
             Thing bench = SpawnBuilding(smithy, ThingDefOf.Gold, forgePos, map, owner);
+            if (bench == null || !bench.Spawned)
+                throw new InvalidOperationException(
+                    "[Aragorn] Workbench missing after golden forge construction.");
             Log.Message("[Aragorn] Gold forge hall built (" + (2 * rx + 1)
                 + " x " + (2 * rz + 1) + ") at " + center
                 + "; workstation: " + smithy.defName + ".");
