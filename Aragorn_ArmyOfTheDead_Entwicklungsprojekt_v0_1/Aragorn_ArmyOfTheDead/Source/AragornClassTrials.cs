@@ -386,17 +386,27 @@ namespace AragornArmy
             }
         }
 
+        private bool LegacyTrial =>
+            trialCampaignActive && trialMap != null && trialIndex >= 0 &&
+            trialMarkers.Count != new [] { 3, 3, 2, 2, 2, 1 }[ClassNumber(trialIndex)];
+
+        private bool TowerStillGuarded(Thing grave)
+        {
+            return grave != null && trialGuards.Any(p =>
+                p != null && p.Spawned && !p.Dead && !p.Downed &&
+                p.Position.DistanceTo(grave.Position) <= 10f);
+        }
+
         public IEnumerable<Gizmo> GetClassTrialGizmos(Pawn pawn)
         {
             if (!trialCampaignActive || trialMap == null || pawn == null ||
                 pawn.Faction != Faction.OfPlayer || !pawn.Spawned ||
                 pawn.Map != trialMap || !pawn.RaceProps.Humanlike) yield break;
+
             int cls = ClassNumber(trialIndex);
+            Texture2D art = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false);
             if (cls == 0 && trialGravesOpened < 3)
             {
-                // Choose the nearest unopened tomb, regardless of its index.
-                // The action belongs to the selected colonist and works next
-                // to ANY of the three graves, not merely the first one.
                 var closest = ClosedGraves()
                     .OrderBy(x => x.grave.Position.DistanceTo(pawn.Position))
                     .FirstOrDefault();
@@ -404,7 +414,7 @@ namespace AragornArmy
                 var cmd = new Command_Action {
                     defaultLabel = AragornText.F("AR_Class_OpenGraveProgress", trialGravesOpened),
                     defaultDesc = AragornText.T("AR_Class_OpenGraveDesc"),
-                    icon = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false),
+                    icon = art,
                     action = () => OpenTrialGrave(pawn)
                 };
                 if (!Cleared(trialGuards))
@@ -414,46 +424,62 @@ namespace AragornArmy
                     cmd.Disable(AragornText.T("AR_Class_GetCloser"));
                 yield return cmd;
             }
-            else if ((cls == 1 || cls == 2 || cls == 5) && RemainingMarkers > 0)
-            {
-                Thing nearest = trialMarkers.Where(t => t != null && t.Spawned)
-                    .OrderBy(t => t.Position.DistanceTo(pawn.Position)).FirstOrDefault();
-                var cmd = new Command_Action {
-                    defaultLabel = AragornText.T("AR_Class_BreakSeal"),
-                    defaultDesc = cls == 2
-                        ? AragornText.T("AR_Bombardier_SealGizmoDesc")
-                        : AragornText.T("AR_Class_BreakSealDesc"),
-                    icon = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false),
-                    action = () => BreakTrialSeal(pawn)
-                };
-                if (nearest == null || pawn.Position.DistanceTo(nearest.Position) > 3f)
-                    cmd.Disable(AragornText.T("AR_Class_GetCloser"));
-                yield return cmd;
-            }
             else if (cls == 3 && trialDuelVictories < 2)
             {
+                bool renew = trialDuelEnemy != null && trialDuelEnemy.Spawned &&
+                    !trialDuelEnemy.Dead && !trialDuelEnemy.Downed &&
+                    (trialDuelChampion == null || trialDuelChampion.Downed ||
+                    trialDuelChampion.Dead || !trialDuelChampion.Spawned);
+                var nearest = SealedSarcophagi().OrderBy(x =>
+                    x.grave.Position.DistanceTo(pawn.Position)).FirstOrDefault();
                 var cmd = new Command_Action {
                     defaultLabel = AragornText.T("AR_Class_StartDuel"),
-                    defaultDesc = AragornText.T("AR_Class_StartDuelDesc"),
-                    icon = ContentFinder<Texture2D>.Get("Aragorn/Gizmos/GhostTrial", false),
+                    defaultDesc = AragornText.T("AR_OathGraves_DuelDescription"),
+                    icon = art,
                     action = () => BeginAxeDuel(pawn)
                 };
                 if (!Cleared(trialGuards))
                     cmd.Disable(AragornText.T("AR_Class_ClearTemple"));
-                else if (pawn.Position.DistanceTo(trialRingCenter) > 5f)
-                    cmd.Disable(AragornText.T("AR_Class_EnterArena"));
-                else if (trialDuelEnemy != null && trialDuelEnemy.Spawned &&
-                    !trialDuelEnemy.Dead && !trialDuelEnemy.Downed &&
-                    trialDuelChampion != null && trialDuelChampion.Spawned &&
-                    !trialDuelChampion.Dead && !trialDuelChampion.Downed)
-                    cmd.Disable(AragornText.T("AR_Class_DuelInProgress"));
-                else if (trialDuelEnemy != null &&
-                    (trialDuelEnemy.Dead || trialDuelEnemy.Downed))
+                else if (pawn.Position.DistanceTo(trialRingCenter) > 5f ||
+                    (!renew && (nearest.grave == null ||
+                    pawn.Position.DistanceTo(nearest.grave.Position) > 4f)))
+                    cmd.Disable(AragornText.T("AR_OathGraves_DuelApproach"));
+                else if (trialDuelEnemy != null && (trialDuelEnemy.Dead ||
+                    trialDuelEnemy.Downed))
                     cmd.Disable(AragornText.T("AR_Class_DuelFinishing"));
+                else if (trialDuelEnemy != null && !renew)
+                    cmd.Disable(AragornText.T("AR_Class_DuelInProgress"));
                 else if (trialMap.mapPawns.AllPawnsSpawned.Any(other =>
                     other != pawn && other.Faction == Faction.OfPlayer &&
                     other.Position.DistanceTo(trialRingCenter) < 7f))
                     cmd.Disable(AragornText.T("AR_Class_DuelAlone"));
+                yield return cmd;
+            }
+            else if ((cls == 1 || cls == 2 || cls == 4 || cls == 5) &&
+                RemainingMarkers > 0)
+            {
+                var nearest = SealedSarcophagi().OrderBy(x =>
+                    x.grave.Position.DistanceTo(pawn.Position)).FirstOrDefault();
+                Thing grave = nearest.grave;
+                var cmd = new Command_Action {
+                    defaultLabel = AragornText.F("AR_OathGraves_OpenProgress",
+                        trialMarkers.Count - RemainingMarkers, trialMarkers.Count),
+                    defaultDesc = cls == 2
+                        ? AragornText.T("AR_Bombardier_SealGizmoDesc")
+                        : AragornText.T("AR_OathGraves_OpenDescription"),
+                    icon = art,
+                    action = () => BreakTrialSeal(pawn)
+                };
+                if (cls == 1 && !LegacyTrial && TowerStillGuarded(grave))
+                    cmd.Disable(AragornText.T("AR_OathGraves_ArchersRemain"));
+                else if (cls == 4 && !LegacyTrial &&
+                    (trialWavesSpawned < 3 || !Cleared(trialGuards)))
+                    cmd.Disable(AragornText.T("AR_OathGraves_CaptainsWait"));
+                else if (cls == 5 && !LegacyTrial && !Cleared(trialGuards))
+                    cmd.Disable(AragornText.T("AR_OathGraves_RoyalGuards"));
+                else if (grave == null ||
+                    pawn.Position.DistanceTo(grave.Position) > 3f)
+                    cmd.Disable(AragornText.T("AR_Class_GetCloser"));
                 yield return cmd;
             }
         }
