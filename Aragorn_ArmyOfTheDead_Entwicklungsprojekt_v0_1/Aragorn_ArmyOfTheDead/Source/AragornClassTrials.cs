@@ -18,6 +18,13 @@ namespace AragornArmy
         private bool trialCampaignActive;
         private List<Pawn> trialGhosts = new List<Pawn>();
         private List<Thing> trialMarkers = new List<Thing>();
+        // Objective state, NOT physical destruction. All quest sarcophagi
+        // remain spawned and immune to all Thing damage/destruction.
+        private List<int> trialActivatedSarcophagi = new List<int>();
+        private int trialCurrentDuelGrave = -1;
+        private int trialKingPhase;
+        private int trialKingPhaseTick;
+        private bool trialSarcophagusGuideShown;
         private Pawn trialDuelChampion;
         private Pawn trialDuelEnemy;
         private IntVec3 trialFortCenter = IntVec3.Invalid;
@@ -47,6 +54,12 @@ namespace AragornArmy
             Scribe_Values.Look(ref trialCampaignActive, "arTrialCampaignActive", false);
             Scribe_Collections.Look(ref trialGhosts, "arTrialGhosts", LookMode.Reference);
             Scribe_Collections.Look(ref trialMarkers, "arTrialMarkers", LookMode.Reference);
+            Scribe_Collections.Look(ref trialActivatedSarcophagi,
+                "arTrialActivatedSarcophagi", LookMode.Value);
+            Scribe_Values.Look(ref trialCurrentDuelGrave, "arTrialCurrentDuelGrave", -1);
+            Scribe_Values.Look(ref trialKingPhase, "arTrialKingPhase", 0);
+            Scribe_Values.Look(ref trialKingPhaseTick, "arTrialKingPhaseTick", 0);
+            Scribe_Values.Look(ref trialSarcophagusGuideShown, "arTrialSarcophagusGuideShown", false);
             Scribe_References.Look(ref trialDuelChampion, "arTrialDuelChampion");
             Scribe_References.Look(ref trialDuelEnemy, "arTrialDuelEnemy");
             Scribe_Values.Look(ref trialFortCenter, "arTrialFortCenter", IntVec3.Invalid);
@@ -63,6 +76,17 @@ namespace AragornArmy
             {
                 if (trialGhosts == null) trialGhosts = new List<Pawn>();
                 if (trialMarkers == null) trialMarkers = new List<Thing>();
+                if (trialActivatedSarcophagi == null)
+                    trialActivatedSarcophagi = new List<int>();
+                // Old (v0.36) markers were physically destroyed when broken.
+                // Reconstruct that progression once when loading an existing
+                // mission, rather than resetting it.
+                if (trialCampaignActive && trialIndex >= 0 && ClassNumber(trialIndex) != 0)
+                    for (int i = 0; i < trialMarkers.Count; i++)
+                        if (trialMarkers[i] == null || trialMarkers[i].Destroyed ||
+                            !trialMarkers[i].Spawned)
+                            if (!trialActivatedSarcophagi.Contains(i))
+                                trialActivatedSarcophagi.Add(i);
                 if (trialOpenedGraveIndices == null) trialOpenedGraveIndices = new List<int>();
                 if (trialCampaignActive && trialIndex >= 0 &&
                     ClassNumber(trialIndex) == 0 && trialOpenedGraveIndices.Count == 0 &&
@@ -81,6 +105,13 @@ namespace AragornArmy
             trialCampaignActive = false;
             trialGhosts.Clear();
             trialMarkers.Clear();
+            if (trialActivatedSarcophagi == null)
+                trialActivatedSarcophagi = new List<int>();
+            trialActivatedSarcophagi.Clear();
+            trialCurrentDuelGrave = -1;
+            trialKingPhase = 0;
+            trialKingPhaseTick = 0;
+            trialSarcophagusGuideShown = false;
             trialDuelChampion = null;
             trialDuelEnemy = null;
             trialFortCenter = IntVec3.Invalid;
@@ -99,7 +130,40 @@ namespace AragornArmy
         private static bool Cleared(IEnumerable<Pawn> pawns) =>
             pawns == null || pawns.All(p => p == null || !p.Spawned || p.Dead || p.Downed);
 
-        private int RemainingMarkers => trialMarkers.Count(t => t != null && t.Spawned && !t.Destroyed);
+        private int RemainingMarkers => Enumerable.Range(0, trialMarkers.Count)
+            .Count(i => !MarkerActivated(i));
+
+        private bool MarkerActivated(int i) =>
+            ClassNumber(trialIndex) == 0
+                ? trialOpenedGraveIndices.Contains(i)
+                : trialActivatedSarcophagi.Contains(i);
+
+        private IEnumerable<(int index, Thing grave)> SealedSarcophagi()
+        {
+            for (int i = 0; i < trialMarkers.Count; i++)
+            {
+                Thing t = trialMarkers[i];
+                if (!MarkerActivated(i) && t != null && t.Spawned && !t.Destroyed)
+                    yield return (i, t);
+            }
+        }
+
+        public bool IsQuestSarcophagus(Thing thing) =>
+            trialCampaignActive && trialMap != null && thing != null &&
+            thing.Map == trialMap && trialMarkers.Contains(thing);
+
+        private void MarkSarcophagusOpened(int index)
+        {
+            if (index < 0 || index >= trialMarkers.Count ||
+                trialActivatedSarcophagi.Contains(index)) return;
+            trialActivatedSarcophagi.Add(index);
+            Thing thing = trialMarkers[index];
+            if (thing != null && thing.Spawned)
+            {
+                FleckMaker.ThrowDustPuffThick(thing.DrawPos, trialMap,
+                    2.2f, new Color(.16f, .9f, .75f));
+            }
+        }
 
         private IEnumerable<(int index, Thing grave)> ClosedGraves()
         {
@@ -132,9 +196,9 @@ namespace AragornArmy
             ThingDef stone = DefDatabase<ThingDef>.GetNamedSilentFail("BlocksSlate");
             IntVec3 cell = fixedPosition && at.InBounds(trialMap) && at.Standable(trialMap)
                 ? at : CellFinder.RandomClosewalkCellNear(at, trialMap, 2);
-            string[] candidates = preferredDef == null
-                ? new [] { "Sarcophagus" }
-                : new [] { preferredDef, "BotchJob_ProfanedBrazier", "Sarcophagus" };
+            // ONE visual language in every class: solid stone sarcophagi.
+            // Their sealing state is persisted in trialActivatedSarcophagi.
+            string[] candidates = new [] { "Sarcophagus" };
             foreach (string name in candidates.Distinct())
             {
                 ThingDef def = DefDatabase<ThingDef>.GetNamedSilentFail(name);
