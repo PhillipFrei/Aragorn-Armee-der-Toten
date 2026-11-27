@@ -1013,12 +1013,40 @@ namespace AragornArmy
 
         public static IntVec3 Build(Map map, int cls)
         {
-            // The sword quest uses the explicitly approved 52x32 blueprint;
-            // all other class maps retain their existing layouts.
-            if (cls == 0) return AragornSwordCryptLayout.Build(map);
-            if (cls == 2) return AragornBombardierCryptLayout.Build(map);
+            // PREPARE THE ENTIRE AREA before placing a single wall.
+            // Random mountains, natural roofs, pre-existing structures and
+            // water used to silently suppress parts of every quest building.
+            // All three builders now start on verified, fully empty, flat
+            // buildable ground. The sword crypt deliberately rebuilds its
+            // artificial cave-rock perimeter after this preparation.
+            if (cls == 0)
+            {
+                AragornTrialSitePreparation.ClearFootprint(map, map.Center,
+                    AragornSwordCryptLayout.Width, AragornSwordCryptLayout.Height);
+                return AragornSwordCryptLayout.Build(map);
+            }
+            if (cls == 2)
+            {
+                AragornTrialSitePreparation.ClearFootprint(map, map.Center,
+                    AragornBombardierCryptLayout.Width, AragornBombardierCryptLayout.Height);
+                return AragornBombardierCryptLayout.Build(map);
+            }
             IntVec3 c = CellFinder.RandomClosewalkCellNear(map.Center, map, 18);
+            AragornTrialSitePreparation.ClearFootprint(map, c, 49, 39);
             OuterFort(map, c, 24, 19, false);
+            ThingDef wallDef = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
+            ThingDef doorDef = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
+            for (int x = -24; x <= 24; x++)
+            for (int z = -19; z <= 19; z++)
+            {
+                bool border = Math.Abs(x) == 24 || Math.Abs(z) == 19;
+                if (!border) continue;
+                bool southEntrance = z == -19 && Math.Abs(x) <= 2;
+                if (southEntrance && x != 0) continue;
+                AragornTrialSitePreparation.RequireBuilding(map,
+                    c + new IntVec3(x, 0, z),
+                    southEntrance ? doorDef : wallDef);
+            }
             if (cls == 1)
             {
                 // Three low-walled ranged platforms with open firing lines.

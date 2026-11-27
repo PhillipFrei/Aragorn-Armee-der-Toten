@@ -246,6 +246,18 @@ namespace AragornArmy
                 PlaceBuilding(map, Cell(map, support.x, support.z), wall, stone);
             }
 
+            // Verify EVERY required wall and door in the approved blueprint.
+            // A whole missing side of the crypt now raises a clear error
+            // instead of silently appearing as an incomplete mission.
+            for (int y = 0; y < Height; y++)
+            for (int x = 0; x < Width; x++)
+            {
+                if (grid[x, y] != 'W' && grid[x, y] != 'D') continue;
+                AragornTrialSitePreparation.RequireBuilding(
+                    map, Cell(map, x, y),
+                    grid[x, y] == 'W' ? wall : door);
+            }
+
             // The cursed altar at T in the original sketch is decorative,
             // not a fourth objective or a prerequisite to the three tombs.
             ThingDef altar = DefDatabase<ThingDef>.GetNamedSilentFail("BotchJob_ProfanedBrazierDarklight")
