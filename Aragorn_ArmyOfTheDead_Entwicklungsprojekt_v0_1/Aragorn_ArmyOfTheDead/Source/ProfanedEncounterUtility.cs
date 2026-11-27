@@ -93,7 +93,8 @@ namespace AragornArmy
         // A ranged-equipped Profaned human becomes an archer even where a
         // separate 'archer' PawnKind is absent in a given Profaned version.
         public static List<Pawn> SpawnThemedGuards(Map map, IntVec3 center,
-            Faction faction, int requested, string role)
+            Faction faction, int requested, string role,
+            List<IntVec3> fortifiedPositions = null)
         {
             var result = new List<Pawn>();
             if (map == null || faction == null) return result;
@@ -175,7 +176,23 @@ namespace AragornArmy
                             guard.equipment.AddEquipment(bow);
                         }
                     }
-                    IntVec3 cell = CellFinder.RandomClosewalkCellNear(center, map, 5);
+                    // If the mission has a built defensive line, spawn at
+                    // designated walkable firing squares BEHIND the barricades,
+                    // rather than randomly inside an open room or atop cover.
+                    IntVec3 cell = IntVec3.Invalid;
+                    if (fortifiedPositions != null)
+                    {
+                        foreach (IntVec3 proposed in fortifiedPositions
+                            .Skip(i % Math.Max(1, fortifiedPositions.Count)))
+                        {
+                            if (!proposed.InBounds(map) || !proposed.Standable(map) ||
+                                proposed.GetThingList(map).Any(t => t is Pawn)) continue;
+                            cell = proposed;
+                            break;
+                        }
+                    }
+                    if (!cell.IsValid)
+                        cell = CellFinder.RandomClosewalkCellNear(center, map, 5);
                     GenSpawn.Spawn(guard, cell, map);
                     result.Add(guard);
                 }
