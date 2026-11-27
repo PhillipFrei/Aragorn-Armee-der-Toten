@@ -282,22 +282,33 @@ namespace AragornArmy
                             AddTrialMarker(AragornSwordCryptLayout.Grave(map, i),
                                 fixedPosition: true);
                         break;
-                    case 1: // Three fortified positions with one oath tomb
-                            // controlling each otherwise invulnerable archer.
+                    case 1: // Three enclosed, fogged archer crypts with
+                            // a dedicated firing line and separate guards.
                         for (int i = 0; i < 3; i++)
                         {
-                            IntVec3 tower = trialFortCenter + new IntVec3((i - 1) * 13, 0, 9);
-                            AddTrialMarker(tower + new IntVec3(0, 0, -5), fixedPosition: true);
+                            int laneX = (i - 1) * 20;
+                            IntVec3 post = trialFortCenter + new IntVec3(laneX, 0, 9);
+                            IntVec3 tower = trialFortCenter + new IntVec3(laneX, 0, 15);
+                            AddTrialMarker(trialFortCenter + new IntVec3(laneX, 0, 20),
+                                fixedPosition: true);
                             Pawn archer = SpawnQuestGhost(3 + i, tower, hostile);
                             List<Pawn> bowmen = ProfanedEncounterUtility.SpawnThemedGuards(
-                                trialMap, tower + new IntVec3(0, 0, -4), hostile, 9, "archers");
+                                trialMap, post, hostile, 9, "archers",
+                                AragornCryptInteriors.HoldBehindRow(
+                                    trialFortCenter, laneX, 6));
                             trialGuards.AddRange(bowmen);
-                            if (archer != null) bowmen.Add(archer);
                             if (bowmen.Count > 0)
                                 LordMaker.MakeNewLord(hostile,
-                                    new LordJob_DefendPoint(tower, wanderRadius: 3f,
-                                        defendRadius: 32f, isCaravanSendable: false, addFleeToil: false),
+                                    new LordJob_DefendPoint(post, wanderRadius: 2f,
+                                        defendRadius: 18f, isCaravanSendable: false, addFleeToil: false),
                                     trialMap, bowmen);
+                            // The ghost itself stays behind the door, in
+                            // the still-undiscovered roofed burial chamber.
+                            if (archer != null)
+                                LordMaker.MakeNewLord(hostile,
+                                    new LordJob_DefendPoint(tower, wanderRadius: 1.5f,
+                                        defendRadius: 13f, isCaravanSendable: false, addFleeToil: false),
+                                    trialMap, new List<Pawn> { archer });
                         }
                         break;
                     case 2: // True ritual crypt: two guarded side chapels
@@ -314,10 +325,20 @@ namespace AragornArmy
                         AragornBombardierCryptLayout.AssignBombardierGuard(
                             map, hostile, westGhost, eastGhost);
                         break;
-                    case 3: // Temple: two indestructible challenge graves
-                            // activate distinct one-on-one axe fights.
-                        AddDefenders(trialFortCenter + new IntVec3(-8, 0, -9), hostile, 8, "ghouls");
-                        AddDefenders(trialFortCenter + new IntVec3(8, 0, -9), hostile, 8, "ghouls");
+                    case 3: // Two separate fogged ghoul crypts, then the
+                            // enclosed 1v1 arena with two indestructible tombs.
+                        foreach (int side in new [] { -1, 1 })
+                        {
+                            IntVec3 chapel = trialFortCenter + new IntVec3(side * 19, 0, -13);
+                            List<Pawn> ghoulWardens = ProfanedEncounterUtility.SpawnThemedGuards(
+                                trialMap, chapel, hostile, 8, "ghouls");
+                            trialGuards.AddRange(ghoulWardens);
+                            if (ghoulWardens.Count > 0)
+                                LordMaker.MakeNewLord(hostile,
+                                    new LordJob_DefendPoint(chapel, wanderRadius: 2.5f,
+                                        defendRadius: 17f, isCaravanSendable: false, addFleeToil: false),
+                                    trialMap, ghoulWardens);
+                        }
                         AddTrialMarker(trialRingCenter + new IntVec3(-3, 0, 0),
                             fixedPosition: true);
                         AddTrialMarker(trialRingCenter + new IntVec3(3, 0, 0),
@@ -339,7 +360,7 @@ namespace AragornArmy
                         SpawnQuestGhost(12, trialFortCenter + new IntVec3(0, 0, 13), hostile);
                         AddDefenders(trialFortCenter + new IntVec3(-9, 0, 5), hostile, 10, "elite");
                         AddDefenders(trialFortCenter + new IntVec3(9, 0, 5), hostile, 10, "elite");
-                        AddTrialMarker(trialFortCenter + new IntVec3(0, 0, 2),
+                        AddTrialMarker(trialFortCenter + new IntVec3(0, 0, 11),
                             fixedPosition: true);
                         break;
                 }
@@ -355,7 +376,7 @@ namespace AragornArmy
                         ", ghosts=" + trialGhosts.Count + "/" + expectedGhosts +
                         ", markers=" + trialMarkers.Count + "/" + expectedMarkers +
                         ", defenders=" + trialGuards.Count);
-                if (cls != 0 && cls != 1 && cls != 2) GuardMission(hostile);
+                if (cls != 0 && cls != 1 && cls != 2 && cls != 3) GuardMission(hostile);
                 // Sword crypt, archer towers and ritual-crypt chambers have
                 // separate defenders, so they must keep their own Lords.
                 if (cls == 0 && !trialGraveGuidanceShown)
@@ -854,7 +875,12 @@ namespace AragornArmy
                     p.RaceProps.Humanlike).ToList();
                 if (candidates.Count > 0)
                 {
-                    Pawn victim = candidates.RandomElement();
+                    // Strike outdoor targets first: an actual constructed
+                    // crypt roof protects the closed rooms from vanilla weather.
+                    var outside = candidates.Where(p =>
+                        trialMap.roofGrid.RoofAt(p.Position) == null).ToList();
+                    Pawn victim = (outside.Count > 0 ? outside : candidates)
+                        .RandomElement();
                     trialMap.weatherManager.eventHandler.AddEvent(
                         new WeatherEvent_LightningStrike(trialMap, victim.Position));
                     // Vanilla weather bolt provides its own visual and damage.
@@ -1023,103 +1049,52 @@ namespace AragornArmy
             {
                 AragornTrialSitePreparation.ClearFootprint(map, map.Center,
                     AragornSwordCryptLayout.Width, AragornSwordCryptLayout.Height);
-                return AragornSwordCryptLayout.Build(map);
+                IntVec3 crypt = AragornSwordCryptLayout.Build(map);
+                AragornCryptInteriors.RefreshDiscoverableRooms(map);
+                return crypt;
             }
             if (cls == 2)
             {
                 AragornTrialSitePreparation.ClearFootprint(map, map.Center,
                     AragornBombardierCryptLayout.Width, AragornBombardierCryptLayout.Height);
-                return AragornBombardierCryptLayout.Build(map);
+                IntVec3 crypt = AragornBombardierCryptLayout.Build(map);
+                AragornCryptInteriors.RefreshDiscoverableRooms(map);
+                return crypt;
             }
+            // All standard class crypts are now 71 x 55 cells (previously
+            // 49 x 39). Keep the original mission map IDs and progression.
             IntVec3 c = CellFinder.RandomClosewalkCellNear(map.Center, map, 18);
-            AragornTrialSitePreparation.ClearFootprint(map, c, 49, 39);
-            OuterFort(map, c, 24, 19, false);
+            AragornTrialSitePreparation.ClearFootprint(map, c, 71, 55);
+            OuterFort(map, c, 35, 27, false);
             ThingDef wallDef = DefDatabase<ThingDef>.GetNamedSilentFail("Wall");
             ThingDef doorDef = DefDatabase<ThingDef>.GetNamedSilentFail("Door");
-            for (int x = -24; x <= 24; x++)
-            for (int z = -19; z <= 19; z++)
+            for (int x = -35; x <= 35; x++)
+            for (int z = -27; z <= 27; z++)
             {
-                bool border = Math.Abs(x) == 24 || Math.Abs(z) == 19;
+                bool border = Math.Abs(x) == 35 || Math.Abs(z) == 27;
                 if (!border) continue;
-                bool southEntrance = z == -19 && Math.Abs(x) <= 2;
-                if (southEntrance && x != 0) continue;
-                AragornTrialSitePreparation.RequireBuilding(map,
-                    c + new IntVec3(x, 0, z),
-                    southEntrance ? doorDef : wallDef);
+                bool entrance = z == -27 && Math.Abs(x) <= 2;
+                if (entrance && x != 0) continue;
+                AragornTrialSitePreparation.RequireBuilding(
+                    map, c + new IntVec3(x, 0, z),
+                    entrance ? doorDef : wallDef);
             }
-            if (cls == 1)
+            switch (cls)
             {
-                // Three low-walled ranged platforms with open firing lines.
-                for (int t = -1; t <= 1; t++)
-                {
-                    IntVec3 tower = c + new IntVec3(t * 13, 0, 9);
-                    for (int x = -4; x <= 4; x++)
-                    for (int z = -3; z <= 3; z++)
-                        if (Math.Abs(x) == 4 || Math.Abs(z) == 3)
-                            if ((x + z) % 3 != 0)
-                                Place(map, tower + new IntVec3(x, 0, z), "Barricade");
-                }
+                case 1:
+                    AragornCryptInteriors.ArcherFortress(map, c);
+                    break;
+                case 3:
+                    AragornCryptInteriors.AxeTemple(map, c);
+                    break;
+                case 4:
+                    AragornCryptInteriors.CaptainFortress(map, c);
+                    break;
+                case 5:
+                    AragornCryptInteriors.KingSanctuary(map, c);
+                    break;
             }
-            else if (cls == 3)
-            {
-                // Two separately guarded ghoul chapels precede the inner arena.
-                // Keep 3-wide access through the central courtyard.
-                foreach (int side in new[] { -1, 1 })
-                {
-                    for (int x = 5; x <= 20; x++)
-                    {
-                        if (x != 10)
-                            Place(map, c + new IntVec3(side * x, 0, -4), "Wall");
-                        else
-                            Place(map, c + new IntVec3(side * x, 0, -4), "Door");
-                    }
-                    for (int z = -14; z <= -5; z += 5)
-                        Place(map, c + new IntVec3(side * 16, 0, z), "Wall");
-                }
-                // The arena is a separate chamber, with two distinct
-                // oath-coffins. Nobody can win the two duels from outside.
-                IntVec3 ring = c + new IntVec3(0, 0, 11);
-                for (int x = -6; x <= 6; x++)
-                for (int z = -6; z <= 6; z++)
-                {
-                    if (Math.Abs(x) != 6 && Math.Abs(z) != 6) continue;
-                    if (x == 0 && z == -6)
-                        Place(map, ring + new IntVec3(x, 0, z), "Door");
-                    else
-                        Place(map, ring + new IntVec3(x, 0, z), "Wall");
-                }
-            }
-            else if (cls == 4)
-            {
-                // Captain fortress: three successive defense lines before
-                // the twin tombs. Two wide flank passages remain open at
-                // each level, to permit actual tactical approaches.
-                foreach (int z in new[] { -5, 3, 10 })
-                    for (int x = -21; x <= 21; x++)
-                    {
-                        if (Math.Abs(x) <= 3 || Math.Abs(x) >= 19) continue;
-                        if (Math.Abs(x) == 12)
-                            Place(map, c + new IntVec3(x, 0, z), "Door");
-                        else
-                            Place(map, c + new IntVec3(x, 0, z), "Wall");
-                    }
-                foreach (int x in new[] { -18, -9, 9, 18 })
-                    for (int z = -13; z <= 7; z += 7)
-                        Place(map, c + new IntVec3(x, 0, z), "Barricade");
-            }
-            else if (cls == 5)
-            {
-                // The royal sarcophagus is placed by PopulateClassTrial,
-                // not as a second decorative coffin.
-                // Two aisle lines and pillars lead to the throne, but the
-                // central route remains open for players and enemy AI.
-                for (int z = -8; z <= 13; z += 7)
-                    foreach (int x in new[] { -16, -12, 12, 16 })
-                        Place(map, c + new IntVec3(x, 0, z), "Wall");
-                for (int x = -17; x <= 17; x++)
-                    if (Math.Abs(x) > 4)
-                        Place(map, c + new IntVec3(x, 0, 8), "Barricade");
-            }
+            AragornCryptInteriors.RefreshDiscoverableRooms(map);
             return c;
         }
     }
