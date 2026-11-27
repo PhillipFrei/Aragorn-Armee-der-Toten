@@ -202,13 +202,28 @@ namespace AragornArmy
                 if (Math.Abs(z) > 15 && Math.Abs(x) > 2) continue;
                 IntVec3 p = At(c, x, z);
                 if (!p.InBounds(map)) continue;
-                map.roofGrid.SetRoof(p, null);
+                try { map.roofGrid.SetRoof(p, null); }
+                catch (Exception ex)
+                {
+                    Log.WarningOnce("[Aragorn] Emergency prison roof: " +
+                        ex.Message, 392523);
+                }
                 foreach (Thing t in p.GetThingList(map).ToList())
                 {
                     if (t is Pawn || t == null || !t.Spawned) continue;
-                    t.Destroy(DestroyMode.Vanish);
+                    try { t.Destroy(DestroyMode.Vanish); }
+                    catch (Exception ex)
+                    {
+                        Log.WarningOnce("[Aragorn] Emergency prison blocker: " +
+                            t.def.defName + " / " + ex.Message, 392524);
+                    }
                 }
-                map.terrainGrid.SetTerrain(p, soil);
+                try { map.terrainGrid.SetTerrain(p, soil); }
+                catch (Exception ex)
+                {
+                    Log.WarningOnce("[Aragorn] Emergency prison ground: " +
+                        ex.Message, 392525);
+                }
             }
 
             // Always build two concentric rooms, with clearly visible doors
