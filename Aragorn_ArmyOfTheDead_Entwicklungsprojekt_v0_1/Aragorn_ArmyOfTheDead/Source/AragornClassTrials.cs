@@ -453,7 +453,7 @@ namespace AragornArmy
                 if (!Cleared(trialGuards))
                     cmd.Disable(AragornText.T("AR_Class_ClearTemple"));
                 else if (pawn.Position.DistanceTo(trialRingCenter) > 5f ||
-                    (!renew && (nearest.grave == null ||
+                    (!LegacyTrial && !renew && (nearest.grave == null ||
                     pawn.Position.DistanceTo(nearest.grave.Position) > 4f)))
                     cmd.Disable(AragornText.T("AR_OathGraves_DuelApproach"));
                 else if (trialDuelEnemy != null && (trialDuelEnemy.Dead ||
