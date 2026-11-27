@@ -10,7 +10,7 @@ bomb = (root / "Source" / "AragornBombardierCryptLayout.cs").read_text(encoding=
 
 # Check the ENTIRE footprint, including walls, doors and extra clearance.
 for name, width, height in [
-    ("sword", 52, 32), ("ritual", 65, 49), ("other", 49, 39)
+    ("sword", 64, 44), ("ritual", 65, 49), ("other", 71, 55)
 ]:
     cx = 125
     cz = 125
@@ -39,15 +39,15 @@ for expected in [
     "AragornTrialSitePreparation.ClearFootprint(map, map.Center,",
     "AragornSwordCryptLayout.Width, AragornSwordCryptLayout.Height",
     "AragornBombardierCryptLayout.Width, AragornBombardierCryptLayout.Height",
-    "AragornTrialSitePreparation.ClearFootprint(map, c, 49, 39)",
+    "AragornTrialSitePreparation.ClearFootprint(map, c, 71, 55)",
     "AragornTrialSitePreparation.RequireBuilding(map,",
 ]:
     assert expected in main, f"Missing trial-map pre-clearance: {expected}"
 
 assert main.index("ClearFootprint(map, map.Center,") < main.index(
     "AragornSwordCryptLayout.Build(map)")
-assert main.index("ClearFootprint(map, c, 49, 39)") < main.index(
-    "OuterFort(map, c, 24, 19, false)")
+assert main.index("ClearFootprint(map, c, 71, 55)") < main.index(
+    "OuterFort(map, c, 35, 27, false)")
 
 for name, contents in [("sword", sword), ("ritual", bomb)]:
     build = contents.split("public static IntVec3 Build(Map map)", 1)[1]
@@ -55,6 +55,6 @@ for name, contents in [("sword", sword), ("ritual", bomb)]:
         f"{name} must validate every planned wall and doorway")
     assert build.index("RequireBuilding(") < build.rindex("return "), (
         f"{name} must validate the structure before returning success")
-print("Quest footprint QA: all 6 trials clear full 52x32 / 65x49 / 49x39 "
+print("Quest footprint QA: all 6 trials clear full 64x44 / 65x49 / 71x55 "
       "construction rectangles + 3-cell margin; roofs before rock, obstacles "
       "before terrain, bounds before mutation, verify required walls/doors.")
