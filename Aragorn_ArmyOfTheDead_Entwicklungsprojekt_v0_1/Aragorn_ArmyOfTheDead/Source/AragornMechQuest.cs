@@ -328,6 +328,8 @@ namespace AragornArmy
                     Log.WarningOnce("[Aragorn] Mech fortress block: " + ex.Message, 317786);
                 }
             }
+            AragornCryptInteriors.RoofRoom(map, center, -rx, -rz, rx, rz);
+            AragornCryptInteriors.RefreshDiscoverableRooms(map);
             Log.Message("[Aragorn] Steel mechanoid stronghold generated at " + center);
             return center;
         }

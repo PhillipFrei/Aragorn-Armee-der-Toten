@@ -1,27 +1,24 @@
-ARAGORN – ARMEE DER TOTEN v0.39.3 (RimWorld 1.6)
+ARAGORN – ARMEE DER TOTEN v0.39.4 (RimWorld 1.6)
 
-WICHTIG: Vollständige Ersatzmod, kein Patch.
+Mac: RimWorld beenden. ZIP entpacken. Den alten Ordner Aragorn_ArmyOfTheDead
+vollständig durch den gleichnamigen Ordner aus der ZIP ersetzen.
+Der Downloadname bleibt absichtlich konstant; die interne Version ist v0.39.4.
 
-INSTALLATION AUF MAC M3:
-1. RimWorld vollständig beenden.
-2. GitHub Actions -> neuesten erfolgreichen Build -> Artifact herunterladen.
-3. Das heruntergeladene Artifact entpacken; die enthaltene Komplettmod-ZIP ebenfalls entpacken.
-4. Den alten Ordner Aragorn_ArmyOfTheDead vollständig ersetzen.
-5. Den einen Modordner Aragorn_ArmyOfTheDead in den lokalen RimWorld-Modsordner legen.
-6. RimWorld starten und den bestehenden Mod-Eintrag Aragorn – Armee der Toten aktiv lassen.
+Wasserquest: Am Südufer steht eine auswählbare Brückenbaustelle.
+500 Holz mitbringen und innerhalb von fünf Feldern abladen, auch von Packtieren.
+Kolonisten auswählen, Baustelle rechtsklicken, Brücke bauen.
+Vier Spielstunden Bauarbeit. Material und Arbeitsfortschritt bleiben bei
+Unterbrechung und Speichern/Laden erhalten. Bereits fertige Übergänge bleiben offen.
+Die Baustelle und Sichtbarkeitskorrektur werden auch auf laufenden Wasserquests
+beim Weiterlaufen der Simulation nachgerüstet.
 
-Der Modordner, die DLL Aragorn_ArmyOfTheDead.dll und die packageId
-aragorn.armyofthedead sind unverändert; keine doppelte Modkopie installieren.
+Neue Questkarten: geschlossene Dächer einschließlich Türen; fehlende Stützen
+werden ergänzt. Innenräume werden mit der passenden RimWorld-1.6-Funktion
+verdeckt. Wasser und Ufer bleiben sichtbar.
+Die erste Krypta räumt nur noch ihren eigenen Grundriss samt schmalem
+Felsrand frei. Keine rechteckige Erdplattform mehr. Dafür eine NEUE
+Kryptenkarte betreten; alte Karten werden nicht zerstörerisch neu gebaut.
 
-v0.39.3: Nicht zerstörbare Dampfgeysire (SteamGeyser) blockieren die
-Quest-Festung nicht länger bei der Kartenfreiräumung; die v0.39.2-
-Wiederherstellungslogik für unvollständige Rettungs-/Schmiedekarten bleibt.
-Die bestehende 77x65-Rettungsfestung, Profaned-Bogenschützen, Skelette,
-der eigene Übergang und die übrigen Questinhalte bleiben erhalten.
-
-TEST: Neuen Questort am besten aus einem Spielstand vor dem ersten Betreten
-laden. Vorhandene leere Karten werden von der Wiederherstellungslogik
-bearbeitet; das Ergebnis muss in RimWorld selbst geprüft werden.
-
-QUELLE:
-https://github.com/PhillipFrei/Aragorn-Armee-der-Toten/actions/workflows/build.yml
+Die goldene Schmiede ist eine offene Ruine; ihre Wandlücken bleiben erhalten.
+Die Mechanoidenfestung besitzt jetzt ein gestütztes Dach.
+Ingame-Tests auf Mac M3 bleiben erforderlich.

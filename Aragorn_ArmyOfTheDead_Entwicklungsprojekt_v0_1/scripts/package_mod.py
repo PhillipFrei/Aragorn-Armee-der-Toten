@@ -7,10 +7,10 @@ import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parents[1]
 mod = root / "Aragorn_ArmyOfTheDead"
-name = "Aragorn_Armee_der_Toten_v0.39.3_Profaned_Bogenschuetzen_Skelette_Eigener_Uebergang_Komplettmod.zip"
+name = "Aragorn_Armee_der_Toten_v0.39.2_Leere_Karten_Schmied_Rettung_Hotfix_Komplettmod(1).zip"
 out = root / "dist" / name
 meta = ET.parse(mod / "About" / "About.xml").getroot()
-assert meta.findtext("name") == "Aragorn – Armee der Toten (v0.39.3)"
+assert meta.findtext("name") == "Aragorn – Armee der Toten (v0.39.4)"
 assert meta.findtext("packageId") == "aragorn.armyofthedead"
 assembly = mod / "1.6" / "Assemblies" / "Aragorn_ArmyOfTheDead.dll"
 if not assembly.is_file() or assembly.stat().st_size < 4096:
@@ -18,6 +18,13 @@ if not assembly.is_file() or assembly.stat().st_size < 4096:
 required = ["About/About.xml", "Defs/AragornRescueQuest.xml",
             "Source/AragornTrialSitePreparation.cs",
             "1.6/Assemblies/Aragorn_ArmyOfTheDead.dll"]
+required += [f"Textures/Aragorn/Spirits/AR_Ghost_{i:02d}_{direction}.png"
+             for i in range(1,14) for direction in ("east","north","south")]
+required += [f"Textures/Aragorn/Gizmos/{icon}.png" for icon in
+             ("BeginReforging","DevComplete","GhostTrial","GuardForge",
+              "KingsLightning","RecallGhosts","SummonGhosts","SwordWhirl")]
+required += ["About/ModIcon.png", "About/Preview.png", "Textures/Things/Weapons/Anduril.png",
+             "Textures/Things/Weapons/AR_KingSpectralStaff.png"]
 for rel in required:
     if not (mod / rel).is_file():
         sys.exit("ERROR: missing " + rel)
@@ -38,5 +45,5 @@ with zipfile.ZipFile(out) as z:
     assert all(n.startswith("Aragorn_ArmyOfTheDead/") for n in names)
     assert "Aragorn_ArmyOfTheDead/1.6/Assemblies/Aragorn_ArmyOfTheDead.dll" in names
     assert "Aragorn_ArmyOfTheDead/About/About.xml" in names
-    assert z.read("Aragorn_ArmyOfTheDead/About/About.xml").find(b"v0.39.3") >= 0
+    assert z.read("Aragorn_ArmyOfTheDead/About/About.xml").find(b"v0.39.4") >= 0
 print("PACKAGE OK:", out, "-", len(names), "files;", out.stat().st_size, "bytes")

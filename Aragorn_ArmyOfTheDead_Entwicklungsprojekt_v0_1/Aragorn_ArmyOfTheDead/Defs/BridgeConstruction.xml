@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>AR_BridgeWorksite</defName>
+    <label>Brückenbau – 500 Holz</label>
+    <description>Baustelle für den Übergang zur Festung. Lege 500 Holz im Umkreis von fünf Feldern ab. Wähle einen Kolonisten und klicke mit rechts auf die Baustelle: Brücke bauen. Der Bau dauert vier Spielstunden; Unterbrechungen behalten Material und Fortschritt.</description>
+    <thingClass>AragornArmy.Building_AragornBridge</thingClass>
+    <graphicData><texPath>Aragorn/Gizmos/GuardForge</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(1.5,1.5)</drawSize></graphicData>
+    <altitudeLayer>Building</altitudeLayer><passability>PassThroughOnly</passability>
+    <statBases><Flammability>0</Flammability></statBases>
+    <selectable>true</selectable><useHitPoints>false</useHitPoints><destroyable>false</destroyable>
+    <rotatable>false</rotatable><size>(1,1)</size><neverMultiSelect>true</neverMultiSelect>
+    <building><isEdifice>false</isEdifice><deconstructible>false</deconstructible></building>
+  </ThingDef>
+  <JobDef><defName>AR_BuildMoatBridge</defName><driverClass>AragornArmy.JobDriver_BuildMoatBridge</driverClass><reportString>baut die Holzbrücke.</reportString><checkOverrideOnExpire>false</checkOverrideOnExpire></JobDef>
+</Defs>

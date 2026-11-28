@@ -242,11 +242,16 @@ Reise mit Aragorn zur markierten Krypta. Besiege den verfluchten Geist und seine
   <AR_OathGraves_Sealed>Versiegelt</AR_OathGraves_Sealed>
   <AR_OathGraves_Indestructible>Unzerstörbarer Eidsarkophag</AR_OathGraves_Indestructible>
   <AR_Rescue_MoatTitle>Das Wassergefängnis der Profaned</AR_Rescue_MoatTitle>
-  <AR_Rescue_MoatBody>Der Graben aus tiefem Wasser ist unpassierbar. Eine fertige Brücke gibt es nicht. Gehe mit einem Kolonisten ans südliche Ufer und nutze den Befehl „Übergang bereiten“, um einen begehbaren Weg anzulegen. Im äußeren Hof lauern Profaned-Bogenschützen hinter Barrikaden; im Bergfried greifen Skelette an. Aragorn liegt hinter der innersten Tür.</AR_Rescue_MoatBody>
-  <AR_Rescue_PrepareCrossing>Übergang bereiten</AR_Rescue_PrepareCrossing>
-  <AR_Rescue_PrepareCrossingDesc>Die Festung ist von echtem Tiefwasser umgeben. Ein Kolonist muss am Südufer stehen und diesen Befehl nutzen, um einen provisorischen, drei Felder breiten Weg über den Graben anzulegen. Es gibt keine vorgebaute Brücke und du benötigst keinen weiteren Brücken-Mod.</AR_Rescue_PrepareCrossingDesc>
+  <AR_Rescue_MoatBody>Die Festung ist von Tiefwasser umgeben. Am Südufer steht die Brückenbaustelle. Bringe 500 Holz mit, lade es im Umkreis von 5 Feldern ab und schicke einen Kolonisten zur Baustelle. Rechtsklick: Brücke bauen. Nach vier Spielstunden Arbeit ist der Übergang fertig.</AR_Rescue_MoatBody>
+  <AR_Rescue_PrepareCrossing>Holzbrücke bauen</AR_Rescue_PrepareCrossing>
+  <AR_Rescue_PrepareCrossingDesc>Am Südufer stehen Bauhinweise. 500 Holz dort ablegen und mit 4 Spielstunden Arbeit die Brücke errichten.</AR_Rescue_PrepareCrossingDesc>
   <AR_Rescue_GoToSouthBank>Gehe mit diesem Kolonisten zum südlichen Ufer des Wassergrabens (bei der markierten Stelle).</AR_Rescue_GoToSouthBank>
   <AR_Rescue_CrossingReadyTitle>Ein Weg durch die Wasser</AR_Rescue_CrossingReadyTitle>
-  <AR_Rescue_CrossingReadyBody>Der provisorische Übergang ist bereitet. Nun führt ein begehbarer Weg über den südlichen Teil des tiefen Wassergrabens. Die Profaned-Bogenschützen an ihren Barrikaden und die Skelette im Bergfried erwarten dich.</AR_Rescue_CrossingReadyBody>
+  <AR_Rescue_CrossingReadyBody>Die Holzbrücke ist fertig. Der Übergang zur Festung ist jetzt begehbar.</AR_Rescue_CrossingReadyBody>
   <AR_Rescue_CrossingFailed>Der Weg über den Wassergraben konnte nicht angelegt werden. Prüfe das Fehlerprotokoll.</AR_Rescue_CrossingFailed>
+  <AR_Bridge_Finished>Holzbrücke fertig.</AR_Bridge_Finished>
+  <AR_Bridge_Status>Holz verbaut: {0}/{1} · Baufortschritt: {2}%</AR_Bridge_Status>
+  <AR_Bridge_Instructions>500 Holz im Umkreis von 5 Feldern ablegen (auch von Packtieren entladen). Kolonisten auswählen und Rechtsklick auf diese Baustelle: Brücke bauen. Arbeitszeit: 4 Spielstunden. Arbeit kann fortgesetzt werden.</AR_Bridge_Instructions>
+  <AR_Bridge_Build>Brücke bauen / fortsetzen</AR_Bridge_Build>
+  <AR_Bridge_NeedWood>Lege zuerst 500 nicht verbotenes, erreichbares Holz im Umkreis von 5 Feldern um die Baustelle ab.</AR_Bridge_NeedWood>
 </LanguageData>

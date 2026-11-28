@@ -50,7 +50,7 @@ namespace AragornArmy
         // A room is fully enclosed by walls and one door. We never replace
         // a missing wall with an open passage; an invalid room fails generation.
         public static void Room(Map map, IntVec3 origin,
-            int minX, int minZ, int maxX, int maxZ, int doorX, int doorZ)
+            int minX, int minZ, int maxX, int maxZ, int doorX, int doorZ, bool roof = true)
         {
             if (minX + 2 >= maxX || minZ + 2 >= maxZ ||
                 !(doorX == minX || doorX == maxX ||
@@ -68,11 +68,11 @@ namespace AragornArmy
                 Build(map, At(origin, x, z),
                     x == doorX && z == doorZ ? Door : Wall);
             }
-            RoofRoom(map, origin, minX, minZ, maxX, maxZ);
+            if (roof) RoofRoom(map, origin, minX, minZ, maxX, maxZ);
         }
 
-        // Roof only tiles with a supporting wall no more than six cells away
-        // (RimWorld's own roof-support range). Open-air yards are never roofed.
+        // Passable stone columns close unsupported holes in large rooms.
+        // Doors and walls also receive roofing; courtyards stay outdoors.
         public static void RoofRoom(Map map, IntVec3 origin,
             int minX, int minZ, int maxX, int maxZ)
         {
@@ -80,20 +80,34 @@ namespace AragornArmy
             for (int z = minZ + 1; z < maxZ; z++)
             {
                 IntVec3 p = At(origin, x, z);
-                if (!p.InBounds(map) || !p.Walkable(map)) continue;
-                bool supported = false;
-                for (int dx = -6; dx <= 6 && !supported; dx++)
-                for (int dz = -6; dz <= 6 && !supported; dz++)
-                {
-                    if (dx * dx + dz * dz > 36) continue;
-                    IntVec3 support = p + new IntVec3(dx, 0, dz);
-                    if (support.InBounds(map) && support.GetThingList(map)
-                        .Any(t => t is Building && t.Spawned && t.def == Wall))
-                        supported = true;
-                }
-                if (supported)
+                if (!p.InBounds(map) || RoofSupported(map, p)) continue;
+                ThingDef column = DefDatabase<ThingDef>.GetNamedSilentFail("Column");
+                if (column == null) throw new InvalidOperationException("Missing roof support column.");
+                // No existing furniture, pawns or walls are overwritten.
+                IntVec3 support = GenRadial.RadialCellsAround(p, 3f, true)
+                    .Where(c => c.x > origin.x + minX && c.x < origin.x + maxX &&
+                        c.z > origin.z + minZ && c.z < origin.z + maxZ &&
+                        c.InBounds(map) && c.Standable(map) &&
+                        !c.GetThingList(map).Any(t => t is Building || t is Pawn))
+                    .DefaultIfEmpty(IntVec3.Invalid).First();
+                if (!support.IsValid || !support.InBounds(map))
+                    throw new InvalidOperationException("No safe roof support position.");
+                Build(map, support, column);
+            }
+            for (int x = minX; x <= maxX; x++)
+            for (int z = minZ; z <= maxZ; z++)
+            {
+                IntVec3 p = At(origin, x, z);
+                if (p.InBounds(map) && RoofSupported(map, p))
                     map.roofGrid.SetRoof(p, RoofDefOf.RoofConstructed);
             }
+        }
+
+        internal static bool RoofSupported(Map map, IntVec3 p)
+        {
+            return GenRadial.RadialCellsAround(p, 6f, true).Any(c =>
+                c.InBounds(map) && c.GetThingList(map).Any(t =>
+                    t is Building && t.Spawned && t.def.holdsRoof));
         }
 
         // Barricades are real passable vanilla cover buildings. Hostile ranged
@@ -176,39 +190,22 @@ namespace AragornArmy
                 "BotchJob_ProfanedThrone", "BotchJob_ProfanedLantern");
         }
 
-        // RimWorld maps can be generated BEFORE the quest's rooms are added.
-        // Force a single fog refresh after all walls/roofs exist so the sealed
-        // chambers are not prematurely visible. Reflection avoids an unsafe
-        // hard dependency on FogGrid's non-public API in RimWorld 1.6.
+        // RimWorld 1.6 exposes Refog(CellRect), not a parameterless Refog.
+        // Fog only constructed interiors, never water or an entire outdoor map.
         public static void RefreshDiscoverableRooms(Map map)
         {
             if (map?.fogGrid == null) return;
-            try
-            {
-                object updater = map.regionAndRoomUpdater;
-                MethodInfo rebuild = updater?.GetType().GetMethod(
-                    "RebuildAllRegionsAndRooms",
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    null, Type.EmptyTypes, null);
-                rebuild?.Invoke(updater, null);
-                object fog = map.fogGrid;
-                MethodInfo refog = fog.GetType().GetMethod(
-                    "Refog",
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    null, Type.EmptyTypes, null);
-                if (refog != null)
-                {
-                    refog.Invoke(fog, null);
-                    Log.Message("[Aragorn] Enclosed crypt chambers refogged after construction.");
-                }
-                else
-                    Log.Warning("[Aragorn] FogGrid.Refog was unavailable; " +
-                        "rooms are still built and roofed but fog must be checked in-game.");
-            }
-            catch (Exception e)
-            {
-                Log.Warning("[Aragorn] Room fog refresh could not complete: " + e.Message);
-            }
+            map.regionAndRoomUpdater.RebuildAllRegionsAndRooms();
+            foreach (IntVec3 p in map.AllCells)
+                if (map.roofGrid.RoofAt(p) == RoofDefOf.RoofConstructed)
+                    map.fogGrid.Refog(new CellRect(p.x, p.z, 1, 1));
+            foreach (IntVec3 p in map.AllCells)
+                if (map.roofGrid.RoofAt(p) == RoofDefOf.RoofConstructed &&
+                    GenAdj.CardinalDirections.Any(d => (p + d).InBounds(map) &&
+                        map.roofGrid.RoofAt(p + d) == null && !(p + d).Fogged(map)))
+                    map.fogGrid.Unfog(p); // exterior wall/door, not the chamber
+            foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
+                map.fogGrid.FloodUnfogAdjacent(pawn.Position, false);
         }
 
         public static void ArcherFortress(Map map, IntVec3 origin)
@@ -275,12 +272,13 @@ namespace AragornArmy
 
         public static void KingSanctuary(Map map, IntVec3 origin)
         {
-            Room(map, origin, -12, 7, 12, 25, 0, 7);
+            Room(map, origin, -12, 7, 12, 25, 0, 7, roof: false);
             // Central pillars support a larger vaulted hall without blocking
             // the king (z=13) or the unique sarcophagus (z=11).
             foreach (int x in new[] { -7, 7 })
                 foreach (int z in new[] { 13, 19 })
                     Build(map, At(origin, x, z), Wall);
+            RoofRoom(map, origin, -12, 7, 12, 25);
             BarricadeRow(map, origin, -24, -6, -3, gapX: -14);
             BarricadeRow(map, origin, 6, 24, -3, gapX: 14);
             DressChapel(map, origin, 0, 22);

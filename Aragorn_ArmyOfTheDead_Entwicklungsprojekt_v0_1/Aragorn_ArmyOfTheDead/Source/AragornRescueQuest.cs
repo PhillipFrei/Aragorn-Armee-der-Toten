@@ -13,7 +13,7 @@ namespace AragornArmy
     // v0.6: The real quests tab entry is permanent. Accepting it creates a
     // traversable world-map site; a custom site worker populates the rescue map.
     // This quest does NOT require a Profaned world faction or settlement.
-    public sealed class AragornRescueGame : GameComponent
+    public sealed partial class AragornRescueGame : GameComponent
     {
         private Quest rescueQuest;
         private Site rescueSite;
@@ -207,7 +207,10 @@ namespace AragornArmy
                 PopulateRescueMap(rescueSite.Map);
             }
             if (rescueQuest.State == QuestState.Ongoing && encounterCreated)
+            {
+                EnsureBridgeSite();
                 CheckRescueOutcome();
+            }
         }
 
         private void ResetAbandonedRescue()
@@ -472,7 +475,7 @@ namespace AragornArmy
             yield return cmd;
         }
 
-        private void PrepareMoatCrossing(Pawn pawn)
+        internal void FinishMoatCrossing(Pawn pawn)
         {
             if (!moatRequiresPreparation || moatCrossingPrepared ||
                 !encounterCreated || rescueSite == null ||

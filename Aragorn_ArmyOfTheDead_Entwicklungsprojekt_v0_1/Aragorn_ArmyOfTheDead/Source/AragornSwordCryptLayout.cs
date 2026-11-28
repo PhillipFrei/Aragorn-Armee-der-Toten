@@ -220,6 +220,19 @@ namespace AragornArmy
             return false;
         }
 
+        public static Func<IntVec3, bool> PreparationMask(Map map)
+        {
+            var grid = CreateBlueprint();
+            var cells = new HashSet<IntVec3>();
+            for (int y = 0; y < Height; y++)
+            for (int x = 0; x < Width; x++)
+                if (grid[x, y] != 'R' || AdjacentToRoom(grid, x, y))
+                    cells.Add(Cell(map, x, y));
+            for (int x = 0; x <= OffsetX + 1; x++)
+                cells.Add(Cell(map, x, OffsetY + 18));
+            return cells.Contains;
+        }
+
         public static IntVec3 Build(Map map)
         {
             var grid = CreateBlueprint();
@@ -310,10 +323,14 @@ namespace AragornArmy
             for (int y = 0; y < Height; y++)
             for (int x = 0; x < Width; x++)
             {
-                if (grid[x, y] != 'P' || !SupportedRoof(grid, x, y)) continue;
+                if (grid[x, y] == 'R') continue;
                 IntVec3 cell = Cell(map, x, y);
-                if (cell.InBounds(map) && cell.Walkable(map))
+                if (cell.InBounds(map))
+                {
+                    if (!AragornCryptInteriors.RoofSupported(map, cell))
+                        AragornCryptInteriors.Build(map, cell, DefDatabase<ThingDef>.GetNamedSilentFail("Column"));
                     map.roofGrid.SetRoof(cell, RoofDefOf.RoofConstructed);
+                }
             }
 
             // Reopen the route from the outside to the entrance.

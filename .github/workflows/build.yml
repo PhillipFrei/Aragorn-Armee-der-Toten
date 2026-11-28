@@ -33,6 +33,8 @@ jobs:
         run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_rescue_moat_fortress.py"
       - name: Validate empty rescue/forge map automatic recovery
         run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_empty_quest_recovery.py"
+      - name: Validate roof coverage and shaped crypt ground
+        run: python "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/scripts/validate_roof_coverage.py"
       - name: Compile RimWorld 1.6 assembly
         run: dotnet build "Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/Aragorn_ArmyOfTheDead/Source/Aragorn_ArmyOfTheDead.csproj" -c Release --nologo
       - name: Package complete installable mod with original folder
@@ -41,6 +43,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Aragorn_Armee_der_Toten_v0.39.3_Profaned_Bogenschuetzen_Skelette_Eigener_Uebergang_Komplettmod
-          path: Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/dist/Aragorn_Armee_der_Toten_v0.39.3_Profaned_Bogenschuetzen_Skelette_Eigener_Uebergang_Komplettmod.zip
+          name: Aragorn_Armee_der_Toten_v0.39.2_Leere_Karten_Schmied_Rettung_Hotfix_Komplettmod(1)
+          path: Aragorn_ArmyOfTheDead_Entwicklungsprojekt_v0_1/dist/Aragorn_Armee_der_Toten_v0.39.2_Leere_Karten_Schmied_Rettung_Hotfix_Komplettmod(1).zip
           if-no-files-found: error

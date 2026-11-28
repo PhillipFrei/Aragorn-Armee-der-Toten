@@ -242,11 +242,16 @@ Travel to the marked crypt with Aragorn. Defeat the cursed spirit and its Profan
   <AR_OathGraves_Sealed>Sealed</AR_OathGraves_Sealed>
   <AR_OathGraves_Indestructible>Indestructible oath sarcophagus</AR_OathGraves_Indestructible>
   <AR_Rescue_MoatTitle>The Profaned Moat Prison</AR_Rescue_MoatTitle>
-  <AR_Rescue_MoatBody>The deep-water moat cannot be crossed. There is no ready-made bridge. Bring a colonist to the southern bank and use 'Prepare crossing' to make a passable route. Profaned archers hold barricades in the outer courtyard; skeletons attack inside the keep. Aragorn waits behind the innermost door.</AR_Rescue_MoatBody>
-  <AR_Rescue_PrepareCrossing>Prepare crossing</AR_Rescue_PrepareCrossing>
-  <AR_Rescue_PrepareCrossingDesc>The fortress is surrounded by genuine deep water. Bring a selected colonist to the southern bank and use this command to construct a makeshift, three-tile-wide causeway. No bridge exists on arrival and no additional bridge mod is needed.</AR_Rescue_PrepareCrossingDesc>
+  <AR_Rescue_MoatBody>Deep water surrounds the fortress. The bridge worksite stands on the south bank. Bring 500 wood, unload it within 5 tiles and send a colonist to the worksite. Right-click: Build bridge. Construction takes four in-game hours.</AR_Rescue_MoatBody>
+  <AR_Rescue_PrepareCrossing>Build wooden bridge</AR_Rescue_PrepareCrossing>
+  <AR_Rescue_PrepareCrossingDesc>Read the worksite instructions on the south bank. Unload 500 wood there and spend 4 in-game hours building the bridge.</AR_Rescue_PrepareCrossingDesc>
   <AR_Rescue_GoToSouthBank>Move this colonist to the southern bank of the moat, near the marked location.</AR_Rescue_GoToSouthBank>
   <AR_Rescue_CrossingReadyTitle>A Road Across the Waters</AR_Rescue_CrossingReadyTitle>
-  <AR_Rescue_CrossingReadyBody>The makeshift crossing is ready. A passable route now traverses the southern part of the deep-water moat. Profaned bowmen behind their barricades and skeletons in the keep await you.</AR_Rescue_CrossingReadyBody>
+  <AR_Rescue_CrossingReadyBody>The wooden bridge is complete. The fortress crossing is now walkable.</AR_Rescue_CrossingReadyBody>
   <AR_Rescue_CrossingFailed>The crossing could not be built. Check the game log for details.</AR_Rescue_CrossingFailed>
+  <AR_Bridge_Finished>Wooden bridge completed.</AR_Bridge_Finished>
+  <AR_Bridge_Status>Wood used: {0}/{1} · Construction: {2}%</AR_Bridge_Status>
+  <AR_Bridge_Instructions>Unload 500 wood within 5 tiles (including pack-animal cargo). Select a colonist and right-click this worksite: Build bridge. Work time: 4 in-game hours. Interrupted work can be resumed.</AR_Bridge_Instructions>
+  <AR_Bridge_Build>Build / resume bridge</AR_Bridge_Build>
+  <AR_Bridge_NeedWood>First unload 500 reachable, unforbidden wood within 5 tiles of the worksite.</AR_Bridge_NeedWood>
 </LanguageData>

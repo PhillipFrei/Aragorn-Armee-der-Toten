@@ -1048,7 +1048,8 @@ namespace AragornArmy
             if (cls == 0)
             {
                 AragornTrialSitePreparation.ClearFootprint(map, map.Center,
-                    AragornSwordCryptLayout.Width, AragornSwordCryptLayout.Height);
+                    AragornSwordCryptLayout.Width, AragornSwordCryptLayout.Height,
+                    footprint: AragornSwordCryptLayout.PreparationMask(map));
                 IntVec3 crypt = AragornSwordCryptLayout.Build(map);
                 AragornCryptInteriors.RefreshDiscoverableRooms(map);
                 return crypt;

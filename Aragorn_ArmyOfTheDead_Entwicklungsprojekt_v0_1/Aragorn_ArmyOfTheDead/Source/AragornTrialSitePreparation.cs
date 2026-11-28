@@ -14,7 +14,7 @@ namespace AragornArmy
     internal static class AragornTrialSitePreparation
     {
         public static void ClearFootprint(Map map, IntVec3 center,
-            int width, int height, int margin = 3)
+            int width, int height, int margin = 3, Func<IntVec3, bool> footprint = null)
         {
             if (map == null)
                 throw new ArgumentNullException(nameof(map));
@@ -48,6 +48,7 @@ namespace AragornArmy
             for (int x = minX; x <= maxX; x++)
             {
                 IntVec3 cell = new IntVec3(x, 0, z);
+                if (footprint != null && !footprint(cell)) continue;
                 if (map.roofGrid.RoofAt(cell) != null)
                 {
                     map.roofGrid.SetRoof(cell, null);
@@ -64,6 +65,7 @@ namespace AragornArmy
             for (int x = minX; x <= maxX; x++)
             {
                 IntVec3 cell = new IntVec3(x, 0, z);
+                if (footprint != null && !footprint(cell)) continue;
                 foreach (Thing thing in cell.GetThingList(map).ToList())
                 {
                     if (thing == null || !thing.Spawned || thing is Pawn)
@@ -118,6 +120,7 @@ namespace AragornArmy
             for (int x = minX; x <= maxX; x++)
             {
                 IntVec3 cell = new IntVec3(x, 0, z);
+                if (footprint != null && !footprint(cell)) continue;
                 Thing blocker = cell.GetThingList(map).FirstOrDefault(t =>
                     t is Building && t.Spawned);
                 if (blocker != null)

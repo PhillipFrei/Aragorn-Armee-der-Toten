@@ -87,9 +87,9 @@ namespace AragornArmy
             // The actual 13x9 jail is an independent room INSIDE this keep.
             // Both rooms have a single southern door, aligned with the bridge.
             AragornCryptInteriors.Room(map, center,
-                -13, -10, 13, 10, 0, -10);
+                -13, -10, 13, 10, 0, -10, roof: false);
             AragornCryptInteriors.Room(map, center,
-                -6, -4, 6, 4, 0, -4);
+                -6, -4, 6, 4, 0, -4, roof: false);
             // Once the inner jail walls exist they support the remaining
             // central roof, making the entire hall a separate covered interior.
             AragornCryptInteriors.RoofRoom(map, center, -13, -10, 13, 10);
@@ -165,6 +165,7 @@ namespace AragornArmy
                 throw new InvalidOperationException(
                     "[Aragorn] Guard post blocked inside fortress entrance.");
 
+            RevealExterior(map);
             AragornCryptInteriors.RefreshDiscoverableRooms(map);
             Log.Message("[Aragorn] Rescue fortress v0.39.1: 77x65 site, " +
                 "UNBROKEN deep-water moat, four Profaned archer barricade lines, " +
@@ -285,6 +286,18 @@ namespace AragornArmy
         // water ring ends at z=-28, and the prepared site spans to z=-35.
         public static IntVec3 SouthBank(Map map) => At(map.Center, 0, -30);
 
+        public static void RevealExterior(Map map)
+        {
+            // Explicitly clear stale mountain fog over the moat and south bank.
+            for (int x = -38; x <= 38; x++)
+            for (int z = -35; z <= 32; z++)
+            {
+                IntVec3 p = At(map.Center, x, z);
+                if (p.InBounds(map) && map.roofGrid.RoofAt(p) == null)
+                    map.fogGrid.Unfog(p);
+            }
+        }
+
         public static bool CrossingIsPrepared(Map map)
         {
             if (map == null) return false;
@@ -308,6 +321,8 @@ namespace AragornArmy
             for (int x = -1; x <= 1; x++)
             {
                 IntVec3 pos = At(map.Center, x, z);
+                map.roofGrid.SetRoof(pos, null);
+                map.fogGrid.Unfog(pos);
                 if (bridge != null)
                 {
                     try { map.terrainGrid.SetTerrain(pos, bridge); }

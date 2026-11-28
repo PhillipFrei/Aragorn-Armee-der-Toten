@@ -16,7 +16,7 @@ for cls in ("ArcherFortress", "AxeTemple", "CaptainFortress", "KingSanctuary"):
     assert f"AragornCryptInteriors.{cls}(map, c);" in main
 
 for text in [
-    "RoofRoom(map, origin", '"Refog"', "RoofDefOf.RoofConstructed",
+    "RoofRoom(map, origin", "map.fogGrid.Refog(new CellRect(", "RoofDefOf.RoofConstructed",
     "RebuildAllRegionsAndRooms", "BarricadeRow(map", "BarricadeColumn",
     "BotchJob_ProfanedBrazierDarklight", "BotchJob_ProfanedStele",
     "BotchJob_ProfanedThrone",
